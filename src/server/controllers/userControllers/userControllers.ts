@@ -137,6 +137,8 @@ export const loginUser = async (
       .cookie(cookieName, token, {
         httpOnly: true,
         maxAge: cookieMaxAge,
+        sameSite: "none",
+        secure: true,
       })
       .json({ message: `${cookieName} has been set` });
   } catch (error: unknown) {

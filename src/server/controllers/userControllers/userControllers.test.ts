@@ -166,6 +166,8 @@ describe("Given a loginUser controller", () => {
       expect(res.cookie).toHaveBeenCalledWith(cookieName, mockToken, {
         httpOnly: true,
         maxAge: cookieMaxAge,
+        sameSite: "none",
+        secure: true,
       });
       expect(res.json).toHaveBeenCalledWith({
         message: "coders_identity_token has been set",
