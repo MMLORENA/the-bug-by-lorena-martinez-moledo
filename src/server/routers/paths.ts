@@ -6,6 +6,7 @@ export const partialPaths = {
     activate: "/activate",
     verifyToken: "/verify-token",
     logout: "/logout",
+    userData: "/user-data",
   },
 };
 
@@ -17,6 +18,7 @@ export const paths = {
     activate: `${partialPaths.users.base}${partialPaths.users.activate}`,
     verifyToken: `${partialPaths.users.base}${partialPaths.users.verifyToken}`,
     logout: `${partialPaths.users.base}${partialPaths.users.logout}`,
+    userData: `${partialPaths.users.base}${partialPaths.users.userData}`,
   },
   apiDocs: {
     base: "/api-docs",

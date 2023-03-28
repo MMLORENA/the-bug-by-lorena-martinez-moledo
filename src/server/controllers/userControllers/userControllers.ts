@@ -23,7 +23,7 @@ const {
 
 const {
   successCodes: { createdCode, okCode, noContentSuccessCode },
-  clientErrors: { conflictCode, unauthorizedCode },
+  clientErrors: { conflictCode, unauthorizedCode, notFoundCode },
   serverErrors: { internalServerErrorCode },
 } = httpStatusCodes;
 
@@ -208,4 +208,31 @@ export const getUserDetails = (req: CustomRequest, res: Response) => {
 
 export const logoutUser = (req: Request, res: Response) => {
   res.clearCookie(cookieName).sendStatus(noContentSuccessCode);
+};
+
+export const getUserData = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id: userId } = req.userDetails;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      const notFoundUser = new CustomError(
+        "User data not available",
+        notFoundCode,
+        `User with ${userId} id not found`
+      );
+      throw notFoundUser;
+    }
+
+    res.status(okCode).json({
+      user: { name: user.name, isAdmin: user.isAdmin, email: user.email },
+    });
+  } catch (error: unknown) {
+    next(error);
+  }
 };

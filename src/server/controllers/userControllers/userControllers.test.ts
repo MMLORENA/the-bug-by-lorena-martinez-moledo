@@ -13,6 +13,7 @@ import { luisEmail } from "../../../testUtils/mocks/mockUsers.js";
 import type { CustomRequest, UserWithId } from "../../types.js";
 import {
   activateUser,
+  getUserData,
   getUserDetails,
   loginUser,
   logoutUser,
@@ -35,7 +36,7 @@ jest.mock("../../../email/sendEmail/sendEmail.js");
 
 const {
   successCodes: { createdCode, okCode, noContentSuccessCode },
-  clientErrors: { unauthorizedCode, conflictCode },
+  clientErrors: { unauthorizedCode, conflictCode, notFoundCode },
 } = httpStatusCodes;
 const {
   singleSignOnCookie: { cookieMaxAge, cookieName },
@@ -303,6 +304,57 @@ describe("Given a logoutUser controller", () => {
 
       expect(res.clearCookie).toHaveBeenCalledWith(cookieName);
       expect(res.sendStatus).toHaveBeenCalledWith(noContentSuccessCode);
+    });
+  });
+});
+
+describe("Given a getUserData controller", () => {
+  const user = getMockUser({
+    _id: "1234",
+  });
+
+  const req: Partial<CustomRequest> = {
+    userDetails: {
+      id: user._id,
+      isAdmin: user.isAdmin,
+      name: user.name,
+    },
+  };
+
+  describe("When it receives a custom request with  with user details id: '1234' and the user exists", () => {
+    test("Then it should invoke response's method status with 200 and json with with received user data", async () => {
+      User.findById = jest.fn().mockResolvedValueOnce(user);
+
+      await getUserData(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(res.status).toHaveBeenCalledWith(okCode);
+      expect(res.json).toHaveBeenCalledWith({
+        user: { name: user.name, email: user.email, isAdmin: user.isAdmin },
+      });
+    });
+  });
+
+  describe("When it receives a custom request with  with user details id: '1234' and the user doesn't exists", () => {
+    test("Then it should invoke next with the error not found user with message 'User with 1234 id not found'", async () => {
+      const expectedNotFoundUser = new CustomError(
+        "User data not available",
+        notFoundCode,
+        `User with ${user._id} id not found`
+      );
+
+      User.findById = jest.fn().mockResolvedValueOnce(null);
+
+      await getUserData(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(next).toHaveBeenCalledWith(expectedNotFoundUser);
     });
   });
 });
