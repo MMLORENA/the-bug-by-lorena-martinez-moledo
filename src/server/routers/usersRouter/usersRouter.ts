@@ -3,6 +3,7 @@ import { Router } from "express";
 import { validate } from "express-validation";
 import {
   activateUser,
+  getUserData,
   getUserDetails,
   loginUser,
   logoutUser,
@@ -40,5 +41,7 @@ usersRouter.use(cookieParser());
 usersRouter.get(partialPaths.users.verifyToken, auth, getUserDetails);
 
 usersRouter.post(partialPaths.users.logout, auth, logoutUser);
+
+usersRouter.get(partialPaths.users.userData, auth, getUserData);
 
 export default usersRouter;

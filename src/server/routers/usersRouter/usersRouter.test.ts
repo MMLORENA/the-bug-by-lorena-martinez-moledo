@@ -10,6 +10,7 @@ import connectDatabase from "../../../database/connectDatabase";
 import User from "../../../database/models/User.js";
 import { getMockUserData } from "../../../factories/userDataFactory";
 import { getMockUser } from "../../../factories/userFactory";
+import { environment } from "../../../loadEnvironments";
 import cookieParser from "../../../testUtils/cookieParser";
 import {
   mockHeaderApiKey,
@@ -30,6 +31,7 @@ import type {
   UserActivationCredentials,
   UserData,
   UserStructure,
+  UserWithId,
 } from "../../types";
 import { paths } from "../paths";
 
@@ -46,8 +48,17 @@ const incorrectCookie = `${cookieName}=incorrect-cookie`;
 
 const {
   successCodes: { createdCode, okCode, noContentSuccessCode },
-  clientErrors: { conflictCode, badRequestCode, unauthorizedCode },
+  clientErrors: {
+    conflictCode,
+    badRequestCode,
+    unauthorizedCode,
+    notFoundCode,
+  },
 } = httpStatusCodes;
+
+const {
+  jwt: { jwtSecret },
+} = environment;
 
 let server: MongoMemoryServer;
 
@@ -444,6 +455,71 @@ describe("Given a POST /users/logout endpoint", () => {
         .expect(noContentSuccessCode);
 
       expect(response.headers).not.toHaveProperty("Cookie", [correctCookie]);
+    });
+  });
+});
+
+describe("Given a GET /users/user-data endpoint", () => {
+  let userId: string;
+  const newUserData = {
+    ...getMockUserData({ name: luisName }),
+    isAdmin: false,
+  };
+
+  beforeEach(async () => {
+    const newUser = await User.create(newUserData);
+    userId = newUser._id.toString();
+  });
+
+  afterEach(async () => {
+    await User.deleteMany();
+  });
+
+  describe("When it receives a request with a correct api-key and api-name with a valid token cookie with an existant user name 'luis' in DB", () => {
+    test("Then it should respond with status 200 and the 'luis' user data information in the body", async () => {
+      const mockenPayload: CustomTokenPayload = {
+        name: newUserData.name,
+        isAdmin: newUserData.isAdmin,
+        id: userId,
+      };
+
+      const mocken = jwt.sign(mockenPayload, jwtSecret);
+      const userLuisCookie = `${cookieName}=${mocken}`;
+
+      const expectedStatus = okCode;
+
+      const response: {
+        body: { user: UserWithId };
+      } = await request(app)
+        .get(paths.users.userData)
+        .set("Cookie", [userLuisCookie])
+        .set(apiKeyHeader, mockHeaderApiKey)
+        .set(apiNameHeader, mockHeaderApiName)
+        .expect(expectedStatus);
+
+      expect(response.body).toHaveProperty("user", {
+        name: newUserData.name,
+        email: newUserData.email,
+        isAdmin: newUserData.isAdmin,
+      });
+    });
+  });
+
+  describe("When it receives a request with a correct api-key and api-name with a valid token cookie with a non-existant user in DB", () => {
+    test("Then it should respond with status 404 and message 'User data not available'", async () => {
+      const expectedStatus = notFoundCode;
+      const expectedMessage = `User with ${mockTokenPayload.id} id not found`;
+
+      const response: {
+        body: { user: UserWithId };
+      } = await request(app)
+        .get(paths.users.userData)
+        .set("Cookie", [correctCookie])
+        .set(apiKeyHeader, mockHeaderApiKey)
+        .set(apiNameHeader, mockHeaderApiName)
+        .expect(expectedStatus);
+
+      expect(response.body).toHaveProperty("error", expectedMessage);
     });
   });
 });
