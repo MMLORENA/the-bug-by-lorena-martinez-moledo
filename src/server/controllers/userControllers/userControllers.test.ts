@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import config from "../../../config.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
-import CustomError from "../../../CustomError/CustomError.js";
 import User from "../../../database/models/User.js";
 import { getMockUserCredentials } from "../../../factories/userCredentialsFactory.js";
 import { getMockUserData } from "../../../factories/userDataFactory.js";
@@ -18,6 +17,11 @@ import {
   logoutUser,
   registerUser,
 } from "./userControllers.js";
+import {
+  activateErrors,
+  loginErrors,
+  registerErrors,
+} from "../../../constants/errors/userErrors.js";
 
 const mockPasswordHash: jest.Mock<string> = jest.fn(() => "");
 const mockPasswordCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(
@@ -35,8 +39,8 @@ jest.mock("../../../email/sendEmail/sendEmail.js");
 
 const {
   successCodes: { createdCode, okCode, noContentSuccessCode },
-  clientErrors: { unauthorizedCode, conflictCode },
 } = httpStatusCodes;
+
 const {
   singleSignOnCookie: { cookieMaxAge, cookieName },
 } = config;
@@ -88,22 +92,17 @@ describe("Given a registerUser Controller", () => {
 
   describe("When it receives a request with a user name that already exist", () => {
     test("Then it should call next with an error message 'User already exists'", async () => {
-      const customErrorDuplicateKey = new CustomError(
-        "Duplicate key",
-        conflictCode,
-        "User already exists"
-      );
+      const duplicateKeyError = registerErrors.duplicateUser("Duplicate key");
 
-      User.create = jest.fn().mockRejectedValue(customErrorDuplicateKey);
+      User.create = jest.fn().mockRejectedValue(duplicateKeyError);
       await registerUser(req as Request, res as Response, next as NextFunction);
 
-      expect(next).toHaveBeenCalledWith(customErrorDuplicateKey);
+      expect(next).toHaveBeenCalledWith(duplicateKeyError);
     });
   });
 });
 
 describe("Given a loginUser controller", () => {
-  const incorrectCredentialsMessage = "Incorrect email or password";
   const userCredentials = getMockUserCredentials({ email: luisEmail });
 
   describe("When it receives a request with email 'luisito@isdicoders.com' and the user doesn't exist, and a next function", () => {
@@ -112,15 +111,9 @@ describe("Given a loginUser controller", () => {
 
       User.findOne = jest.fn().mockResolvedValueOnce(null);
 
-      const userNotFoundError = new CustomError(
-        "User not found",
-        unauthorizedCode,
-        incorrectCredentialsMessage
-      );
-
       await loginUser(req as Request, null, next);
 
-      expect(next).toHaveBeenCalledWith(userNotFoundError);
+      expect(next).toHaveBeenCalledWith(loginErrors.userNotFound);
     });
   });
 
@@ -136,15 +129,9 @@ describe("Given a loginUser controller", () => {
       User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
       mockPasswordCompare.mockReturnValueOnce(false);
 
-      const incorrectPasswordError = new CustomError(
-        "Incorrect password",
-        unauthorizedCode,
-        incorrectCredentialsMessage
-      );
-
       await loginUser(req as Request, null, next);
 
-      expect(next).toHaveBeenCalledWith(incorrectPasswordError);
+      expect(next).toHaveBeenCalledWith(loginErrors.incorrectPassword);
     });
   });
 
@@ -180,19 +167,13 @@ describe("Given a loginUser controller", () => {
       req.body = userCredentials;
       const existingUser = getMockUser(userCredentials);
 
-      const inactiveUserError = new CustomError(
-        "User is inactive",
-        unauthorizedCode,
-        "User is inactive, contact your administrator if you think this is a mistake"
-      );
-
       User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
 
       mockPasswordCompare.mockReturnValueOnce(true);
 
       await loginUser(req as Request, null, next);
 
-      expect(next).toHaveBeenCalledWith(inactiveUserError);
+      expect(next).toHaveBeenCalledWith(loginErrors.inactiveUser);
     });
   });
 
@@ -247,12 +228,6 @@ describe("Given an activateUser function", () => {
   describe("When it receives query string activationKey 'invalid-key', in the body password and confirmPassword 'test-password' and the activationKey is invalid", () => {
     test("Then it should invoke next with message 'Invalid activation key' and status 401", async () => {
       const activationKey = "invalid-key";
-      const invalidKeyErrorMessage = "Invalid activation key";
-      const invalidKeyError = new CustomError(
-        invalidKeyErrorMessage,
-        unauthorizedCode,
-        invalidKeyErrorMessage
-      );
 
       req.query = {
         activationKey,
@@ -270,7 +245,7 @@ describe("Given an activateUser function", () => {
 
       await activateUser(req as Request, null, next);
 
-      expect(next).toHaveBeenCalledWith(invalidKeyError);
+      expect(next).toHaveBeenCalledWith(activateErrors.invalidActivationKey);
     });
   });
 });
