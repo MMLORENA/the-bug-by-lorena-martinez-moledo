@@ -416,7 +416,7 @@ describe("Given a GET /users/verify-token endpoint", () => {
   });
 
   describe("When it receives a request with a cookie that contains an invalid token and a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
-    test.only("Then it should respond with status 401 and error message 'Unauthorized'", async () => {
+    test("Then it should respond with status 401 and error message 'Unauthorized'", async () => {
       const expectedStatus = unauthorizedCode;
       const expectedMessage = "Unauthorized";
 

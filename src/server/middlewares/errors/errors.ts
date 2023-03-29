@@ -2,13 +2,13 @@ import "../../../loadEnvironments.js";
 import chalk from "chalk";
 import type { NextFunction, Request, Response } from "express";
 import { ValidationError } from "express-validation";
-import CustomError from "../../../CustomError/CustomError.js";
+import type CustomError from "../../../CustomError/CustomError.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import debugConfig from "../../../utils/debugConfig/debugConfig.js";
+import generalErrors from "../../../constants/errors/generalErrors.js";
 
 const {
   serverErrors: { internalServerErrorCode },
-  clientErrors: { notFoundCode },
 } = httpStatusCodes;
 
 const debug = debugConfig.extend("middlewares:errors");
@@ -47,13 +47,7 @@ export const unknownEndpoint = (
 ) => {
   const { path } = req;
 
-  next(
-    new CustomError(
-      `Unknown endpoint: ${path}`,
-      notFoundCode,
-      "Unknown endpoint"
-    )
-  );
+  next(generalErrors.unknownEndpoint(path));
 };
 
 export default generalError;
