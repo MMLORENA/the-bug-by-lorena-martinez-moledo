@@ -12,8 +12,15 @@ const authErrors = {
     "No Token provided"
   ),
 
-  generalAuthError: (message: string) =>
-    new CustomError(message, unauthorizedCode, "Unauthorized"),
+  generalAuthError(message?: string) {
+    const unauthorizedMessage = "Unauthorized";
+
+    return new CustomError(
+      message ?? unauthorizedMessage,
+      unauthorizedCode,
+      unauthorizedMessage
+    );
+  },
 };
 
 export default authErrors;

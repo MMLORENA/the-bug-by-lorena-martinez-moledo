@@ -30,15 +30,25 @@ export const loginErrors = {
 };
 
 export const registerErrors = {
-  duplicateUser: (message: string) =>
-    new CustomError(message, conflictCode, "User already exists"),
+  duplicateUser(message: string) {
+    const duplicateUserMessage = "User already exists";
 
-  generalRegisterError: (message: string) =>
-    new CustomError(
-      message,
+    return new CustomError(
+      message ?? duplicateUserMessage,
+      conflictCode,
+      duplicateUserMessage
+    );
+  },
+
+  generalRegisterError(message?: string) {
+    const generalRegisterErrorMessage = "Error creating a new user";
+
+    return new CustomError(
+      message ?? generalRegisterErrorMessage,
       internalServerErrorCode,
-      "Error creating a new user"
-    ),
+      generalRegisterErrorMessage
+    );
+  },
 };
 
 export const activateErrors = {

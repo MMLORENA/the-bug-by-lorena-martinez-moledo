@@ -6,12 +6,15 @@ const {
 } = httpStatusCodes;
 
 const generalErrors = {
-  unknownEndpoint: (path: string) =>
-    new CustomError(
-      `Unknown endpoint: ${path}`,
+  unknownEndpoint(path?: string) {
+    const unknownEndpointMessage = "Unknown endpoint";
+
+    return new CustomError(
+      path ? `${unknownEndpointMessage}: ${path}` : unknownEndpointMessage,
       notFoundCode,
-      "Unknown endpoint"
-    ),
+      unknownEndpointMessage
+    );
+  },
 };
 
 export default generalErrors;
