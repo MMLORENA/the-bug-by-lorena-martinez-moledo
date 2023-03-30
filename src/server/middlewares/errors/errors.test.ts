@@ -2,6 +2,7 @@ import type { Request, NextFunction, Response } from "express";
 import generalError, { unknownEndpoint } from "./errors.js";
 import CustomError from "../../../CustomError/CustomError.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
+import generalErrors from "../../../constants/errors/generalErrors.js";
 
 const {
   serverErrors: { internalServerErrorCode },
@@ -53,14 +54,9 @@ describe("Given an unknownEndpoint middleware", () => {
   describe("When it receives a request with path /not-found", () => {
     test("Then it should invoke next with a custom error with message 'Unknown endpoint: /not-found', status code 404 and public message 'Unknown endpoint'", () => {
       const path = "/not-found";
-      const errorMessage = "Unknown endpoint";
       const req: Partial<Request> = { path };
       const next: NextFunction = jest.fn();
-      const expectedError = new CustomError(
-        `${errorMessage}: ${path}`,
-        notFoundCode,
-        errorMessage
-      );
+      const expectedError = generalErrors.unknownEndpoint(path);
 
       unknownEndpoint(req as Request, null, next);
 

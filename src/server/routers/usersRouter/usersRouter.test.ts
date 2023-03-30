@@ -32,6 +32,7 @@ import type {
   UserStructure,
 } from "../../types";
 import { paths } from "../paths";
+import authErrors from "../../../constants/errors/authErrors";
 
 jest.mock("../../../email/sendEmail/sendEmail.js");
 
@@ -378,12 +379,11 @@ describe("Given a POST /users/activate endpoint", () => {
   });
 });
 
-describe("Given a GET /verify-token endpoint", () => {
-  const expectedMessage = "Unauthorized";
-
+describe("Given a GET /users/verify-token endpoint", () => {
   describe("When it receives a request with no cookie and a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
     test("Then it should respond with status 401 and 'Unauthorized' error message ", async () => {
       const expectedStatus = unauthorizedCode;
+      const { publicMessage: expectedMessage } = authErrors.noToken;
 
       const response: {
         body: { userPayload: CustomTokenPayload };
@@ -415,9 +415,10 @@ describe("Given a GET /verify-token endpoint", () => {
     });
   });
 
-  describe("When it receives a request with auth header and an invalid token and a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
+  describe("When it receives a request with a cookie that contains an invalid token and a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
     test("Then it should respond with status 401 and error message 'Unauthorized'", async () => {
       const expectedStatus = unauthorizedCode;
+      const expectedMessage = "Unauthorized";
 
       const response: {
         body: { userPayload: CustomTokenPayload };
