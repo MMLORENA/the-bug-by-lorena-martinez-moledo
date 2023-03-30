@@ -218,15 +218,15 @@ export const getUserData = async (
   const { id: userId } = req.userDetails;
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).exec();
 
     if (!user) {
-      const notFoundUser = new CustomError(
+      const notFoundError = new CustomError(
         "User data not available",
         notFoundCode,
         `User with ${userId} id not found`
       );
-      throw notFoundUser;
+      throw notFoundError;
     }
 
     res.status(okCode).json({

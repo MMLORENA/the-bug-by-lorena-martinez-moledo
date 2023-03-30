@@ -321,9 +321,11 @@ describe("Given a getUserData controller", () => {
     },
   };
 
-  describe("When it receives a custom request with  with user details id: '1234' and the user exists", () => {
-    test("Then it should invoke response's method status with 200 and json with with received user data", async () => {
-      User.findById = jest.fn().mockResolvedValueOnce(user);
+  describe("When it receives a custom request with user details id: '1234' and the user exists", () => {
+    test("Then it should invoke response's method status with 200 and json with received user data", async () => {
+      User.findById = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValueOnce(user),
+      }));
 
       await getUserData(
         req as CustomRequest,
@@ -338,15 +340,17 @@ describe("Given a getUserData controller", () => {
     });
   });
 
-  describe("When it receives a custom request with  with user details id: '1234' and the user doesn't exists", () => {
+  describe("When it receives a custom request with user details id: '1234' and the user doesn't exists", () => {
     test("Then it should invoke next with the error not found user with message 'User with 1234 id not found'", async () => {
-      const expectedNotFoundUser = new CustomError(
+      const expectedNotFoundError = new CustomError(
         "User data not available",
         notFoundCode,
         `User with ${user._id} id not found`
       );
 
-      User.findById = jest.fn().mockResolvedValueOnce(null);
+      User.findById = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValueOnce(null),
+      }));
 
       await getUserData(
         req as CustomRequest,
@@ -354,7 +358,7 @@ describe("Given a getUserData controller", () => {
         next as NextFunction
       );
 
-      expect(next).toHaveBeenCalledWith(expectedNotFoundUser);
+      expect(next).toHaveBeenCalledWith(expectedNotFoundError);
     });
   });
 });
