@@ -9,7 +9,6 @@ const connectDatabase = async (mongoDbUrl: string) => {
     transform(doc, ret) {
       delete ret._id;
       delete ret.__v;
-      delete ret.password;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return ret;
