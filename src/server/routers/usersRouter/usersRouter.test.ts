@@ -43,7 +43,7 @@ const {
   singleSignOnCookie: { cookieName },
 } = config;
 
-const correctCookie = `${cookieName}=${mockToken}`;
+const randomUserCookie = `${cookieName}=${mockToken}`;
 const incorrectCookie = `${cookieName}=incorrect-cookie`;
 
 const {
@@ -416,7 +416,7 @@ describe("Given a GET /verify-token endpoint", () => {
         body: { userPayload: CustomTokenPayload };
       } = await request(app)
         .get(paths.users.verifyToken)
-        .set("Cookie", [correctCookie])
+        .set("Cookie", [randomUserCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .send(mockTokenPayload)
@@ -449,12 +449,12 @@ describe("Given a POST /users/logout endpoint", () => {
     test("Then it should respond without a cookie and a status 204", async () => {
       const response = await request(app)
         .post(paths.users.logout)
-        .set("Cookie", [correctCookie])
+        .set("Cookie", [randomUserCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .expect(noContentSuccessCode);
 
-      expect(response.headers).not.toHaveProperty("Cookie", [correctCookie]);
+      expect(response.headers).not.toHaveProperty("Cookie", [randomUserCookie]);
     });
   });
 });
@@ -477,14 +477,14 @@ describe("Given a GET /users/user-data endpoint", () => {
 
   describe("When it receives a request with a correct api-key and api-name with a valid token cookie with an existant user name 'luis' in DB", () => {
     test("Then it should respond with status 200 and the 'luis' user data information in the body", async () => {
-      const mockenPayload: CustomTokenPayload = {
+      const mockUserPayload: CustomTokenPayload = {
         name: newUserData.name,
         isAdmin: newUserData.isAdmin,
         id: userId,
       };
 
-      const mocken = jwt.sign(mockenPayload, jwtSecret);
-      const userLuisCookie = `${cookieName}=${mocken}`;
+      const mockLuisToken = jwt.sign(mockUserPayload, jwtSecret);
+      const userLuisCookie = `${cookieName}=${mockLuisToken}`;
 
       const expectedStatus = okCode;
 
@@ -514,7 +514,7 @@ describe("Given a GET /users/user-data endpoint", () => {
         body: { user: UserWithId };
       } = await request(app)
         .get(paths.users.userData)
-        .set("Cookie", [correctCookie])
+        .set("Cookie", [randomUserCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .expect(expectedStatus);
