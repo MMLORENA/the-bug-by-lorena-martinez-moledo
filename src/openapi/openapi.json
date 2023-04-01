@@ -58,6 +58,16 @@
         "type": "http",
         "name": "coders_identity_token",
         "cookieFormat": "JWT"
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      },
+      "apiName": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-NAME"
       }
     },
     "responses": {
@@ -106,7 +116,36 @@
       "post": {
         "tags": ["User"],
         "summary": "Activates a user account",
+
+        "security": [
+          {
+            "apiKey": []
+          },
+          {
+            "apiName": []
+          }
+        ],
         "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-NAME",
+            "required": true,
+            "description": "A valid X-API-NAME to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "api-name"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-KEY",
+            "required": true,
+            "description": "A valid X-API-KEY to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "xx-yy-zz"
+            }
+          },
           {
             "description": "User Activation Key",
             "required": true,
@@ -118,6 +157,7 @@
             }
           }
         ],
+
         "requestBody": {
           "required": true,
           "content": {
@@ -156,6 +196,36 @@
       "post": {
         "tags": ["User"],
         "summary": "Login a user",
+        "security": [
+          {
+            "apiKey": []
+          },
+          {
+            "apiName": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-NAME",
+            "required": true,
+            "description": "A valid X-API-NAME to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "api-name"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-KEY",
+            "required": true,
+            "description": "A valid X-API-KEY to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "xx-yy-zz"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -190,6 +260,12 @@
         "security": [
           {
             "Cookie Auth": []
+          },
+          {
+            "apiKey": []
+          },
+          {
+            "apiName": []
           }
         ],
         "parameters": [
@@ -201,6 +277,26 @@
             "schema": {
               "type": "string",
               "example": "coders_identity_token=xx.yy.zz"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-NAME",
+            "required": true,
+            "description": "A valid X-API-NAME to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "api-name"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-KEY",
+            "required": true,
+            "description": "A valid X-API-KEY to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "xx-yy-zz"
             }
           }
         ],
@@ -231,6 +327,12 @@
         "security": [
           {
             "Cookie Auth": []
+          },
+          {
+            "apiKey": []
+          },
+          {
+            "apiName": []
           }
         ],
         "parameters": [
@@ -242,6 +344,26 @@
             "schema": {
               "type": "string",
               "example": "coders_identity_token=xx.yy.zz"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-NAME",
+            "required": true,
+            "description": "A valid X-API-NAME to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "api-name"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-KEY",
+            "required": true,
+            "description": "A valid X-API-KEY to make request to identity-server",
+            "schema": {
+              "type": "string",
+              "example": "xx-yy-zz"
             }
           }
         ],
