@@ -10,6 +10,7 @@ import connectDatabase from "../../../database/connectDatabase";
 import User from "../../../database/models/User.js";
 import { getMockUserData } from "../../../factories/userDataFactory";
 import { getMockUser } from "../../../factories/userFactory";
+import { environment } from "../../../loadEnvironments";
 import cookieParser from "../../../testUtils/cookieParser";
 import {
   mockHeaderApiKey,
@@ -30,6 +31,7 @@ import type {
   UserActivationCredentials,
   UserData,
   UserStructure,
+  UserWithId,
 } from "../../types";
 import { paths } from "../paths";
 import authErrors from "../../../constants/errors/authErrors";
@@ -42,13 +44,22 @@ const {
   singleSignOnCookie: { cookieName },
 } = config;
 
-const correctCookie = `${cookieName}=${mockToken}`;
+const randomUserCookie = `${cookieName}=${mockToken}`;
 const incorrectCookie = `${cookieName}=incorrect-cookie`;
 
 const {
   successCodes: { createdCode, okCode, noContentSuccessCode },
-  clientErrors: { conflictCode, badRequestCode, unauthorizedCode },
+  clientErrors: {
+    conflictCode,
+    badRequestCode,
+    unauthorizedCode,
+    notFoundCode,
+  },
 } = httpStatusCodes;
+
+const {
+  jwt: { jwtSecret },
+} = environment;
 
 let server: MongoMemoryServer;
 
@@ -405,7 +416,7 @@ describe("Given a GET /users/verify-token endpoint", () => {
         body: { userPayload: CustomTokenPayload };
       } = await request(app)
         .get(paths.users.verifyToken)
-        .set("Cookie", [correctCookie])
+        .set("Cookie", [randomUserCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .send(mockTokenPayload)
@@ -439,12 +450,77 @@ describe("Given a POST /users/logout endpoint", () => {
     test("Then it should respond without a cookie and a status 204", async () => {
       const response = await request(app)
         .post(paths.users.logout)
-        .set("Cookie", [correctCookie])
+        .set("Cookie", [randomUserCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .expect(noContentSuccessCode);
 
-      expect(response.headers).not.toHaveProperty("Cookie", [correctCookie]);
+      expect(response.headers).not.toHaveProperty("Cookie", [randomUserCookie]);
+    });
+  });
+});
+
+describe("Given a GET /users/user-data endpoint", () => {
+  let userId: string;
+  const newUserData = {
+    ...getMockUserData({ name: luisName }),
+    isAdmin: false,
+  };
+
+  beforeEach(async () => {
+    const newUser = await User.create(newUserData);
+    userId = newUser._id.toString();
+  });
+
+  afterEach(async () => {
+    await User.deleteMany();
+  });
+
+  describe("When it receives a request with a correct api-key and api-name with a valid token cookie with an existant user name 'luis' in DB", () => {
+    test("Then it should respond with status 200 and the 'luis' user data information in the body", async () => {
+      const mockUserPayload: CustomTokenPayload = {
+        name: newUserData.name,
+        isAdmin: newUserData.isAdmin,
+        id: userId,
+      };
+
+      const mockLuisToken = jwt.sign(mockUserPayload, jwtSecret);
+      const userLuisCookie = `${cookieName}=${mockLuisToken}`;
+
+      const expectedStatus = okCode;
+
+      const response: {
+        body: { user: UserWithId };
+      } = await request(app)
+        .get(paths.users.userData)
+        .set("Cookie", [userLuisCookie])
+        .set(apiKeyHeader, mockHeaderApiKey)
+        .set(apiNameHeader, mockHeaderApiName)
+        .expect(expectedStatus);
+
+      expect(response.body).toHaveProperty("user", {
+        name: newUserData.name,
+        email: newUserData.email,
+        isAdmin: newUserData.isAdmin,
+      });
+    });
+  });
+
+  describe("When it receives a request with a correct api-key and api-name with a valid token cookie with a non-existant user in DB", () => {
+    test("Then it should respond with status 404 and message 'User data not available'", async () => {
+      const expectedStatus = notFoundCode;
+      const expectedMessage = `User data not available`;
+
+      const response: {
+        body: { user: UserWithId };
+      } = await request(app)
+        .get(paths.users.userData)
+        .set("Cookie", [randomUserCookie])
+        .set(apiKeyHeader, mockHeaderApiKey)
+        .set(apiNameHeader, mockHeaderApiName)
+        .expect(expectedStatus);
+
+      expect(response.body).toHaveProperty("error", expectedMessage);
     });
   });
 });

@@ -12,6 +12,7 @@ import { luisEmail } from "../../../testUtils/mocks/mockUsers.js";
 import type { CustomRequest, UserWithId } from "../../types.js";
 import {
   activateUser,
+  getUserData,
   getUserDetails,
   loginUser,
   logoutUser,
@@ -21,6 +22,7 @@ import {
   activateErrors,
   loginErrors,
   registerErrors,
+  userDataErrors,
 } from "../../../constants/errors/userErrors.js";
 
 const mockPasswordHash: jest.Mock<string> = jest.fn(() => "");
@@ -278,6 +280,55 @@ describe("Given a logoutUser controller", () => {
 
       expect(res.clearCookie).toHaveBeenCalledWith(cookieName);
       expect(res.sendStatus).toHaveBeenCalledWith(noContentSuccessCode);
+    });
+  });
+});
+
+describe("Given a getUserData controller", () => {
+  const user = getMockUser({
+    _id: "1234",
+  });
+
+  const req: Partial<CustomRequest> = {
+    userDetails: {
+      id: user._id,
+      isAdmin: user.isAdmin,
+      name: user.name,
+    },
+  };
+
+  describe("When it receives a custom request with user details id: '1234' and the user exists", () => {
+    test("Then it should invoke response's method status with 200 and json with received user data", async () => {
+      User.findById = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValueOnce(user),
+      }));
+
+      await getUserData(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(res.status).toHaveBeenCalledWith(okCode);
+      expect(res.json).toHaveBeenCalledWith({
+        user: { name: user.name, email: user.email, isAdmin: user.isAdmin },
+      });
+    });
+  });
+
+  describe("When it receives a custom request with user details id: '1234' and the user doesn't exists", () => {
+    test("Then it should invoke next with the error not found user with message 'User data not available'", async () => {
+      User.findById = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValueOnce(null),
+      }));
+
+      await getUserData(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(next).toHaveBeenCalledWith(userDataErrors.userDataNotFound);
     });
   });
 });

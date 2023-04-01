@@ -20,6 +20,7 @@ import {
   loginErrors,
   registerErrors,
 } from "../../../constants/errors/userErrors.js";
+import { userDataErrors } from "../../../constants/errors/userErrors.js";
 
 const {
   jwt: { jwtSecret, tokenExpiry },
@@ -180,4 +181,26 @@ export const getUserDetails = (req: CustomRequest, res: Response) => {
 
 export const logoutUser = (req: Request, res: Response) => {
   res.clearCookie(cookieName).sendStatus(noContentSuccessCode);
+};
+
+export const getUserData = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id: userId } = req.userDetails;
+
+  try {
+    const user = await User.findById(userId).exec();
+
+    if (!user) {
+      throw userDataErrors.userDataNotFound;
+    }
+
+    res.status(okCode).json({
+      user: { name: user.name, isAdmin: user.isAdmin, email: user.email },
+    });
+  } catch (error: unknown) {
+    next(error);
+  }
 };

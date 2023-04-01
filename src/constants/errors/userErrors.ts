@@ -2,7 +2,7 @@ import CustomError from "../../CustomError/CustomError.js";
 import httpStatusCodes from "../statusCodes/httpStatusCodes.js";
 
 const {
-  clientErrors: { unauthorizedCode, conflictCode },
+  clientErrors: { unauthorizedCode, conflictCode, notFoundCode },
   serverErrors: { internalServerErrorCode },
 } = httpStatusCodes;
 
@@ -56,5 +56,13 @@ export const activateErrors = {
     invalidActivationKeyMessage,
     unauthorizedCode,
     invalidActivationKeyMessage
+  ),
+};
+
+export const userDataErrors = {
+  userDataNotFound: new CustomError(
+    "User data not available",
+    notFoundCode,
+    "User data not available"
   ),
 };
