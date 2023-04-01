@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import config from "../../../config.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
-import CustomError from "../../../CustomError/CustomError.js";
 import User from "../../../database/models/User.js";
 import createRegisterEmail from "../../../email/emailTemplates/createRegisterEmail.js";
 import sendEmail from "../../../email/sendEmail/sendEmail.js";
@@ -16,6 +15,12 @@ import type {
   UserCredentials,
   UserData,
 } from "../../types.js";
+import {
+  activateErrors,
+  loginErrors,
+  registerErrors,
+} from "../../../constants/errors/userErrors.js";
+import { userDataErrors } from "../../../constants/errors/userErrors.js";
 
 const {
   jwt: { jwtSecret, tokenExpiry },
@@ -23,8 +28,6 @@ const {
 
 const {
   successCodes: { createdCode, okCode, noContentSuccessCode },
-  clientErrors: { conflictCode, unauthorizedCode, notFoundCode },
-  serverErrors: { internalServerErrorCode },
 } = httpStatusCodes;
 
 const {
@@ -64,23 +67,14 @@ export const registerUser = async (
 
     res.status(createdCode).json({ user: { id: newUser._id, name, email } });
   } catch (error: unknown) {
-    if ((error as Error).message.includes("duplicate key")) {
-      const customErrorDuplicateKey = new CustomError(
-        (error as Error).message,
-        conflictCode,
-        "User already exists"
-      );
-      next(customErrorDuplicateKey);
+    const errorMessage = (error as Error).message;
+
+    if (errorMessage.includes("duplicate key")) {
+      next(registerErrors.duplicateUser(errorMessage));
       return;
     }
 
-    const customError = new CustomError(
-      (error as Error).message,
-      internalServerErrorCode,
-      "Error creating a new user"
-    );
-
-    next(customError);
+    next(registerErrors.generalRegisterError(errorMessage));
   }
 };
 
@@ -98,30 +92,16 @@ export const loginUser = async (
   try {
     const user = await User.findOne({ email });
 
-    const unauthorizedMessage = "Incorrect email or password";
-
     if (!user) {
-      throw new CustomError(
-        "User not found",
-        unauthorizedCode,
-        unauthorizedMessage
-      );
+      throw loginErrors.userNotFound;
     }
 
     if (!(await passwordHasher.passwordCompare(password, user.password))) {
-      throw new CustomError(
-        "Incorrect password",
-        unauthorizedCode,
-        unauthorizedMessage
-      );
+      throw loginErrors.incorrectPassword;
     }
 
     if (!user.isActive) {
-      throw new CustomError(
-        "User is inactive",
-        unauthorizedCode,
-        "User is inactive, contact your administrator if you think this is a mistake"
-      );
+      throw loginErrors.inactiveUser;
     }
 
     const tokenPayload: CustomTokenPayload = {
@@ -160,21 +140,14 @@ export const activateUser = async (
   const { password } = req.body;
 
   try {
-    const invalidActivationKeyMessage = "Invalid activation key";
-    const invalidActivationKeyError = new CustomError(
-      invalidActivationKeyMessage,
-      unauthorizedCode,
-      invalidActivationKeyMessage
-    );
-
     if (!mongoose.Types.ObjectId.isValid(userId as string)) {
-      throw invalidActivationKeyError;
+      throw activateErrors.invalidActivationKey;
     }
 
     const user = await User.findById(userId);
 
     if (!user) {
-      throw invalidActivationKeyError;
+      throw activateErrors.invalidActivationKey;
     }
 
     if (
@@ -184,7 +157,7 @@ export const activateUser = async (
         user.activationKey
       ))
     ) {
-      throw invalidActivationKeyError;
+      throw activateErrors.invalidActivationKey;
     }
 
     const hashedPassword = await passwordHasher.passwordHash(password);
@@ -221,12 +194,7 @@ export const getUserData = async (
     const user = await User.findById(userId).exec();
 
     if (!user) {
-      const notFoundError = new CustomError(
-        "User data not available",
-        notFoundCode,
-        `User with ${userId} id not found`
-      );
-      throw notFoundError;
+      throw userDataErrors.userDataNotFound;
     }
 
     res.status(okCode).json({
