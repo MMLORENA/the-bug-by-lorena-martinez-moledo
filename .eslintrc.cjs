@@ -16,7 +16,6 @@ module.exports = {
         ],
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/no-empty-function": "off",
-        "no-implicit-coercion": "off",
       },
     },
     {
@@ -30,5 +29,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: {},
+  rules: {
+    "no-implicit-coercion": "off",
+  },
 };
