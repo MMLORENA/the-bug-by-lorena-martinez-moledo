@@ -22,9 +22,7 @@ export interface UserStructure
   isActive: boolean;
   activationKey: string;
 }
-export interface CustomTokenPayload
-  extends Pick<UserStructure, "name" | "isAdmin">,
-    JwtPayload {
+export interface CustomTokenPayload extends JwtPayload {
   id: string;
 }
 
@@ -39,7 +37,5 @@ export interface CustomRequest<
 > extends Request<P, ResBody, ReqBody> {
   userDetails: {
     id: string;
-    isAdmin: boolean;
-    name: string;
   };
 }
