@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
 import type { NextFunction, Response } from "express";
-import type { CustomRequest, CustomTokenPayload } from "../../types";
+import jwt from "jsonwebtoken";
 import config from "../../../config.js";
-import { environment } from "../../../loadEnvironments.js";
 import authErrors from "../../../constants/errors/authErrors.js";
+import { environment } from "../../../loadEnvironments.js";
+import type { CustomRequest, CustomTokenPayload } from "../../types";
 
 const {
   jwt: { jwtSecret },
@@ -25,10 +25,6 @@ const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
       authToken,
       jwtSecret
     ) as CustomTokenPayload;
-
-    if (!verifyToken.id) {
-      throw authErrors.generalAuthError(verifyToken.message);
-    }
 
     const { id } = verifyToken;
 
