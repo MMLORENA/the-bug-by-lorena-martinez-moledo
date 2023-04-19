@@ -26,13 +26,13 @@ const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
       jwtSecret
     ) as CustomTokenPayload;
 
-    if (verifyToken.name.includes("Error")) {
+    if (!verifyToken.id) {
       throw authErrors.generalAuthError(verifyToken.message);
     }
 
-    const { name, isAdmin, id } = verifyToken;
+    const { id } = verifyToken;
 
-    req.userDetails = { name, isAdmin, id };
+    req.userDetails = { id };
 
     next();
   } catch (error: unknown) {

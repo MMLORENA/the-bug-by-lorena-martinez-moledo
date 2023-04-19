@@ -55,9 +55,9 @@ describe("Given the auth middleware", () => {
   });
 
   describe("When it receives a request with a cookie that has a valid token", () => {
-    test("Then it should add id, name and isAdmin to userDetails in the request", () => {
+    test("Then it should add the user id to userDetails in the request", () => {
       const mockVerifyToken = mockTokenPayload;
-      const { id, isAdmin, name } = mockTokenPayload;
+      const { id } = mockTokenPayload;
 
       jwt.verify = jest.fn().mockReturnValue(mockVerifyToken);
       req.cookies = cookies;
@@ -65,8 +65,6 @@ describe("Given the auth middleware", () => {
       auth(req as CustomRequest, null, next);
 
       expect(req.userDetails).toHaveProperty("id", id);
-      expect(req.userDetails).toHaveProperty("name", name);
-      expect(req.userDetails).toHaveProperty("isAdmin", isAdmin);
     });
 
     test("Then it should invoke next", () => {
