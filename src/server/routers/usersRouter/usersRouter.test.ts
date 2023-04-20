@@ -194,7 +194,7 @@ describe("Given a POST /users/login endpoint", () => {
 
   describe("When it receives a request with email 'luisito@isdicoders.com', a correct password and the user is registered and active and it receives a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
     test("Then it should respond with status 200 and a Set-cookie header with a token", async () => {
-      const { email, password, name } = luisitoUser;
+      const { email, password } = luisitoUser;
 
       const response = await request(app)
         .post(paths.users.login)
@@ -216,7 +216,6 @@ describe("Given a POST /users/login endpoint", () => {
         "id",
         luisitoId.toString()
       );
-      expect(tokenPayload as CustomTokenPayload).toHaveProperty("name", name);
     });
   });
 

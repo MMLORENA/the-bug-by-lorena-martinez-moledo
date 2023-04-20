@@ -1,5 +1,5 @@
-import type * as core from "express-serve-static-core";
 import type { Request } from "express";
+import type * as core from "express-serve-static-core";
 import type { JwtPayload } from "jsonwebtoken";
 
 export interface UserCredentials {
@@ -15,6 +15,7 @@ export interface UserActivationCredentials
 export interface UserData extends Omit<UserCredentials, "password"> {
   name: string;
 }
+
 export interface UserStructure
   extends UserData,
     Pick<UserCredentials, "password"> {
@@ -22,9 +23,8 @@ export interface UserStructure
   isActive: boolean;
   activationKey: string;
 }
-export interface CustomTokenPayload
-  extends Pick<UserStructure, "name" | "isAdmin">,
-    JwtPayload {
+
+export interface CustomTokenPayload extends JwtPayload {
   id: string;
 }
 
@@ -39,7 +39,5 @@ export interface CustomRequest<
 > extends Request<P, ResBody, ReqBody> {
   userDetails: {
     id: string;
-    isAdmin: boolean;
-    name: string;
   };
 }
