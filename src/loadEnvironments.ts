@@ -19,6 +19,21 @@ const {
   API_GATEWAY_KEY: apiGatewayKey,
 } = process.env;
 
+if (
+  !port ||
+  !tokenExpiry ||
+  !smtpPort ||
+  !port ||
+  !mongoDbUrl ||
+  !appName ||
+  !jwtSecret ||
+  !swaggerBasicAuthPassword ||
+  !swaggerBasicAuthUsername
+) {
+  console.error("Missing environmental variables");
+  process.exit(1);
+}
+
 export const environment = {
   port: +port || 4000,
   mongoDbUrl,
