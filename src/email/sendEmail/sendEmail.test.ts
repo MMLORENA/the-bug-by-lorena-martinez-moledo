@@ -18,13 +18,18 @@ const mockMessageInformation: Partial<SMTPTransport.SentMessageInfo> = {
   response: `${okCode} Ok`,
 };
 
+const error = {};
+
 jest.mock("nodemailer", () => ({
   createTransport: jest.fn().mockImplementationOnce(() => ({
     sendMail(
       emailOptions: EmailOptions,
       callback: (err: Error, info: SMTPTransport.SentMessageInfo) => void
     ) {
-      callback(null, mockMessageInformation as SMTPTransport.SentMessageInfo);
+      callback(
+        error as Error,
+        mockMessageInformation as SMTPTransport.SentMessageInfo
+      );
     },
   })),
 }));

@@ -113,7 +113,7 @@ describe("Given a loginUser controller", () => {
 
       User.findOne = jest.fn().mockResolvedValueOnce(null);
 
-      await loginUser(req as Request, null, next);
+      await loginUser(req as Request, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(loginErrors.userNotFound);
     });
@@ -131,7 +131,7 @@ describe("Given a loginUser controller", () => {
       User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
       mockPasswordCompare.mockReturnValueOnce(false);
 
-      await loginUser(req as Request, null, next);
+      await loginUser(req as Request, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(loginErrors.incorrectPassword);
     });
@@ -173,7 +173,7 @@ describe("Given a loginUser controller", () => {
 
       mockPasswordCompare.mockReturnValueOnce(true);
 
-      await loginUser(req as Request, null, next);
+      await loginUser(req as Request, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(loginErrors.inactiveUser);
     });
@@ -188,7 +188,7 @@ describe("Given a loginUser controller", () => {
       User.findOne = jest.fn().mockResolvedValueOnce(userCredentials);
       mockPasswordCompare.mockRejectedValueOnce(bcryptError);
 
-      await loginUser(req as Request, null, next);
+      await loginUser(req as Request, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(bcryptError);
     });
@@ -218,7 +218,7 @@ describe("Given an activateUser function", () => {
       mockPasswordCompare.mockReturnValueOnce(true);
       mockPasswordHash.mockReturnValueOnce(password);
 
-      await activateUser(req as Request, res as Response, null);
+      await activateUser(req as Request, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(okCode);
       expect(res.json).toHaveBeenCalledWith({
@@ -245,7 +245,7 @@ describe("Given an activateUser function", () => {
 
       User.findById = jest.fn().mockResolvedValueOnce(null);
 
-      await activateUser(req as Request, null, next);
+      await activateUser(req as Request, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(activateErrors.invalidActivationKey);
     });
