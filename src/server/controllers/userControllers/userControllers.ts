@@ -96,6 +96,10 @@ export const loginUser = async (
       throw loginErrors.userNotFound;
     }
 
+    if (!user.password) {
+      throw loginErrors.incorrectPassword;
+    }
+
     if (!(await passwordHasher.passwordCompare(password, user.password))) {
       throw loginErrors.incorrectPassword;
     }
