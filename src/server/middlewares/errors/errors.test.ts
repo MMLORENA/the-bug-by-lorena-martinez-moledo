@@ -15,7 +15,7 @@ const res: Partial<Response> = {
 };
 
 const req: Partial<Request> = {};
-const next: NextFunction = () => ({});
+const next: NextFunction = () => {};
 
 beforeEach(() => {
   jest.clearAllMocks();

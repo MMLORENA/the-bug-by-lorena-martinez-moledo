@@ -16,7 +16,15 @@
         ],
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/no-empty-function": "off",
-        "no-implicit-coercion": "off"
+        "no-implicit-coercion": "off",
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            "types": {
+              "null": false
+            }
+          }
+        ]
       }
     },
     {
