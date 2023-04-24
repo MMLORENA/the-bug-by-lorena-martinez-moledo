@@ -33,6 +33,9 @@ jobs:
           REDIS_HOST: ${{ secrets.REDIS_HOST}}
           REDIS_PORT: ${{ secrets.REDIS_PORT}}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD}}
+          SWAGGER_BASIC_AUTH_USERNAME: ${{ secrets.SWAGGER_BASIC_AUTH_USERNAME }}
+          SWAGGER_BASIC_AUTH_PASSWORD: ${{ secrets.SWAGGER_BASIC_AUTH_PASSWORD }}
+          PORT: ${{ secrets.PORT }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

@@ -23,7 +23,6 @@ if (
   !port ||
   !tokenExpiry ||
   !smtpPort ||
-  !port ||
   !mongoDbUrl ||
   !appName ||
   !jwtSecret ||

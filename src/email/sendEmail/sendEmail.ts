@@ -32,6 +32,7 @@ const sendEmail = async ({
           debug(chalk.red.bold(`Problem sending email: ${error.message}`));
 
           reject(error);
+          return;
         }
 
         debug(
