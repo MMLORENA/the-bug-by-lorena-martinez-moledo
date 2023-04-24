@@ -8,8 +8,6 @@ const {
 } = environment;
 
 export const mockTokenPayload: CustomTokenPayload = {
-  name: "admin",
-  isAdmin: false,
   id: new mongoose.Types.ObjectId().toString(),
 };
 

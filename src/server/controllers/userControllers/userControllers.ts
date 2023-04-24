@@ -109,8 +109,6 @@ export const loginUser = async (
     }
 
     const tokenPayload: CustomTokenPayload = {
-      name: user.name,
-      isAdmin: user.isAdmin,
       id: user._id.toString(),
     };
 
@@ -178,9 +176,9 @@ export const activateUser = async (
 };
 
 export const getUserDetails = (req: CustomRequest, res: Response) => {
-  const { id, isAdmin, name } = req.userDetails;
+  const { id } = req.userDetails;
 
-  res.status(okCode).json({ userPayload: { name, isAdmin, id } });
+  res.status(okCode).json({ userPayload: { id } });
 };
 
 export const logoutUser = (req: Request, res: Response) => {

@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
 import type { NextFunction, Response } from "express";
-import type { CustomRequest, CustomTokenPayload } from "../../types";
+import jwt from "jsonwebtoken";
 import config from "../../../config.js";
-import { environment } from "../../../loadEnvironments.js";
 import authErrors from "../../../constants/errors/authErrors.js";
+import { environment } from "../../../loadEnvironments.js";
+import type { CustomRequest, CustomTokenPayload } from "../../types";
 
 const {
   jwt: { jwtSecret },
@@ -26,13 +26,9 @@ const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
       jwtSecret
     ) as CustomTokenPayload;
 
-    if (verifyToken.name.includes("Error")) {
-      throw authErrors.generalAuthError(verifyToken.message);
-    }
+    const { id } = verifyToken;
 
-    const { name, isAdmin, id } = verifyToken;
-
-    req.userDetails = { name, isAdmin, id };
+    req.userDetails = { id };
 
     next();
   } catch (error: unknown) {

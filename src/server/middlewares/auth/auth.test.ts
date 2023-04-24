@@ -1,13 +1,13 @@
-import jwt from "jsonwebtoken";
 import type { NextFunction, Response } from "express";
+import jwt from "jsonwebtoken";
 import config from "../../../config";
+import authErrors from "../../../constants/errors/authErrors";
 import {
   mockToken,
   mockTokenPayload,
 } from "../../../testUtils/mocks/mockToken";
 import type { CustomRequest } from "../../types";
 import auth from "./auth";
-import authErrors from "../../../constants/errors/authErrors";
 
 const {
   singleSignOnCookie: { cookieName },
@@ -47,7 +47,10 @@ describe("Given the auth middleware", () => {
       const jwtError = new Error("jwt malformed");
       const notVerifyTokenError = authErrors.generalAuthError(jwtError.message);
 
-      jwt.verify = jest.fn().mockReturnValueOnce(jwtError);
+      jwt.verify = jest.fn().mockImplementation(() => {
+        throw notVerifyTokenError;
+      });
+
       req.cookies = incorrectCookies;
 
       auth(req as CustomRequest, res as Response, next);
@@ -57,9 +60,9 @@ describe("Given the auth middleware", () => {
   });
 
   describe("When it receives a request with a cookie that has a valid token", () => {
-    test("Then it should add id, name and isAdmin to userDetails in the request", () => {
+    test("Then it should add the user id to userDetails in the request", () => {
       const mockVerifyToken = mockTokenPayload;
-      const { id, isAdmin, name } = mockTokenPayload;
+      const { id } = mockTokenPayload;
 
       jwt.verify = jest.fn().mockReturnValue(mockVerifyToken);
       req.cookies = cookies;
@@ -67,8 +70,6 @@ describe("Given the auth middleware", () => {
       auth(req as CustomRequest, res as Response, next);
 
       expect(req.userDetails).toHaveProperty("id", id);
-      expect(req.userDetails).toHaveProperty("name", name);
-      expect(req.userDetails).toHaveProperty("isAdmin", isAdmin);
     });
 
     test("Then it should invoke next", () => {
