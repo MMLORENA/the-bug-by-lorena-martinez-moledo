@@ -14,6 +14,9 @@ const res: Partial<Response> = {
   json: jest.fn(),
 };
 
+const req: Partial<Request> = {};
+const next: NextFunction = () => {};
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -25,7 +28,7 @@ describe("Given the generalError middleware", () => {
       const error = new Error(privateMessage);
       const expectedPublicMessage = "There was an error on the server";
 
-      generalError(error as CustomError, null, res as Response, null);
+      generalError(error as CustomError, req as Request, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(internalServerErrorCode);
       expect(res.json).toHaveBeenCalledWith({ error: expectedPublicMessage });
@@ -42,7 +45,7 @@ describe("Given the generalError middleware", () => {
         publicMessage
       );
 
-      generalError(customError, null, res as Response, null);
+      generalError(customError, req as Request, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(notFoundCode);
       expect(res.json).toHaveBeenCalledWith({ error: publicMessage });
@@ -58,7 +61,7 @@ describe("Given an unknownEndpoint middleware", () => {
       const next: NextFunction = jest.fn();
       const expectedError = generalErrors.unknownEndpoint(path);
 
-      unknownEndpoint(req as Request, null, next);
+      unknownEndpoint(req as Request, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });

@@ -9,7 +9,8 @@
     "noEmitOnError": true /* Disable emitting files if any type checking errors are reported. */,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
     "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied `any` type.. */,
-    "allowJs": true
+    "allowJs": true,
+    "strictNullChecks": true
   },
   "include": ["src/**/*.ts", "src/**/*.json"]
 }

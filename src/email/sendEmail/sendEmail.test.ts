@@ -22,7 +22,10 @@ jest.mock("nodemailer", () => ({
   createTransport: jest.fn().mockImplementationOnce(() => ({
     sendMail(
       emailOptions: EmailOptions,
-      callback: (err: Error, info: SMTPTransport.SentMessageInfo) => void
+      callback: (
+        error: Error | null,
+        info: SMTPTransport.SentMessageInfo
+      ) => void
     ) {
       callback(null, mockMessageInformation as SMTPTransport.SentMessageInfo);
     },

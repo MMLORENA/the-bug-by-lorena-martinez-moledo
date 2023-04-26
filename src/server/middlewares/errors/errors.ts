@@ -20,7 +20,7 @@ const generalError = (
   // eslint-disable-next-line no-unused-vars
   next: NextFunction
 ) => {
-  if (error instanceof ValidationError) {
+  if (error instanceof ValidationError && error.details.body) {
     const validationErrors = error.details.body
       // eslint-disable-next-line no-useless-escape
       .map((joiError) => joiError.message.replaceAll(`\"`, ""))
