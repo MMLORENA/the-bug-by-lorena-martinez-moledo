@@ -17,7 +17,7 @@ import {
   mockHeaderApiName,
 } from "../../../testUtils/mocks/mockRequestHeaders";
 import {
-  mockToken,
+  generateMockToken,
   mockTokenPayload,
 } from "../../../testUtils/mocks/mockToken";
 import {
@@ -44,7 +44,7 @@ const {
   singleSignOnCookie: { cookieName },
 } = config;
 
-const randomUserCookie = `${cookieName}=${mockToken}`;
+const randomUserCookie = `${cookieName}=${generateMockToken()}`;
 const incorrectCookie = `${cookieName}=incorrect-cookie`;
 
 const {

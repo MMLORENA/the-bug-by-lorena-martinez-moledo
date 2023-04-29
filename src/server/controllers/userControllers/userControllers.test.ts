@@ -7,7 +7,7 @@ import User from "../../../database/models/User.js";
 import { getMockUserCredentials } from "../../../factories/userCredentialsFactory.js";
 import { getMockUserData } from "../../../factories/userDataFactory.js";
 import { getMockUser } from "../../../factories/userFactory.js";
-import { mockToken } from "../../../testUtils/mocks/mockToken.js";
+import { generateMockToken } from "../../../testUtils/mocks/mockToken.js";
 import { luisEmail } from "../../../testUtils/mocks/mockUsers.js";
 import type { CustomRequest, UserWithId } from "../../types.js";
 import {
@@ -142,22 +142,27 @@ describe("Given a loginUser controller", () => {
       req.body = userCredentials;
 
       const existingUser = getMockUser({ ...userCredentials, isActive: true });
+      const existingUserMockToken = generateMockToken({ id: existingUser._id });
 
       User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
 
       mockPasswordCompare.mockReturnValueOnce(true);
 
-      jwt.sign = jest.fn().mockReturnValueOnce(mockToken);
+      jwt.sign = jest.fn().mockReturnValueOnce(existingUserMockToken);
 
       await loginUser(req as Request, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(okCode);
-      expect(res.cookie).toHaveBeenCalledWith(cookieName, mockToken, {
-        httpOnly: true,
-        maxAge: cookieMaxAge,
-        sameSite: "none",
-        secure: true,
-      });
+      expect(res.cookie).toHaveBeenCalledWith(
+        cookieName,
+        existingUserMockToken,
+        {
+          httpOnly: true,
+          maxAge: cookieMaxAge,
+          sameSite: "none",
+          secure: true,
+        }
+      );
       expect(res.json).toHaveBeenCalledWith({
         message: "coders_identity_token has been set",
       });
@@ -214,7 +219,7 @@ describe("Given a loginUser controller", () => {
 
 describe("Given an activateUser function", () => {
   describe("When it receives a request with query string activationKey and body password and confirmPassword 'test-password' and the activationKey is valid", () => {
-    test("Then it invoke response's method status with 200 and json with the message 'User account has been activated'", async () => {
+    test("Then it should invoke response's method status with 200 and json with the message 'User account has been activated'", async () => {
       mockPasswordCompare.mockReset();
 
       const activationKey = new mongoose.Types.ObjectId().toString();
