@@ -21,12 +21,12 @@ const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
       throw authErrors.noToken;
     }
 
-    const verifyToken: CustomTokenPayload = jwt.verify(
+    const userPayload: CustomTokenPayload = jwt.verify(
       authToken,
       jwtSecret
     ) as CustomTokenPayload;
 
-    const { id } = verifyToken;
+    const { id } = userPayload;
 
     req.userDetails = { id };
 

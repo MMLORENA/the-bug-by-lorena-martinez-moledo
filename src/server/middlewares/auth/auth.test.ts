@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import config from "../../../config";
 import authErrors from "../../../constants/errors/authErrors";
 import {
-  mockToken,
+  generateMockToken,
   mockTokenPayload,
 } from "../../../testUtils/mocks/mockToken";
 import type { CustomRequest } from "../../types";
@@ -25,7 +25,7 @@ afterEach(() => {
 
 describe("Given the auth middleware", () => {
   const cookies = {
-    [cookieName]: mockToken,
+    [cookieName]: generateMockToken(),
   };
 
   const incorrectCookies = {
@@ -61,10 +61,9 @@ describe("Given the auth middleware", () => {
 
   describe("When it receives a request with a cookie that has a valid token", () => {
     test("Then it should add the user id to userDetails in the request", () => {
-      const mockVerifyToken = mockTokenPayload;
       const { id } = mockTokenPayload;
 
-      jwt.verify = jest.fn().mockReturnValue(mockVerifyToken);
+      jwt.verify = jest.fn().mockReturnValue(mockTokenPayload);
       req.cookies = cookies;
 
       auth(req as CustomRequest, res as Response, next);
@@ -73,9 +72,7 @@ describe("Given the auth middleware", () => {
     });
 
     test("Then it should invoke next", () => {
-      const mockVerifyToken = mockTokenPayload;
-
-      jwt.verify = jest.fn().mockReturnValue(mockVerifyToken);
+      jwt.verify = jest.fn().mockReturnValue(mockTokenPayload);
       req.cookies = cookies;
 
       auth(req as CustomRequest, res as Response, next);
