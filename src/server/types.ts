@@ -12,6 +12,10 @@ export interface UserActivationCredentials
   confirmPassword: string;
 }
 
+export interface UserPassword extends Pick<UserCredentials, "password"> {
+  password: string;
+}
+
 export interface UserData extends Omit<UserCredentials, "password"> {
   name: string;
 }
@@ -32,12 +36,22 @@ export interface UserWithId extends UserStructure {
   _id: string;
 }
 
+export interface UserDetails {
+  id: string;
+}
+
 export interface CustomRequest<
   P = core.ParamsDictionary,
   ResBody = any,
   ReqBody = any
 > extends Request<P, ResBody, ReqBody> {
-  userDetails: {
-    id: string;
-  };
+  userDetails: UserDetails;
+}
+
+export interface SetPasswordRequest<
+  P = core.ParamsDictionary,
+  ResBody = any,
+  ReqBody = UserPassword
+> extends Request<P, ResBody, ReqBody> {
+  userDetails: UserDetails;
 }
