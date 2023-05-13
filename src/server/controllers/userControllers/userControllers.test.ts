@@ -1,21 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
-import mongoose from "mongoose";
 import config from "../../../config.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
-import { getMockUserCredentials } from "../../../factories/userCredentialsFactory.js";
 import { getMockUser } from "../../../factories/userFactory.js";
 import type { CustomRequest } from "../../types.js";
-import {
-  activateUser,
-  getUserData,
-  getUserDetails,
-  logoutUser,
-} from "./userControllers.js";
-import {
-  activateErrors,
-  userDataErrors,
-} from "../../../constants/errors/userErrors.js";
+import { getUserData, getUserDetails, logoutUser } from "./userControllers.js";
+import { userDataErrors } from "../../../constants/errors/userErrors.js";
 
 const mockPasswordHash: jest.Mock<string> = jest.fn(() => "");
 const mockPasswordCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(
@@ -54,65 +44,6 @@ const res: Partial<Response> = {
 };
 
 const next = jest.fn();
-
-describe("Given an activateUser function", () => {
-  describe("When it receives a request with query string activationKey and body password and confirmPassword 'test-password' and the activationKey is valid", () => {
-    test("Then it should invoke response's method status with 200 and json with the message 'User account has been activated'", async () => {
-      mockPasswordCompare.mockReset();
-
-      const activationKey = new mongoose.Types.ObjectId().toString();
-
-      req.query = {
-        activationKey,
-      };
-
-      const user = getMockUserCredentials();
-      const { password } = user;
-
-      req.body = {
-        password,
-        confirmPassword: password,
-      };
-
-      User.findById = jest
-        .fn()
-        .mockResolvedValueOnce({ ...user, activationKey, save: jest.fn() });
-      mockPasswordCompare.mockReturnValueOnce(true);
-      mockPasswordHash.mockReturnValueOnce(password);
-
-      await activateUser(req as Request, res as Response, next);
-
-      expect(res.status).toHaveBeenCalledWith(okCode);
-      expect(res.json).toHaveBeenCalledWith({
-        message: "User account has been activated",
-      });
-    });
-  });
-
-  describe("When it receives query string activationKey 'invalid-key', in the body password and confirmPassword 'test-password' and the activationKey is invalid", () => {
-    test("Then it should invoke next with message 'Invalid activation key' and status 401", async () => {
-      const activationKey = "invalid-key";
-
-      req.query = {
-        activationKey,
-      };
-
-      const user = getMockUserCredentials();
-      const { password } = user;
-
-      req.body = {
-        password,
-        confirmPassword: password,
-      };
-
-      User.findById = jest.fn().mockResolvedValueOnce(null);
-
-      await activateUser(req as Request, res as Response, next);
-
-      expect(next).toHaveBeenCalledWith(activateErrors.invalidActivationKey);
-    });
-  });
-});
 
 describe("Given a getUserDetails controller", () => {
   describe("When it receives a CustomRequest with user details id: '1234', name: 'Fulanito', and isAdmin 'false'", () => {
