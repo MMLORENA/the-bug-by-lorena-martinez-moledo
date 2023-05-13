@@ -1,10 +1,9 @@
-import type { NextFunction, Request, Response } from "express";
-import config from "../../../config.js";
+import type { NextFunction, Response } from "express";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
 import { getMockUser } from "../../../factories/userFactory.js";
 import type { CustomRequest } from "../../types.js";
-import { getUserData, logoutUser } from "./userControllers.js";
+import { getUserData } from "./userControllers.js";
 import { userDataErrors } from "../../../constants/errors/userErrors.js";
 
 const mockPasswordHash: jest.Mock<string> = jest.fn(() => "");
@@ -22,18 +21,12 @@ jest.mock("../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js", () =>
 jest.mock("../../../email/sendEmail/sendEmail.js");
 
 const {
-  successCodes: { okCode, noContentSuccessCode },
+  successCodes: { okCode },
 } = httpStatusCodes;
-
-const {
-  singleSignOnCookie: { cookieName },
-} = config;
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
-
-const req: Partial<Request> = {};
 
 const res: Partial<Response> = {
   status: jest.fn().mockReturnThis(),
@@ -44,17 +37,6 @@ const res: Partial<Response> = {
 };
 
 const next = jest.fn();
-
-describe("Given a logoutUser controller", () => {
-  describe("When it receives a request with cookie 'coders_identity_token' and a response", () => {
-    test("Then it should invoke the response's method clearCookie with 'coders_identity_token' and status with 204", () => {
-      logoutUser(req as Request, res as Response);
-
-      expect(res.clearCookie).toHaveBeenCalledWith(cookieName);
-      expect(res.sendStatus).toHaveBeenCalledWith(noContentSuccessCode);
-    });
-  });
-});
 
 describe("Given a getUserData controller", () => {
   const user = getMockUser({
