@@ -16,7 +16,7 @@ const logLoginAttempt = async (
   const { email } = req.body;
 
   const log = new Log(email, res.statusCode);
-  const timeToString = log.time.toLocaleString("es-ES", {
+  const timeToString = log.time.toLocaleString("en-GB", {
     timeZone: "Europe/Madrid",
   });
   const statusToString = LoginAttemptStatus[log.status];

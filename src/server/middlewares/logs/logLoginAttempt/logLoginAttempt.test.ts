@@ -33,20 +33,22 @@ const res: Partial<Response> = {
 
 const next: NextFunction = jest.fn();
 
-const loginSessionManagerMock = jest.spyOn(
-  LogManager.prototype,
-  "writeLogToFile"
-);
-const mockWriteLogToFile = jest.fn().mockResolvedValue(null);
-loginSessionManagerMock.mockImplementation(mockWriteLogToFile);
-
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.restoreAllMocks();
 });
 
 describe("Given a logLoginAttempt middleware", () => {
   describe("When it receives a request with email 'luisito@isdicoders.com' and a response", () => {
     test("Then it should invoke the listener function on when the the response close with a statusCode 200'", async () => {
+      const loginSessionManagerMock = jest.spyOn(
+        LogManager.prototype,
+        "writeLogToFile"
+      );
+
+      const mockWriteLogToFile = jest.fn().mockRejectedValue(Promise.resolve());
+      loginSessionManagerMock.mockImplementation(mockWriteLogToFile);
+
       await logLoginAttempt(
         req as Request<
           Record<string, unknown>,
@@ -61,6 +63,13 @@ describe("Given a logLoginAttempt middleware", () => {
     });
 
     test("Then it should invoke next function", async () => {
+      const loginSessionManagerMock = jest.spyOn(
+        LogManager.prototype,
+        "writeLogToFile"
+      );
+      const mockWriteLogToFile = jest.fn().mockReturnValue(Promise.resolve());
+      loginSessionManagerMock.mockImplementation(mockWriteLogToFile);
+
       await logLoginAttempt(
         req as Request<
           Record<string, unknown>,
@@ -74,10 +83,14 @@ describe("Given a logLoginAttempt middleware", () => {
       expect(next).toHaveBeenCalled();
     });
 
-    test("Then it should invoke next function with an Error when the listener function failures", async () => {
-      const mockError = new Error();
-      const mockWriteLogToFile = jest.fn().mockRejectedValue(mockError);
+    test("Then it should invoke next function with 'Error on write log to file' as error when the method writeLogToFile failures", async () => {
+      const loginSessionManagerMock = jest.spyOn(
+        LogManager.prototype,
+        "writeLogToFile"
+      );
+      const mockError = new Error("Error on write log to file");
 
+      const mockWriteLogToFile = jest.fn().mockRejectedValue(mockError);
       loginSessionManagerMock.mockImplementation(mockWriteLogToFile);
 
       await logLoginAttempt(
