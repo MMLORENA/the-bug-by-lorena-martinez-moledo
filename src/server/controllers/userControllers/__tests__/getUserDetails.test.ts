@@ -16,7 +16,7 @@ const res: Partial<Response> = {
 };
 
 describe("Given a getUserDetails controller", () => {
-  describe("When it receives a CustomRequest with user details id: '1234', name: 'Fulanito', and isAdmin 'false'", () => {
+  describe("When it receives a CustomRequest with user details id: '1234'", () => {
     test("Then it should invoke response's method status with 200 and json with with received user details", () => {
       const userDetails = {
         id: "1234",
