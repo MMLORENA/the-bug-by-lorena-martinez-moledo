@@ -1,32 +1,10 @@
 import type { NextFunction, Response } from "express";
-import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
-import User from "../../../database/models/User.js";
-import { getMockUser } from "../../../factories/userFactory.js";
-import type { CustomRequest } from "../../types.js";
-import { getUserData } from "./userControllers.js";
-import { userDataErrors } from "../../../constants/errors/userErrors.js";
-
-const mockPasswordHash: jest.Mock<string> = jest.fn(() => "");
-const mockPasswordCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(
-  () => true
-);
-
-jest.mock("../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js", () =>
-  jest.fn().mockImplementation(() => ({
-    passwordHash: () => mockPasswordHash(),
-    passwordCompare: () => mockPasswordCompare(),
-  }))
-);
-
-jest.mock("../../../email/sendEmail/sendEmail.js");
-
-const {
-  successCodes: { okCode },
-} = httpStatusCodes;
-
-beforeEach(() => {
-  jest.clearAllMocks();
-});
+import User from "../../../../database/models/User";
+import { getMockUser } from "../../../../factories/userFactory";
+import type { CustomRequest } from "../../../types";
+import { getUserData } from "../userControllers";
+import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import { userDataErrors } from "../../../../constants/errors/userErrors";
 
 const res: Partial<Response> = {
   status: jest.fn().mockReturnThis(),
@@ -37,6 +15,10 @@ const res: Partial<Response> = {
 };
 
 const next = jest.fn();
+
+const {
+  successCodes: { okCode },
+} = httpStatusCodes;
 
 describe("Given a getUserData controller", () => {
   const user = getMockUser({
