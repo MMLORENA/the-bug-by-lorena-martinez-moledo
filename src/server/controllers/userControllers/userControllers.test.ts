@@ -4,7 +4,7 @@ import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
 import { getMockUser } from "../../../factories/userFactory.js";
 import type { CustomRequest } from "../../types.js";
-import { getUserData, getUserDetails, logoutUser } from "./userControllers.js";
+import { getUserData, logoutUser } from "./userControllers.js";
 import { userDataErrors } from "../../../constants/errors/userErrors.js";
 
 const mockPasswordHash: jest.Mock<string> = jest.fn(() => "");
@@ -44,25 +44,6 @@ const res: Partial<Response> = {
 };
 
 const next = jest.fn();
-
-describe("Given a getUserDetails controller", () => {
-  describe("When it receives a CustomRequest with user details id: '1234', name: 'Fulanito', and isAdmin 'false'", () => {
-    test("Then it should invoke response's method status with 200 and json with with received user details", () => {
-      const userDetails = {
-        id: "1234",
-      };
-
-      const req: Partial<CustomRequest> = {
-        userDetails,
-      };
-
-      getUserDetails(req as CustomRequest, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(okCode);
-      expect(res.json).toHaveBeenCalledWith({ userPayload: userDetails });
-    });
-  });
-});
 
 describe("Given a logoutUser controller", () => {
   describe("When it receives a request with cookie 'coders_identity_token' and a response", () => {
