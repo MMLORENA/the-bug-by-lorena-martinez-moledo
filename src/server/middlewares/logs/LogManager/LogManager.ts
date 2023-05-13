@@ -8,10 +8,12 @@ class LogManager implements LogManagerStructure {
 
   constructor(fileName: string, private readonly folderName: string) {
     this.filePath = path.join(folderName, fileName);
+    (async () => {
+      await this.manageFilePath();
+    })();
   }
 
   public async writeLogToFile(log: string): Promise<void> {
-    await this.manageFilePath();
     await fs.appendFile(this.filePath, log);
   }
 
