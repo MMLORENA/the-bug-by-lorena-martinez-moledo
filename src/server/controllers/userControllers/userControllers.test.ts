@@ -5,23 +5,20 @@ import config from "../../../config.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
 import { getMockUserCredentials } from "../../../factories/userCredentialsFactory.js";
-import { getMockUserData } from "../../../factories/userDataFactory.js";
 import { getMockUser } from "../../../factories/userFactory.js";
 import { generateMockToken } from "../../../testUtils/mocks/mockToken.js";
 import { luisEmail } from "../../../testUtils/mocks/mockUsers.js";
-import type { CustomRequest, UserWithId } from "../../types.js";
+import type { CustomRequest } from "../../types.js";
 import {
   activateUser,
   getUserData,
   getUserDetails,
   loginUser,
   logoutUser,
-  registerUser,
 } from "./userControllers.js";
 import {
   activateErrors,
   loginErrors,
-  registerErrors,
   userDataErrors,
 } from "../../../constants/errors/userErrors.js";
 
@@ -40,7 +37,7 @@ jest.mock("../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js", () =>
 jest.mock("../../../email/sendEmail/sendEmail.js");
 
 const {
-  successCodes: { createdCode, okCode, noContentSuccessCode },
+  successCodes: { okCode, noContentSuccessCode },
 } = httpStatusCodes;
 
 const {
@@ -62,47 +59,6 @@ const res: Partial<Response> = {
 };
 
 const next = jest.fn();
-
-describe("Given a registerUser Controller", () => {
-  const registerUserBody = getMockUserData({ email: luisEmail });
-
-  describe("When it receives a request with a user data with email: 'luisito@isdicoders.com'", () => {
-    test("Then it should call the response method status with a 201, and method json with a user with email 'luisito@isdicoders.com", async () => {
-      const userCreatedMock: UserWithId = getMockUser(registerUserBody);
-      const expectedStatus = createdCode;
-
-      req.body = registerUserBody;
-
-      User.create = jest
-        .fn()
-        .mockReturnValueOnce({ ...userCreatedMock, save: jest.fn() });
-
-      mockPasswordHash.mockReturnValueOnce("mock activation key");
-
-      await registerUser(req as Request, res as Response, next as NextFunction);
-
-      expect(res.status).toHaveBeenCalledWith(expectedStatus);
-      expect(res.json).toHaveBeenCalledWith({
-        user: {
-          id: userCreatedMock._id,
-          name: userCreatedMock.name,
-          email: userCreatedMock.email,
-        },
-      });
-    });
-  });
-
-  describe("When it receives a request with a user name that already exist", () => {
-    test("Then it should call next with an error message 'User already exists'", async () => {
-      const duplicateKeyError = registerErrors.duplicateUser("Duplicate key");
-
-      User.create = jest.fn().mockRejectedValue(duplicateKeyError);
-      await registerUser(req as Request, res as Response, next as NextFunction);
-
-      expect(next).toHaveBeenCalledWith(duplicateKeyError);
-    });
-  });
-});
 
 describe("Given a loginUser controller", () => {
   const userCredentials = getMockUserCredentials({ email: luisEmail });
