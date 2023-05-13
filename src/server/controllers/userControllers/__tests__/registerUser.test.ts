@@ -34,6 +34,8 @@ jest.mock(
     }))
 );
 
+jest.mock("../../../../email/sendEmail/sendEmail.js");
+
 describe("Given a registerUser Controller", () => {
   const registerUserBody = getMockUserData({ email: luisEmail });
 
