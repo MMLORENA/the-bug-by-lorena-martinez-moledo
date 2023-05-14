@@ -7,7 +7,7 @@ import User from "../../../database/models/User.js";
 import createRegisterEmail from "../../../email/emailTemplates/createRegisterEmail.js";
 import sendEmail from "../../../email/sendEmail/sendEmail.js";
 import { environment } from "../../../loadEnvironments.js";
-import PasswordHasherBcrypt from "../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js";
+import HasherBcrypt from "../../../utils/HasherBcrypt/HasherBcrypt.js";
 import type {
   CustomRequest,
   CustomTokenPayload,
@@ -34,7 +34,7 @@ const {
   singleSignOnCookie: { cookieName, cookieMaxAge },
 } = config;
 
-const passwordHasher = new PasswordHasherBcrypt();
+const hasher = new HasherBcrypt();
 
 export const registerUser = async (
   req: Request<Record<string, unknown>, Record<string, unknown>, UserData>,
@@ -51,7 +51,7 @@ export const registerUser = async (
 
     const userId = newUser._id.toString();
 
-    const activationKey = await passwordHasher.passwordHash(userId);
+    const activationKey = await hasher.hash(userId);
 
     newUser.activationKey = activationKey;
 
@@ -100,7 +100,7 @@ export const loginUser = async (
       throw loginErrors.incorrectPassword;
     }
 
-    if (!(await passwordHasher.passwordCompare(password, user.password))) {
+    if (!(await hasher.compare(password, user.password))) {
       throw loginErrors.incorrectPassword;
     }
 
@@ -154,15 +154,12 @@ export const activateUser = async (
 
     if (
       !user.activationKey ||
-      !(await passwordHasher.passwordCompare(
-        userId as string,
-        user.activationKey
-      ))
+      !(await hasher.compare(userId as string, user.activationKey))
     ) {
       throw activateErrors.invalidActivationKey;
     }
 
-    const hashedPassword = await passwordHasher.passwordHash(password);
+    const hashedPassword = await hasher.hash(password);
 
     user.password = hashedPassword;
     user.isActive = true;
@@ -232,7 +229,7 @@ export const setUserNewPassword = async (
       user.isActive = true;
     }
 
-    const hashedPassword = await passwordHasher.passwordHash(newPassword);
+    const hashedPassword = await hasher.hash(newPassword);
     user.password = hashedPassword;
 
     await user.save();

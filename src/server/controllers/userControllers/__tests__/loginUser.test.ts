@@ -30,16 +30,12 @@ const res: Partial<Response> = {
 
 const next = jest.fn();
 
-const mockPasswordCompare: jest.Mock<Promise<boolean>> = jest.fn(
-  async () => true
-);
+const mockCompare: jest.Mock<Promise<boolean>> = jest.fn(async () => true);
 
-jest.mock(
-  "../../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js",
-  () =>
-    jest.fn().mockImplementation(() => ({
-      passwordCompare: async () => mockPasswordCompare(),
-    }))
+jest.mock("../../../../utils/HasherBcrypt/HasherBcrypt.js", () =>
+  jest.fn().mockImplementation(() => ({
+    compare: async () => mockCompare(),
+  }))
 );
 
 describe("Given a loginUser controller", () => {
@@ -67,7 +63,7 @@ describe("Given a loginUser controller", () => {
       req.body = incorrectUserCredentials;
 
       User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
-      mockPasswordCompare.mockResolvedValueOnce(false);
+      mockCompare.mockResolvedValueOnce(false);
 
       await loginUser(req as Request, res as Response, next);
 
@@ -84,7 +80,7 @@ describe("Given a loginUser controller", () => {
 
       User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
 
-      mockPasswordCompare.mockResolvedValueOnce(true);
+      mockCompare.mockResolvedValueOnce(true);
 
       jwt.sign = jest.fn().mockReturnValueOnce(existingUserMockToken);
 
@@ -114,7 +110,7 @@ describe("Given a loginUser controller", () => {
 
       User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
 
-      mockPasswordCompare.mockResolvedValueOnce(true);
+      mockCompare.mockResolvedValueOnce(true);
 
       await loginUser(req as Request, res as Response, next);
 
@@ -129,7 +125,7 @@ describe("Given a loginUser controller", () => {
       req.body = userCredentials;
 
       User.findOne = jest.fn().mockResolvedValueOnce(userCredentials);
-      mockPasswordCompare.mockRejectedValueOnce(bcryptError);
+      mockCompare.mockRejectedValueOnce(bcryptError);
 
       await loginUser(req as Request, res as Response, next);
 
@@ -146,7 +142,7 @@ describe("Given a loginUser controller", () => {
       req.body = incorrectUserCredentials;
 
       User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
-      mockPasswordCompare.mockRejectedValueOnce(false);
+      mockCompare.mockRejectedValueOnce(false);
 
       await loginUser(req as Request, res as Response, next);
 
