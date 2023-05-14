@@ -25,15 +25,13 @@ import {
   userDataErrors,
 } from "../../../constants/errors/userErrors.js";
 
-const mockPasswordHash: jest.Mock<string> = jest.fn(() => "");
-const mockPasswordCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(
-  () => true
-);
+const mockHash: jest.Mock<string> = jest.fn(() => "");
+const mockCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(() => true);
 
-jest.mock("../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js", () =>
+jest.mock("../../../utils/HasherBcrypt/HasherBcrypt.js", () =>
   jest.fn().mockImplementation(() => ({
-    passwordHash: () => mockPasswordHash(),
-    passwordCompare: () => mockPasswordCompare(),
+    hash: () => mockHash(),
+    compare: () => mockCompare(),
   }))
 );
 
@@ -77,7 +75,7 @@ describe("Given a registerUser Controller", () => {
         .fn()
         .mockReturnValueOnce({ ...userCreatedMock, save: jest.fn() });
 
-      mockPasswordHash.mockReturnValueOnce("mock activation key");
+      mockHash.mockReturnValueOnce("mock activation key");
 
       await registerUser(req as Request, res as Response, next as NextFunction);
 
@@ -129,7 +127,7 @@ describe("Given a loginUser controller", () => {
       req.body = incorrectUserCredentials;
 
       User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
-      mockPasswordCompare.mockReturnValueOnce(false);
+      mockCompare.mockReturnValueOnce(false);
 
       await loginUser(req as Request, res as Response, next);
 
@@ -146,7 +144,7 @@ describe("Given a loginUser controller", () => {
 
       User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
 
-      mockPasswordCompare.mockReturnValueOnce(true);
+      mockCompare.mockReturnValueOnce(true);
 
       jwt.sign = jest.fn().mockReturnValueOnce(existingUserMockToken);
 
@@ -176,7 +174,7 @@ describe("Given a loginUser controller", () => {
 
       User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
 
-      mockPasswordCompare.mockReturnValueOnce(true);
+      mockCompare.mockReturnValueOnce(true);
 
       await loginUser(req as Request, res as Response, next);
 
@@ -191,7 +189,7 @@ describe("Given a loginUser controller", () => {
       req.body = userCredentials;
 
       User.findOne = jest.fn().mockResolvedValueOnce(userCredentials);
-      mockPasswordCompare.mockRejectedValueOnce(bcryptError);
+      mockCompare.mockRejectedValueOnce(bcryptError);
 
       await loginUser(req as Request, res as Response, next);
 
@@ -208,7 +206,7 @@ describe("Given a loginUser controller", () => {
       req.body = incorrectUserCredentials;
 
       User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
-      mockPasswordCompare.mockRejectedValueOnce(false);
+      mockCompare.mockRejectedValueOnce(false);
 
       await loginUser(req as Request, res as Response, next);
 
@@ -220,7 +218,7 @@ describe("Given a loginUser controller", () => {
 describe("Given an activateUser function", () => {
   describe("When it receives a request with query string activationKey and body password and confirmPassword 'test-password' and the activationKey is valid", () => {
     test("Then it should invoke response's method status with 200 and json with the message 'User account has been activated'", async () => {
-      mockPasswordCompare.mockReset();
+      mockCompare.mockReset();
 
       const activationKey = new mongoose.Types.ObjectId().toString();
 
@@ -239,8 +237,8 @@ describe("Given an activateUser function", () => {
       User.findById = jest
         .fn()
         .mockResolvedValueOnce({ ...user, activationKey, save: jest.fn() });
-      mockPasswordCompare.mockReturnValueOnce(true);
-      mockPasswordHash.mockReturnValueOnce(password);
+      mockCompare.mockReturnValueOnce(true);
+      mockHash.mockReturnValueOnce(password);
 
       await activateUser(req as Request, res as Response, next);
 
