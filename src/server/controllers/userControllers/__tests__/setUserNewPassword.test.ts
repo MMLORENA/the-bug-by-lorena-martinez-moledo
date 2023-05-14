@@ -10,19 +10,14 @@ const {
   successCodes: { okCode },
 } = httpStatusCodes;
 
-const mockPasswordHash = jest.fn();
-const mockPasswordCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(
-  () => true
-);
+const mockHash = jest.fn();
+const mockCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(() => true);
 
-jest.mock(
-  "../../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js",
-  () =>
-    jest.fn().mockImplementation(() => ({
-      passwordHash: async () =>
-        (mockPasswordHash as jest.Mock<Promise<string>>)(),
-      passwordCompare: () => mockPasswordCompare(),
-    }))
+jest.mock("../../../../utils/HasherBcrypt/HasherBcrypt.js", () =>
+  jest.fn().mockImplementation(() => ({
+    hash: async () => (mockHash as jest.Mock<Promise<string>>)(),
+    compare: () => mockCompare(),
+  }))
 );
 
 let user = {
@@ -65,7 +60,7 @@ describe("Given a setUserNewPassword controller", () => {
     test("Then the user should have the new password hashed", async () => {
       const hashedPassword = "hashed-password";
 
-      mockPasswordHash.mockResolvedValueOnce(hashedPassword);
+      mockHash.mockResolvedValueOnce(hashedPassword);
 
       await setUserNewPassword(
         req as CustomRequest,

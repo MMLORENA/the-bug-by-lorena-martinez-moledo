@@ -20,18 +20,14 @@ const {
   successCodes: { okCode },
 } = httpStatusCodes;
 
-const mockPasswordHash: jest.Mock<Promise<string>> = jest.fn(async () => "");
-const mockPasswordCompare: jest.Mock<Promise<boolean>> = jest.fn(
-  async () => true
-);
+const mockHash: jest.Mock<Promise<string>> = jest.fn(async () => "");
+const mockCompare: jest.Mock<Promise<boolean>> = jest.fn(async () => true);
 
-jest.mock(
-  "../../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js",
-  () =>
-    jest.fn().mockImplementation(() => ({
-      passwordCompare: async () => mockPasswordCompare(),
-      passwordHash: async () => mockPasswordHash(),
-    }))
+jest.mock("../../../../utils/HasherBcrypt/HasherBcrypt.js", () =>
+  jest.fn().mockImplementation(() => ({
+    compare: async () => mockCompare(),
+    hash: async () => mockHash(),
+  }))
 );
 
 describe("Given an activateUser function", () => {
@@ -55,8 +51,8 @@ describe("Given an activateUser function", () => {
         .fn()
         .mockResolvedValueOnce({ ...user, activationKey, save: jest.fn() });
 
-      mockPasswordCompare.mockResolvedValueOnce(true);
-      mockPasswordHash.mockResolvedValueOnce(password);
+      mockCompare.mockResolvedValueOnce(true);
+      mockHash.mockResolvedValueOnce(password);
 
       await activateUser(req as Request, res as Response, next);
 

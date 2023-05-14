@@ -24,14 +24,12 @@ const res: Partial<Response> = {
 
 const next = jest.fn();
 
-const mockPasswordHash: jest.Mock<Promise<string>> = jest.fn(async () => "");
+const mockHash: jest.Mock<Promise<string>> = jest.fn(async () => "");
 
-jest.mock(
-  "../../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js",
-  () =>
-    jest.fn().mockImplementation(() => ({
-      passwordHash: async () => mockPasswordHash(),
-    }))
+jest.mock("../../../../utils/HasherBcrypt/HasherBcrypt.js", () =>
+  jest.fn().mockImplementation(() => ({
+    hash: async () => mockHash(),
+  }))
 );
 
 jest.mock("../../../../email/sendEmail/sendEmail.js");
@@ -50,7 +48,7 @@ describe("Given a registerUser Controller", () => {
         .fn()
         .mockReturnValueOnce({ ...userCreatedMock, save: jest.fn() });
 
-      mockPasswordHash.mockResolvedValueOnce("mock activation key");
+      mockHash.mockResolvedValueOnce("mock activation key");
 
       await registerUser(req as Request, res as Response, next as NextFunction);
 
