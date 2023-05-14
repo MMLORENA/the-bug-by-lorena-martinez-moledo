@@ -1,26 +1,32 @@
-import type { NextFunction } from "express";
-import type { SetPasswordRequest } from "../../types";
+import type { NextFunction, Response } from "express";
 import User from "../../../database/models/User";
 import {
   activateErrors,
   loginErrors,
 } from "../../../constants/errors/userErrors";
+import type { ActivationKeyRequest } from "../../types";
+import HasherBcrypt from "../../../utils/HasherBcrypt/HasherBcrypt";
 
 const checkActivationKey = async (
-  req: SetPasswordRequest,
+  req: ActivationKeyRequest,
   res: Response,
   next: NextFunction
 ) => {
   const { email, activationKey } = req.params;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).exec();
 
     if (!user) {
       throw loginErrors.userNotFound;
     }
 
-    if (!user.activationKey || user.activationKey !== activationKey) {
+    const hasher = new HasherBcrypt();
+
+    if (
+      !user.activationKey ||
+      !(await hasher.compare(activationKey, user.activationKey))
+    ) {
       throw activateErrors.invalidActivationKey;
     }
 

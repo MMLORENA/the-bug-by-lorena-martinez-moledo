@@ -48,10 +48,7 @@ export interface CustomRequest<
   userDetails: UserDetails;
 }
 
-export interface SetPasswordRequest<
-  P = core.ParamsDictionary,
-  ResBody = any,
-  ReqBody = UserPassword
-> extends Request<P, ResBody, ReqBody> {
-  userDetails: UserDetails;
-}
+export type ActivationKeyRequest = CustomRequest<{
+  email: string;
+  activationKey: string;
+}>;
