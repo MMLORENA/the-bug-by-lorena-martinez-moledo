@@ -203,3 +203,39 @@ export const getUserData = async (
     next(error);
   }
 };
+
+export const setUserNewPassword = async (
+  req: CustomRequest<
+    Record<string, unknown>,
+    Record<string, unknown>,
+    Pick<UserCredentials, "password">
+  >,
+  res: Response,
+  next: NextFunction
+) => {
+  const {
+    userDetails: { id: userId },
+    body: { password: newPassword },
+  } = req;
+
+  try {
+    const user = await User.findById(userId).exec();
+
+    if (!user) {
+      throw userDataErrors.userDataNotFound;
+    }
+
+    if (!user.isActive && !user.password) {
+      user.isActive = true;
+    }
+
+    const hashedPassword = await hasher.hash(newPassword);
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.status(okCode).json({ message: "User's new password has been set" });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
