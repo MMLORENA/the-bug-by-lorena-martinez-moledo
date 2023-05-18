@@ -1,10 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import { getMockUserCredentials } from "../../../../factories/userCredentialsFactory";
-import User from "../../../../database/models/User";
-import { activateUser } from "../userControllers";
-import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import { activateErrors } from "../../../../constants/errors/userErrors";
+import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import User from "../../../../database/models/User";
+import { getMockUserCredentials } from "../../../../factories/userCredentialsFactory";
+import { activateUser } from "../userControllers";
 
 const req: Partial<Request> = {};
 const res: Partial<Response> = {
@@ -47,9 +47,11 @@ describe("Given an activateUser function", () => {
         confirmPassword: password,
       };
 
-      User.findById = jest
-        .fn()
-        .mockResolvedValueOnce({ ...user, activationKey, save: jest.fn() });
+      User.findById = jest.fn().mockReturnValue({
+        exec: jest
+          .fn()
+          .mockResolvedValueOnce({ ...user, activationKey, save: jest.fn() }),
+      });
 
       mockCompare.mockResolvedValueOnce(true);
       mockHash.mockResolvedValueOnce(password);
