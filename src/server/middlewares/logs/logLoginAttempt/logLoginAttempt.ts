@@ -15,18 +15,19 @@ const logLoginAttempt = async (
 ) => {
   const { email } = req.body;
 
-  const log = new Log(email, res.statusCode);
-  const timeToString = log.time.toLocaleString("en-GB", {
-    timeZone: "Europe/Madrid",
-  });
-  const statusToString = LoginAttemptStatus[log.status];
-  const userLoginSession = `[${timeToString}] User: ${log.email}, session status: ${statusToString};\n`;
-
   const folderName = "sessions";
   const fileName = "sessions";
   const loginSessionManager = new LogManager(fileName, folderName);
 
   res.on("close", () => {
+    const log = new Log(email, res.statusCode);
+
+    const timeToString = log.time.toLocaleString("en-GB", {
+      timeZone: "Europe/Madrid",
+    });
+    const statusToString = LoginAttemptStatus[log.status];
+    const userLoginSession = `[${timeToString}] User: ${log.email}, status: ${statusToString};\n`;
+
     (async () => {
       try {
         await loginSessionManager.writeLogToFile(userLoginSession);
