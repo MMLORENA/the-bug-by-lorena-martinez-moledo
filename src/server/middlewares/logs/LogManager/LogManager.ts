@@ -8,9 +8,9 @@ class LogManager implements LogManagerStructure {
 
   constructor(fileName: string, private readonly folderName: string) {
     this.filePath = path.join(folderName, fileName);
-    (async () => {
-      await this.manageFilePath();
-    })();
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    this.manageFilePath();
   }
 
   public async writeLogToFile(log: string): Promise<void> {
