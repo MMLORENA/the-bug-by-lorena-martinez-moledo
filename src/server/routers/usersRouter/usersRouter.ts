@@ -10,6 +10,7 @@ import {
   registerUser,
 } from "../../controllers/userControllers/userControllers.js";
 import auth from "../../middlewares/auth/auth.js";
+import logLoginAttempt from "../../middlewares/logs/logLoginAttempt/logLoginAttempt.js";
 import activateUserSchema from "../../schemas/activateUserSchema.js";
 import loginUserSchema from "../../schemas/loginUserSchema.js";
 import registerUserSchema from "../../schemas/registerUserSchema.js";
@@ -28,6 +29,7 @@ usersRouter.post(
 usersRouter.post(
   partialPaths.users.login,
   validate(loginUserSchema, {}, noAbortEarly),
+  logLoginAttempt,
   loginUser
 );
 
