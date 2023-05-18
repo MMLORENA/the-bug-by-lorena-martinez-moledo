@@ -1,14 +1,14 @@
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { getMockUserCredentials } from "../../../../factories/userCredentialsFactory";
-import { luisEmail } from "../../../../testUtils/mocks/mockUsers";
-import User from "../../../../database/models/User";
-import { loginUser } from "../userControllers";
+import config from "../../../../config";
 import { loginErrors } from "../../../../constants/errors/userErrors";
+import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import User from "../../../../database/models/User";
+import { getMockUserCredentials } from "../../../../factories/userCredentialsFactory";
 import { getMockUser } from "../../../../factories/userFactory";
 import { generateMockToken } from "../../../../testUtils/mocks/mockToken";
-import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
-import config from "../../../../config";
+import { luisEmail } from "../../../../testUtils/mocks/mockUsers";
+import { loginUser } from "../userControllers";
 
 const {
   successCodes: { okCode },
@@ -45,7 +45,9 @@ describe("Given a loginUser controller", () => {
     test("Then next should be invoked with message 'User not found', status 401 and public message 'Incorrect email or password'", async () => {
       req.body = userCredentials;
 
-      User.findOne = jest.fn().mockResolvedValueOnce(null);
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      });
 
       await loginUser(req as Request, res as Response, next);
 
@@ -62,7 +64,9 @@ describe("Given a loginUser controller", () => {
       };
       req.body = incorrectUserCredentials;
 
-      User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValueOnce(incorrectUserCredentials),
+      });
       mockCompare.mockResolvedValueOnce(false);
 
       await loginUser(req as Request, res as Response, next);
@@ -78,8 +82,9 @@ describe("Given a loginUser controller", () => {
       const existingUser = getMockUser({ ...userCredentials, isActive: true });
       const existingUserMockToken = generateMockToken({ id: existingUser._id });
 
-      User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
-
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValueOnce(existingUser),
+      });
       mockCompare.mockResolvedValueOnce(true);
 
       jwt.sign = jest.fn().mockReturnValueOnce(existingUserMockToken);
@@ -108,8 +113,9 @@ describe("Given a loginUser controller", () => {
       req.body = userCredentials;
       const existingUser = getMockUser(userCredentials);
 
-      User.findOne = jest.fn().mockResolvedValueOnce(existingUser);
-
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValueOnce(existingUser),
+      });
       mockCompare.mockResolvedValueOnce(true);
 
       await loginUser(req as Request, res as Response, next);
@@ -124,7 +130,9 @@ describe("Given a loginUser controller", () => {
 
       req.body = userCredentials;
 
-      User.findOne = jest.fn().mockResolvedValueOnce(userCredentials);
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValueOnce(userCredentials),
+      });
       mockCompare.mockRejectedValueOnce(bcryptError);
 
       await loginUser(req as Request, res as Response, next);
@@ -141,7 +149,10 @@ describe("Given a loginUser controller", () => {
       };
       req.body = incorrectUserCredentials;
 
-      User.findOne = jest.fn().mockResolvedValueOnce(incorrectUserCredentials);
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValueOnce(incorrectUserCredentials),
+      });
+
       mockCompare.mockRejectedValueOnce(false);
 
       await loginUser(req as Request, res as Response, next);
