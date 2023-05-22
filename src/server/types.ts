@@ -12,9 +12,9 @@ export interface UserActivationCredentials
   confirmPassword: string;
 }
 
-export interface UserPassword extends Pick<UserCredentials, "password"> {
-  password: string;
-}
+export type UserPassword = Pick<UserCredentials, "password">;
+
+export type UserEmail = Pick<UserCredentials, "email">;
 
 export interface UserData extends Omit<UserCredentials, "password"> {
   name: string;

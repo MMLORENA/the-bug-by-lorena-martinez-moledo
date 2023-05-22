@@ -26,14 +26,14 @@ const generalError = (
       .map((joiError) => joiError.message.replaceAll(`\"`, ""))
       .join(" & ");
 
-    error.publicMessage = validationErrors;
+    (error as CustomError).publicMessage = validationErrors;
 
     debug(chalk.blueBright(validationErrors));
   }
 
   const statusCode = error.statusCode || internalServerErrorCode;
   const publicMessage =
-    error.publicMessage || "There was an error on the server";
+    error.publicMessage ?? "There was an error on the server";
 
   debug(chalk.bold.red(error.message));
 
