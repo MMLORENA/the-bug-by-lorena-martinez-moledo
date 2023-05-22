@@ -7,6 +7,7 @@ export const partialPaths = {
     verifyToken: "/verify-token",
     logout: "/logout",
     userData: "/user-data",
+    forgottenPassword: "/forgotten-password",
   },
 };
 
