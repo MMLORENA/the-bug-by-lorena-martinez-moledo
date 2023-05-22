@@ -15,6 +15,7 @@ const {
   SMTP_PASSWORD: smtpPassword,
   EMAIL_SENDER: emailSender,
   TOKEN_EXPIRY: tokenExpiry,
+  ACTIVATION_KEY_EXPIRY: activationKeyExpiry,
   APP_NAME: appName,
   API_GATEWAY_KEY: apiGatewayKey,
 } = process.env;
@@ -54,4 +55,5 @@ export const environment = {
   },
   appName,
   apiGatewayKey,
+  activationKeyExpiry: +activationKeyExpiry!,
 };
