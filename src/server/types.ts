@@ -25,7 +25,8 @@ export interface UserStructure
     Pick<UserCredentials, "password"> {
   isAdmin: boolean;
   isActive: boolean;
-  activationKey: string;
+  activationKey?: string;
+  activationKeyExpiry?: Date;
 }
 
 export interface CustomTokenPayload extends JwtPayload {

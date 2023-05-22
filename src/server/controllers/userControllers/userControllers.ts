@@ -55,6 +55,12 @@ export const registerUser = async (
 
     newUser.activationKey = activationKey;
 
+    const activationKeyExpiry = new Date(
+      new Date().getTime() + environment.activationKeyExpiry
+    );
+
+    newUser.activationKeyExpiry = activationKeyExpiry;
+
     await newUser.save();
 
     const { text, subject } = createRegisterEmail(name, userId);
