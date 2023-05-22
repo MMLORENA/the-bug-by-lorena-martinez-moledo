@@ -4,6 +4,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import request from "supertest";
 import config from "../../../config";
+import authErrors from "../../../constants/errors/authErrors";
 import requestHeaders from "../../../constants/requestHeaders";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import connectDatabase from "../../../database/connectDatabase";
@@ -34,8 +35,8 @@ import type {
   UserWithId,
 } from "../../types";
 import { paths } from "../paths";
-import authErrors from "../../../constants/errors/authErrors";
 
+jest.mock("../../middlewares/logs/LogManager/LogManager");
 jest.mock("../../../email/sendEmail/sendEmail.js");
 
 const { apiKeyHeader, apiNameHeader } = requestHeaders;

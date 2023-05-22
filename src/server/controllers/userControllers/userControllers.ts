@@ -2,6 +2,12 @@ import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import config from "../../../config.js";
+import {
+  activateErrors,
+  loginErrors,
+  registerErrors,
+  userDataErrors,
+} from "../../../constants/errors/userErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
 import createRegisterEmail from "../../../email/emailTemplates/createRegisterEmail.js";
@@ -15,12 +21,6 @@ import type {
   UserCredentials,
   UserData,
 } from "../../types.js";
-import {
-  activateErrors,
-  loginErrors,
-  registerErrors,
-} from "../../../constants/errors/userErrors.js";
-import { userDataErrors } from "../../../constants/errors/userErrors.js";
 
 const {
   jwt: { jwtSecret, tokenExpiry },
@@ -96,7 +96,7 @@ export const loginUser = async (
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).exec();
 
     if (!user) {
       throw loginErrors.userNotFound;
@@ -152,7 +152,7 @@ export const activateUser = async (
       throw activateErrors.invalidActivationKey;
     }
 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).exec();
 
     if (!user) {
       throw activateErrors.invalidActivationKey;
