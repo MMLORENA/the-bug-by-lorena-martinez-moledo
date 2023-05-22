@@ -23,9 +23,12 @@ const checkActivationKey = async (
 
     const hasher = new HasherBcrypt();
 
+    const today = new Date();
+
     if (
       !user.activationKey ||
-      !(await hasher.compare(activationKey, user.activationKey))
+      !(await hasher.compare(activationKey, user.activationKey)) ||
+      today >= user.activationKeyExpiry!
     ) {
       throw activateErrors.invalidActivationKey;
     }
