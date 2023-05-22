@@ -23,6 +23,7 @@ const {
 if (
   !port ||
   !tokenExpiry ||
+  !activationKeyExpiry ||
   !smtpPort ||
   !mongoDbUrl ||
   !appName ||
@@ -55,5 +56,5 @@ export const environment = {
   },
   appName,
   apiGatewayKey,
-  activationKeyExpiry: +activationKeyExpiry!,
+  activationKeyExpiry: +activationKeyExpiry,
 };
