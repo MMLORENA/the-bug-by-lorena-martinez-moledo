@@ -343,7 +343,7 @@ describe("Given a POST /users/activate endpoint", () => {
     };
 
     beforeEach(async () => {
-      const martitaData = getMockUserData({ email: martaEmail });
+      const martitaData = getMockUser({ email: martaEmail });
       const martitaUser = await User.create({
         ...martitaData,
       });

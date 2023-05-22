@@ -2,12 +2,18 @@ import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import config from "../../../config.js";
+import {
+  activateErrors,
+  loginErrors,
+  registerErrors,
+  userDataErrors,
+} from "../../../constants/errors/userErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
 import createRegisterEmail from "../../../email/emailTemplates/createRegisterEmail.js";
 import sendEmail from "../../../email/sendEmail/sendEmail.js";
 import { environment } from "../../../loadEnvironments.js";
-import PasswordHasherBcrypt from "../../../utils/PasswordHasherBcrypt/PasswordHasherBcrypt.js";
+import HasherBcrypt from "../../../utils/HasherBcrypt/HasherBcrypt.js";
 import type {
   CustomRequest,
   CustomTokenPayload,
@@ -15,12 +21,6 @@ import type {
   UserCredentials,
   UserData,
 } from "../../types.js";
-import {
-  activateErrors,
-  loginErrors,
-  registerErrors,
-} from "../../../constants/errors/userErrors.js";
-import { userDataErrors } from "../../../constants/errors/userErrors.js";
 
 const {
   jwt: { jwtSecret, tokenExpiry },
@@ -34,7 +34,7 @@ const {
   singleSignOnCookie: { cookieName, cookieMaxAge },
 } = config;
 
-const passwordHasher = new PasswordHasherBcrypt();
+const hasher = new HasherBcrypt();
 
 export const registerUser = async (
   req: Request<Record<string, unknown>, Record<string, unknown>, UserData>,
@@ -51,7 +51,7 @@ export const registerUser = async (
 
     const userId = newUser._id.toString();
 
-    const activationKey = await passwordHasher.passwordHash(userId);
+    const activationKey = await hasher.hash(userId);
 
     newUser.activationKey = activationKey;
 
@@ -90,7 +90,7 @@ export const loginUser = async (
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).exec();
 
     if (!user) {
       throw loginErrors.userNotFound;
@@ -100,7 +100,7 @@ export const loginUser = async (
       throw loginErrors.incorrectPassword;
     }
 
-    if (!(await passwordHasher.passwordCompare(password, user.password))) {
+    if (!(await hasher.compare(password, user.password))) {
       throw loginErrors.incorrectPassword;
     }
 
@@ -146,7 +146,7 @@ export const activateUser = async (
       throw activateErrors.invalidActivationKey;
     }
 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).exec();
 
     if (!user) {
       throw activateErrors.invalidActivationKey;
@@ -154,15 +154,12 @@ export const activateUser = async (
 
     if (
       !user.activationKey ||
-      !(await passwordHasher.passwordCompare(
-        userId as string,
-        user.activationKey
-      ))
+      !(await hasher.compare(userId as string, user.activationKey))
     ) {
       throw activateErrors.invalidActivationKey;
     }
 
-    const hashedPassword = await passwordHasher.passwordHash(password);
+    const hashedPassword = await hasher.hash(password);
 
     user.password = hashedPassword;
     user.isActive = true;
@@ -202,6 +199,42 @@ export const getUserData = async (
     res.status(okCode).json({
       user: { name: user.name, isAdmin: user.isAdmin, email: user.email },
     });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+export const setUserNewPassword = async (
+  req: CustomRequest<
+    Record<string, unknown>,
+    Record<string, unknown>,
+    Pick<UserCredentials, "password">
+  >,
+  res: Response,
+  next: NextFunction
+) => {
+  const {
+    userDetails: { id: userId },
+    body: { password: newPassword },
+  } = req;
+
+  try {
+    const user = await User.findById(userId).exec();
+
+    if (!user) {
+      throw userDataErrors.userDataNotFound;
+    }
+
+    if (!user.isActive && !user.password) {
+      user.isActive = true;
+    }
+
+    const hashedPassword = await hasher.hash(newPassword);
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.status(okCode).json({ message: "User's new password has been set" });
   } catch (error: unknown) {
     next(error);
   }

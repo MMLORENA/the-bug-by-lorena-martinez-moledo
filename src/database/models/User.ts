@@ -25,7 +25,7 @@ const userSchema = new Schema(
     },
     activationKey: {
       type: String,
-      expires: 86400000,
+      expireAt: { type: Date, expires: 86400 },
     },
   },
   {
