@@ -40,7 +40,7 @@ usersRouter.post(
   activateUser
 );
 
-usersRouter.get(
+usersRouter.post(
   partialPaths.users.forgottenPassword,
   sendEmailForForgottenPassword
 );
