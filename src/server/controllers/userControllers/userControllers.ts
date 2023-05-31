@@ -20,7 +20,10 @@ import type {
   UserActivationCredentials,
   UserCredentials,
   UserData,
+  UserEmail,
 } from "../../types.js";
+import CustomError from "../../../CustomError/CustomError.js";
+import createForgottenPasswordEmail from "../../../email/emailTemplates/createForgottenPasswordEmail.js";
 
 const {
   jwt: { jwtSecret, tokenExpiry },
@@ -241,6 +244,49 @@ export const setUserNewPassword = async (
     await user.save();
 
     res.status(okCode).json({ message: "User's new password has been set" });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+export const sendEmailForForgottenPassword = async (
+  req: Request<Record<string, unknown>, Record<string, unknown>, UserEmail>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      throw new CustomError("User not found", 404);
+    }
+
+    const activationKey = await hasher.hash(user._id.toString());
+
+    user.activationKey = activationKey;
+
+    const activationKeyExpiry = new Date(
+      new Date().getTime() + environment.activationKeyExpiry
+    );
+
+    user.activationKeyExpiry = activationKeyExpiry;
+
+    await user.save();
+
+    const { text, subject } = createForgottenPasswordEmail(
+      user.name,
+      user._id.toString()
+    );
+
+    await sendEmail({
+      to: email,
+      text,
+      subject,
+    });
+
+    res.status(okCode).json({ message: "Email sent" });
   } catch (error: unknown) {
     next(error);
   }

@@ -8,6 +8,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  sendEmailForForgottenPassword,
 } from "../../controllers/userControllers/userControllers.js";
 import auth from "../../middlewares/auth/auth.js";
 import logLoginAttempt from "../../middlewares/logs/logLoginAttempt/logLoginAttempt.js";
@@ -38,6 +39,12 @@ usersRouter.post(
   validate(activateUserSchema, {}, noAbortEarly),
   activateUser
 );
+
+usersRouter.get(
+  partialPaths.users.forgottenPassword,
+  sendEmailForForgottenPassword
+);
+
 usersRouter.use(cookieParser());
 
 usersRouter.get(partialPaths.users.verifyToken, auth, getUserDetails);
