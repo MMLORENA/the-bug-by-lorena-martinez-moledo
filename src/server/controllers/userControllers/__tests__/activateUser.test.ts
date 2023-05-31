@@ -30,6 +30,8 @@ jest.mock("../../../../utils/HasherBcrypt/HasherBcrypt.js", () =>
   }))
 );
 
+jest.mock("../../../../email/sendEmail/sendEmail.js");
+
 describe("Given an activateUser function", () => {
   describe("When it receives a request with query string activationKey and body password and confirmPassword 'test-password' and the activationKey is valid", () => {
     test("Then it should invoke response's method status with 200 and json with the message 'User account has been activated'", async () => {
