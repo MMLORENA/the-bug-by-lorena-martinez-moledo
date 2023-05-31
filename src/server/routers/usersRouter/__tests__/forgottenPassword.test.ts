@@ -41,7 +41,7 @@ describe("Given a GET /users/forgotten-password endpoint", () => {
       const expectedMessage = "Email sent";
 
       const response: { body: { message: string } } = await request(app)
-        .get(paths.users.forgottenPassword)
+        .post(paths.users.forgottenPassword)
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .send({ email: luisEmail })
@@ -56,7 +56,7 @@ describe("Given a GET /users/forgotten-password endpoint", () => {
       const expectedMessage = "User not found";
 
       const response: { body: { message: string } } = await request(app)
-        .get(paths.users.forgottenPassword)
+        .post(paths.users.forgottenPassword)
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .send({ email: martaEmail })
