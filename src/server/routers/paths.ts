@@ -20,6 +20,7 @@ export const paths = {
     verifyToken: `${partialPaths.users.base}${partialPaths.users.verifyToken}`,
     logout: `${partialPaths.users.base}${partialPaths.users.logout}`,
     userData: `${partialPaths.users.base}${partialPaths.users.userData}`,
+    forgottenPassword: `${partialPaths.users.base}${partialPaths.users.forgottenPassword}`,
   },
   apiDocs: {
     base: "/api-docs",
