@@ -17,6 +17,13 @@ class LogManager implements LogManagerStructure {
     await fs.appendFile(this.filePath, log);
   }
 
+  public generatePathByDate(date: string): string {
+    const month = date.slice(2, 4);
+    const year = date.slice(4);
+
+    return path.join(this.folderName, year, month, date);
+  }
+
   private async manageFilePath(): Promise<void> {
     const isFile = fsSync.existsSync(this.filePath);
 

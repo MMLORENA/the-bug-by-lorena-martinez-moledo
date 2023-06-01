@@ -25,4 +25,16 @@ describe("Given an instance of LogManager", () => {
       expect(spyAppendFile).toHaveBeenCalledWith(fakePath, log);
     });
   });
+
+  describe("When the method generatePathByDate it's invoked with '01011970", () => {
+    test("Then it should return 'fakeFolderName\\1970\\01\\01011970'", () => {
+      const expectPathByDate = "fakeFolderName\\1970\\01\\01011970";
+      const date = "01011970";
+      const logManager = new LogManager(fileName, folderName);
+
+      const resultPathByDate = logManager.generatePathByDate(date);
+
+      expect(resultPathByDate).toBe(expectPathByDate);
+    });
+  });
 });
