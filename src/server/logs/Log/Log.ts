@@ -1,4 +1,4 @@
-import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes.js";
+import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import type { LogData } from "../types.js";
 import { LoginAttemptStatus } from "../types.js";
 

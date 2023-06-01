@@ -36,7 +36,7 @@ import type {
 } from "../../types";
 import { paths } from "../paths";
 
-jest.mock("../../middlewares/logs/LogManager/LogManager");
+jest.mock("../../logs/LogManager/LogManager");
 jest.mock("../../../email/sendEmail/sendEmail.js");
 
 const { apiKeyHeader, apiNameHeader } = requestHeaders;
