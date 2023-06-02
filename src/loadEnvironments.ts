@@ -3,52 +3,51 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const {
-  PORT: port,
-  MONGODB_URL: mongoDbUrl,
-  MONGODB_DEBUG: mongoDbDebug,
+  ACTIVATION_KEY_EXPIRY: activationKeyExpiry,
+  API_GATEWAY_KEY: apiGatewayKey,
+  APP_NAME: appName,
+  AUTH_FRONT_URL: authFrontUrl,
   DEBUG: debug,
-  ORIGIN_WHITELIST: originWhitelist,
+  EMAIL_SENDER: emailSender,
   JWT_SECRET: jwtSecret,
-  SWAGGER_BASIC_AUTH_USERNAME: swaggerBasicAuthUsername,
-  SWAGGER_BASIC_AUTH_PASSWORD: swaggerBasicAuthPassword,
+  MONGODB_DEBUG: mongoDbDebug,
+  MONGODB_URL: mongoDbUrl,
+  ORIGIN_WHITELIST: originWhitelist,
+  PORT: port,
+  REDIS_HOST: redisHost,
+  REDIS_PASSWORD: redisPassword,
+  REDIS_PORT: redisPort,
   SMTP_HOST: smtpHost,
+  SMTP_PASSWORD: smtpPassword,
   SMTP_PORT: smtpPort,
   SMTP_USERNAME: smtpUsername,
-  SMTP_PASSWORD: smtpPassword,
-  EMAIL_SENDER: emailSender,
+  SWAGGER_BASIC_AUTH_PASSWORD: swaggerBasicAuthPassword,
+  SWAGGER_BASIC_AUTH_USERNAME: swaggerBasicAuthUsername,
   TOKEN_EXPIRY: tokenExpiry,
-  ACTIVATION_KEY_EXPIRY: activationKeyExpiry,
-  APP_NAME: appName,
-  API_GATEWAY_KEY: apiGatewayKey,
-  AUTH_FRONT_URL: authFrontUrl,
-  REDIS_HOST: redisHost,
-  REDIS_PORT: redisPort,
-  REDIS_PASSWORD: redisPassword,
 } = process.env;
 
 if (
-  !port ||
-  !tokenExpiry ||
   !activationKeyExpiry ||
-  !smtpPort ||
-  !smtpHost ||
-  !smtpUsername ||
-  !smtpPassword ||
-  !emailSender ||
-  !appName ||
   !apiGatewayKey ||
-  !redisHost ||
-  !redisPort ||
-  !redisPassword ||
-  !mongoDbUrl ||
-  !mongoDbDebug ||
-  !originWhitelist ||
-  !debug ||
   !appName ||
+  !authFrontUrl ||
+  !debug ||
+  !emailSender ||
   !jwtSecret ||
+  !mongoDbDebug ||
+  !mongoDbUrl ||
+  !originWhitelist ||
+  !port ||
+  !redisHost ||
+  !redisPassword ||
+  !redisPort ||
+  !smtpHost ||
+  !smtpPassword ||
+  !smtpPort ||
+  !smtpUsername ||
   !swaggerBasicAuthPassword ||
   !swaggerBasicAuthUsername ||
-  !authFrontUrl
+  !tokenExpiry
 ) {
   console.error("Missing environmental variables");
   process.exit(1);

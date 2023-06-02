@@ -281,7 +281,8 @@ export const sendEmailForForgottenPassword = async (
 
     const { text, subject } = createForgottenPasswordEmail(
       user.name,
-      user._id.toString()
+      user._id.toString(),
+      activationKeyExpiry.getTime()
     );
 
     await sendEmail({

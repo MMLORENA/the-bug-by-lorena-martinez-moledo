@@ -18,25 +18,27 @@ jobs:
       - name: Coverage
         run: npm run test:coverage
         env:
-          ORIGIN_WHITELIST: ${{ secrets.ORIGIN_WHITELIST }}
-          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          ACTIVATION_KEY_EXPIRY: ${{ secrets.ACTIVATION_KEY_EXPIRY}}
+          API_GATEWAY_KEY: ${{ secrets.API_GATEWAY_KEY}}
+          APP_NAME: ${{ secrets.APP_NAME}}
+          AUTH_FRONT_URL: ${{ secrets.AUTH_FRONT_URL }}
           DEBUG: ${{ secrets.DEBUG }}
+          EMAIL_SENDER: ${{ secrets.JWT_SECRET }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          MONGODB_DEBUG: ${{ secrets.MONGODB_DEBUG }}
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          ORIGIN_WHITELIST: ${{ secrets.ORIGIN_WHITELIST }}
+          PORT: ${{ secrets.PORT }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST}}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD}}
+          REDIS_PORT: ${{ secrets.REDIS_PORT}}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_PORT: ${{ secrets.JWT_SECRET }}
           SMTP_USERNAME: ${{ secrets.JWT_SECRET }}
-          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          EMAIL_SENDER: ${{ secrets.JWT_SECRET }}
-          TOKEN_EXPIRY: ${{ secrets.TOKEN_EXPIRY}}
-          ACTIVATION_KEY_EXPIRY: ${{ secrets.ACTIVATION_KEY_EXPIRY}}
-          APP_NAME: ${{ secrets.APP_NAME}}
-          API_GATEWAY_KEY: ${{ secrets.API_GATEWAY_KEY}}
-          REDIS_HOST: ${{ secrets.REDIS_HOST}}
-          REDIS_PORT: ${{ secrets.REDIS_PORT}}
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD}}
-          SWAGGER_BASIC_AUTH_USERNAME: ${{ secrets.SWAGGER_BASIC_AUTH_USERNAME }}
           SWAGGER_BASIC_AUTH_PASSWORD: ${{ secrets.SWAGGER_BASIC_AUTH_PASSWORD }}
-          PORT: ${{ secrets.PORT }}
+          SWAGGER_BASIC_AUTH_USERNAME: ${{ secrets.SWAGGER_BASIC_AUTH_USERNAME }}
+          TOKEN_EXPIRY: ${{ secrets.TOKEN_EXPIRY}}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
