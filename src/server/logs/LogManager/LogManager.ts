@@ -17,7 +17,7 @@ class LogManager implements LogManagerStructure {
     await fs.appendFile(this.filePath, log);
   }
 
-  public async readLogToFile(path: string): Promise<string> {
+  public async readLogFromFile(path: string): Promise<string> {
     return fs.readFile(path, { encoding: "utf8" });
   }
 

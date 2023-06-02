@@ -14,27 +14,26 @@ describe("Given an instance of LogManager", () => {
   });
 
   describe("When the method writeLogToFile it's invoked with 'log'", () => {
-    test("Then it should be 'log' write into 'fakeFolderName\\fakeFileName' path", async () => {
+    test("Then it should be 'log' write into 'fakeFolderName/fakeFileName' path", async () => {
       const logManager = new LogManager(fileName, folderName);
 
       await logManager.writeLogToFile(fakeLog);
-      const resultLogData = await logManager.readLogToFile(fakePath);
+      const restultLog = fsSync.readFileSync(fakePath, { encoding: "utf8" });
 
-      expect(resultLogData).toBe(fakeLog);
+      expect(restultLog).toBe(fakeLog);
     });
   });
 
-  describe("When the method readLogFromFile it's invoked with 'fakeFolderName\\fakeFileName'", () => {
-    beforeAll(async () => {
-      const logManagerFake = new LogManager(fileName, folderName);
-
-      await logManagerFake.writeLogToFile(fakeLog);
+  describe("When the method readLogFromFile it's invoked with 'fakeFolderName/fakeFileName'", () => {
+    beforeAll(() => {
+      fsSync.mkdirSync(folderName, { recursive: true });
+      fsSync.appendFileSync(fakePath, fakeLog);
     });
 
     test("Then the method readLogFromFile should return the log inside the given path with 'log'", async () => {
       const logManager = new LogManager(fileName, folderName);
 
-      const resultLogData = await logManager.readLogToFile(fakePath);
+      const resultLogData = await logManager.readLogFromFile(fakePath);
 
       expect(resultLogData).toBe(fakeLog);
     });
