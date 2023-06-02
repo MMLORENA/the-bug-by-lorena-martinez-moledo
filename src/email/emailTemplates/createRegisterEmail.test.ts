@@ -1,30 +1,47 @@
 import { luisName } from "../../testUtils/mocks/mockUsers";
 import createRegisterEmail from "./createRegisterEmail";
+import { getNewPasswordLink } from "./utils";
 
 describe("Given the function createRegisterEmail", () => {
-  describe("When it receives name 'Luis' and activation key 'test-activation-key'", () => {
-    test(`Then it should return and subject: 'Welcome to Coders App, Luis. Please activate your account' and text:
-    Hello Luis,
+  describe("When it receives name 'Luis', activation key 'test-activation-key' and key expiration tomorrow", () => {
+    const activationKey = "test-activation-key";
+    const activationKeyExpiry = new Date().setDate(new Date().getDate() + 1);
 
-    Welcome to Coders App.
-
-    You need to set a password to activate your account.
-
-    Here's your activation key: test-activation-key
-
-    Your activation key expires in 24 hours.`, () => {
-      const activationKey = "test-activation-key";
-      const expectedEmailText = `Hello Luis,\n\nWelcome to Coders App.\n\nYou need to set a password to activate your account.\n\nHere's your activation key: test-activation-key\n\nYour activation key expires in 24 hours.`;
+    test("Then it should return a subject: 'Welcome to Coders One, Luis. Please activate your account'", () => {
       const expectedEmailSubject =
-        "Welcome to Coders App, Luis. Please activate your account";
-      const expectedEmail = {
-        text: expectedEmailText,
-        subject: expectedEmailSubject,
-      };
+        "Welcome to Coders One, Luis. Please activate your account";
 
-      const registerEmail = createRegisterEmail(luisName, activationKey);
+      const registerEmail = createRegisterEmail(
+        luisName,
+        activationKey,
+        activationKeyExpiry
+      );
 
-      expect(registerEmail).toStrictEqual(expectedEmail);
+      expect(registerEmail).toHaveProperty("subject", expectedEmailSubject);
+    });
+
+    test("Then it should return a text containing 'Hello Luis'", () => {
+      const expectedEmailGreeting = "Hello Luis";
+
+      const registerEmail = createRegisterEmail(
+        luisName,
+        activationKey,
+        activationKeyExpiry
+      );
+
+      expect(registerEmail.text).toContain(expectedEmailGreeting);
+    });
+
+    test("Then it should return a text containing an activation link", () => {
+      const expectedEmailActivationLink = getNewPasswordLink(activationKey);
+
+      const registerEmail = createRegisterEmail(
+        luisName,
+        activationKey,
+        activationKeyExpiry
+      );
+
+      expect(registerEmail.text).toContain(expectedEmailActivationLink);
     });
   });
 });

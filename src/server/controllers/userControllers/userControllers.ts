@@ -66,7 +66,11 @@ export const registerUser = async (
 
     await newUser.save();
 
-    const { text, subject } = createRegisterEmail(name, userId);
+    const { text, subject } = createRegisterEmail(
+      name,
+      activationKey,
+      activationKeyExpiry.getTime()
+    );
 
     await sendEmail({
       to: email,
