@@ -5,3 +5,8 @@ exec >/dev/tty 2>&1
 
 npx lint-staged
 
+if git diff --cached --name-only | xargs grep -q "process.env"; 
+then
+  echo -e "\n\n\e[38;5;208mIt seems like there are changes related to env variables. Please check if you have to add a new variable to initial checking in loadEnvironment, and make sure you share it with the rest of the team\n\e[0m]" 
+  git diff --cached --name-only | xargs grep -l "process.env"
+fi
