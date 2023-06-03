@@ -1,23 +1,51 @@
 import { luisName } from "../../testUtils/mocks/mockUsers";
 import createForgottenPasswordEmail from "./createForgottenPasswordEmail";
+import { getNewPasswordLink } from "./utils";
 
 describe("Given the function createForgottenPasswordEmail", () => {
-  describe("When it receives name 'Luis' and activation key 'test-activation-key'", () => {
+  describe("When it receives name 'Luis', activation key 'test-activation-key' and key expiration tomorrow", () => {
+    const activationKey = "test-activation-key";
+    const activationKeyExpiry = new Date().setDate(new Date().getDate() + 1);
+
     test("Then it should return a subject: 'Luis, please set your new password' and text with an activation link", () => {
-      const activationKey = "test-activation-key";
-      const expectedEmailText = `Hello Luis,\n\nWe've received a request to set a new password.\n\nPlease click the following link to set the password: test-activation-key\n\nThis link expires in 24 hours.`;
       const expectedEmailSubject = "Luis, please set your new password";
-      const expectedEmail = {
-        text: expectedEmailText,
-        subject: expectedEmailSubject,
-      };
 
       const forgottenPasswordEmail = createForgottenPasswordEmail(
         luisName,
-        activationKey
+        activationKey,
+        activationKeyExpiry
       );
 
-      expect(forgottenPasswordEmail).toStrictEqual(expectedEmail);
+      expect(forgottenPasswordEmail).toHaveProperty(
+        "subject",
+        expectedEmailSubject
+      );
+    });
+
+    test("Then it should return a text containing 'Hello Luis'", () => {
+      const expectedEmailGreeting = "Hello Luis";
+
+      const forgottenPasswordEmail = createForgottenPasswordEmail(
+        luisName,
+        activationKey,
+        activationKeyExpiry
+      );
+
+      expect(forgottenPasswordEmail.text).toContain(expectedEmailGreeting);
+    });
+
+    test("Then it should return a text with an activation link", () => {
+      const expectedEmailActivationLink = getNewPasswordLink(activationKey);
+
+      const forgottenPasswordEmail = createForgottenPasswordEmail(
+        luisName,
+        activationKey,
+        activationKeyExpiry
+      );
+
+      expect(forgottenPasswordEmail.text).toContain(
+        expectedEmailActivationLink
+      );
     });
   });
 });
