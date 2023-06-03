@@ -12,7 +12,6 @@ const {
   JWT_SECRET: jwtSecret,
   MONGODB_DEBUG: mongoDbDebug,
   MONGODB_URL: mongoDbUrl,
-  ORIGIN_WHITELIST: originWhitelist,
   PORT: port,
   REDIS_HOST: redisHost,
   REDIS_PASSWORD: redisPassword,
@@ -36,7 +35,6 @@ if (
   !jwtSecret ||
   !mongoDbDebug ||
   !mongoDbUrl ||
-  !originWhitelist ||
   !port ||
   !redisHost ||
   !redisPassword ||
