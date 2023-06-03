@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { UserCredentials } from "../../../types.js";
+import type { UserCredentials } from "../../types.js";
 import Log from "../Log/Log.js";
 import LogManager from "../LogManager/LogManager.js";
 import { LoginAttemptStatus } from "../types.js";
