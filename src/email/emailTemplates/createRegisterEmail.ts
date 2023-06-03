@@ -1,6 +1,18 @@
-const createRegisterEmail = (name: string, activationKey: string) => ({
-  subject: `Welcome to Coders App, ${name}. Please activate your account`,
-  text: `Hello ${name},\n\nWelcome to Coders App.\n\nYou need to set a password to activate your account.\n\nHere's your activation key: ${activationKey}\n\nYour activation key expires in 24 hours.`,
-});
+import { getNewPasswordLink, getTimeToExpirationString } from "./utils.js";
+
+const createRegisterEmail = (
+  name: string,
+  activationKey: string,
+  activationKeyExpiry: number
+) => {
+  const timeToExpirationString = getTimeToExpirationString(activationKeyExpiry);
+
+  const newPasswordLink = getNewPasswordLink(activationKey);
+
+  return {
+    subject: `Welcome to Coders One, ${name}. Please activate your account`,
+    text: `Hello ${name},\n\nWelcome to Coders App.\n\nYou need to set a password to activate your account.\n\nPlease visit this page to set your password: ${newPasswordLink}\n\nThis link expires in ${timeToExpirationString}.`,
+  };
+};
 
 export default createRegisterEmail;
