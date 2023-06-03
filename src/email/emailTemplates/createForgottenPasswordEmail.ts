@@ -1,4 +1,4 @@
-import { getNewPasswordLink, getTimeToExpirationString } from "./utils";
+import { getNewPasswordLink, getTimeToExpirationString } from "./utils.js";
 
 const createForgottenPasswordEmail = (
   name: string,
