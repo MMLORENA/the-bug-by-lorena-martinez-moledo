@@ -26,15 +26,38 @@ describe("Given an instance of LogManager", () => {
     });
   });
 
-  describe("When the method generatePathByDate it's invoked with '01011970", () => {
-    test("Then it should return 'fakeFolderName\\1970\\01\\01011970'", () => {
-      const expectPathByDate = "fakeFolderName\\1970\\01\\01011970";
-      const date = "01011970";
+  describe("When the method generatePathByDate it's invoked with date '1970-01-01T00:00:00.000Z' ", () => {
+    const fakeDate = new Date("1970-01-01T00:00:00.000");
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
+    beforeEach(() => {
+      jest.setSystemTime(fakeDate);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    test("Then it should return a path with 'fakeFolderName', '1970','01' and '01011970'", () => {
+      const expectedDate = "01011970";
+      const expectedYear = "1970";
+      const expectedMonth = "01";
+      const expectedPartialPaths = [
+        folderName,
+        expectedDate,
+        expectedYear,
+        expectedMonth,
+      ];
       const logManager = new LogManager(fileName, folderName);
 
-      const resultPathByDate = logManager.generatePathByDate(date);
+      const resultPathByDate = logManager.generatePathByDate(fakeDate);
 
-      expect(resultPathByDate).toBe(expectPathByDate);
+      expectedPartialPaths.forEach((partialPath) => {
+        expect(resultPathByDate).toContain(partialPath);
+      });
     });
   });
 });

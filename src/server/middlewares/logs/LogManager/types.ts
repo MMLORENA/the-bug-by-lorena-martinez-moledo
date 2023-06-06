@@ -1,6 +1,6 @@
 interface LogManagerStructure {
   writeLogToFile: (log: string) => Promise<void>;
-  generatePathByDate: (date: string) => string;
+  generatePathByDate: (date: Date) => string;
 }
 
 export default LogManagerStructure;
