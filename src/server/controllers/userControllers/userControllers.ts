@@ -66,7 +66,11 @@ export const registerUser = async (
 
     await newUser.save();
 
-    const { text, subject } = createRegisterEmail(name, userId);
+    const { text, subject } = createRegisterEmail(
+      name,
+      activationKey,
+      activationKeyExpiry.getTime()
+    );
 
     await sendEmail({
       to: email,
@@ -277,7 +281,8 @@ export const sendEmailForForgottenPassword = async (
 
     const { text, subject } = createForgottenPasswordEmail(
       user.name,
-      user._id.toString()
+      user._id.toString(),
+      activationKeyExpiry.getTime()
     );
 
     await sendEmail({

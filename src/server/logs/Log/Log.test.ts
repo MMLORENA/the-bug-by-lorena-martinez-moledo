@@ -1,5 +1,5 @@
-import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
-import { luisEmail, martaEmail } from "../../../../testUtils/mocks/mockUsers";
+import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
+import { luisEmail, martaEmail } from "../../../testUtils/mocks/mockUsers";
 import type { LogData } from "../types";
 import Log from "./Log";
 

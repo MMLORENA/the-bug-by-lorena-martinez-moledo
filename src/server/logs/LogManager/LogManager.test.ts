@@ -1,9 +1,9 @@
 import fsSync from "fs";
-import fs from "fs/promises";
 import path from "path";
 import LogManager from "./LogManager";
 
 describe("Given an instance of LogManager", () => {
+  const fakeLog = "log";
   const fileName = "fakeFileName";
   const folderName = "fakeFolderName";
   const fakePath = path.join(folderName, fileName);
@@ -13,16 +13,29 @@ describe("Given an instance of LogManager", () => {
     fsSync.rmSync(folderName, { recursive: true, force: true });
   });
 
-  describe("When the method writeLogFile it's invoked with 'log'", () => {
-    test("Then the method appendFile of fs should be invoked with 'fakeFolderName\\fakeFileName' as path and the log received", async () => {
-      const spyAppendFile = jest.spyOn(fs, "appendFile");
+  describe("When the method writeLogToFile it's invoked with 'log'", () => {
+    test("Then it should be 'log' write into 'fakeFolderName/fakeFileName' path", async () => {
+      const logManager = new LogManager(fileName, folderName);
 
-      const log = "log";
-      const writeLuisLogToFile = new LogManager(fileName, folderName);
+      await logManager.writeLogToFile(fakeLog);
+      const log = fsSync.readFileSync(fakePath, { encoding: "utf8" });
 
-      await writeLuisLogToFile.writeLogToFile(log);
+      expect(log).toBe(fakeLog);
+    });
+  });
 
-      expect(spyAppendFile).toHaveBeenCalledWith(fakePath, log);
+  describe("When the method readLogFromFile it's invoked with 'fakeFolderName/fakeFileName'", () => {
+    beforeAll(() => {
+      fsSync.mkdirSync(folderName, { recursive: true });
+      fsSync.appendFileSync(fakePath, fakeLog);
+    });
+
+    test("Then the method readLogFromFile should return the log inside the given path with 'log'", async () => {
+      const logManager = new LogManager(fileName, folderName);
+
+      const logData = await logManager.readLogFromFile(fakePath);
+
+      expect(logData).toBe(fakeLog);
     });
   });
 
@@ -53,10 +66,10 @@ describe("Given an instance of LogManager", () => {
       ];
       const logManager = new LogManager(fileName, folderName);
 
-      const resultPathByDate = logManager.generatePathByDate(fakeDate);
+      const pathByDate = logManager.generatePathByDate(fakeDate);
 
       expectedPartialPaths.forEach((partialPath) => {
-        expect(resultPathByDate).toContain(partialPath);
+        expect(pathByDate).toContain(partialPath);
       });
     });
   });

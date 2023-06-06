@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
-import { getMockUserCredentials } from "../../../../factories/userCredentialsFactory";
-import { luisEmail } from "../../../../testUtils/mocks/mockUsers";
-import type { UserCredentials } from "../../../types";
+import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
+import { getMockUserCredentials } from "../../../factories/userCredentialsFactory";
+import { luisEmail } from "../../../testUtils/mocks/mockUsers";
+import type { UserCredentials } from "../../types";
 import LogManager from "../LogManager/LogManager";
 import logLoginAttempt from "./logLoginAttempt";
 

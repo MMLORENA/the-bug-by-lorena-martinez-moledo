@@ -33,6 +33,10 @@ class LogManager implements LogManagerStructure {
     return path.join(this.folderName, year, month, `${day}${month}${year}`);
   }
 
+  public async readLogFromFile(path: string): Promise<string> {
+    return fs.readFile(path, { encoding: "utf8" });
+  }
+
   private async manageFilePath(): Promise<void> {
     const isFile = fsSync.existsSync(this.filePath);
 
