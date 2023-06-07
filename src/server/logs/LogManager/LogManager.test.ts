@@ -18,9 +18,9 @@ describe("Given an instance of LogManager", () => {
       const logManager = new LogManager(fileName, folderName);
 
       await logManager.writeLogToFile(fakeLog);
-      const restultLog = fsSync.readFileSync(fakePath, { encoding: "utf8" });
+      const log = fsSync.readFileSync(fakePath, { encoding: "utf8" });
 
-      expect(restultLog).toBe(fakeLog);
+      expect(log).toBe(fakeLog);
     });
   });
 
@@ -33,9 +33,44 @@ describe("Given an instance of LogManager", () => {
     test("Then the method readLogFromFile should return the log inside the given path with 'log'", async () => {
       const logManager = new LogManager(fileName, folderName);
 
-      const resultLogData = await logManager.readLogFromFile(fakePath);
+      const logData = await logManager.readLogFromFile(fakePath);
 
-      expect(resultLogData).toBe(fakeLog);
+      expect(logData).toBe(fakeLog);
+    });
+  });
+
+  describe("When the method generatePathByDate it's invoked with date '1970-01-01T00:00:00.000Z' ", () => {
+    const fakeDate = new Date("1970-01-01T00:00:00.000");
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
+    beforeEach(() => {
+      jest.setSystemTime(fakeDate);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    test("Then it should return a path with 'fakeFolderName', '1970','01' and '01011970'", () => {
+      const expectedDate = "01011970";
+      const expectedYear = "1970";
+      const expectedMonth = "01";
+      const expectedPartialPaths = [
+        folderName,
+        expectedDate,
+        expectedYear,
+        expectedMonth,
+      ];
+      const logManager = new LogManager(fileName, folderName);
+
+      const pathByDate = logManager.generatePathByDate(fakeDate);
+
+      expectedPartialPaths.forEach((partialPath) => {
+        expect(pathByDate).toContain(partialPath);
+      });
     });
   });
 });

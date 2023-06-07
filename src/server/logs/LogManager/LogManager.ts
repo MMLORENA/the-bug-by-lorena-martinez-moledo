@@ -17,6 +17,22 @@ class LogManager implements LogManagerStructure {
     await fs.appendFile(this.filePath, log);
   }
 
+  public generatePathByDate(date: Date): string {
+    const dateMaxLength = 2;
+    const dateFormatFill = "0";
+
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1)
+      .toString()
+      .padStart(dateMaxLength, dateFormatFill);
+    const day = date
+      .getDate()
+      .toString()
+      .padStart(dateMaxLength, dateFormatFill);
+
+    return path.join(this.folderName, year, month, `${day}${month}${year}`);
+  }
+
   public async readLogFromFile(path: string): Promise<string> {
     return fs.readFile(path, { encoding: "utf8" });
   }
