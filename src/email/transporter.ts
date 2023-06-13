@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { environment } from "../loadEnvironments.js";
+import { environment } from "../environment/loadEnvironments.js";
 
 const { smtp } = environment;
 

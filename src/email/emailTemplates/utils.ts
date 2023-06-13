@@ -1,4 +1,4 @@
-import { environment } from "../../loadEnvironments.js";
+import { environment } from "../../environment/loadEnvironments.js";
 
 export const getNewPasswordLink = (activationKey: string) =>
   `${environment.authFrontUrl}/set-password?key=${activationKey}`;

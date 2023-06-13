@@ -1,21 +1,26 @@
 import dotenv from "dotenv";
+import envSchema from "./schema.js";
 
 dotenv.config();
+
+const envValidationResult = envSchema.validate(process.env);
+
+if (envValidationResult.error) {
+  console.error("\u001b[31mMissing environmental variables\u001b[0m");
+  console.error(`\u001b[31m${envValidationResult.error.message}\u001b[0m`);
+  process.exit(1);
+}
 
 const {
   ACTIVATION_KEY_EXPIRY: activationKeyExpiry,
   API_GATEWAY_KEY: apiGatewayKey,
   APP_NAME: appName,
   AUTH_FRONT_URL: authFrontUrl,
-  DEBUG: debug,
   EMAIL_SENDER: emailSender,
   JWT_SECRET: jwtSecret,
   MONGODB_DEBUG: mongoDbDebug,
   MONGODB_URL: mongoDbUrl,
   PORT: port,
-  REDIS_HOST: redisHost,
-  REDIS_PASSWORD: redisPassword,
-  REDIS_PORT: redisPort,
   SMTP_HOST: smtpHost,
   SMTP_PASSWORD: smtpPassword,
   SMTP_PORT: smtpPort,
@@ -25,53 +30,27 @@ const {
   TOKEN_EXPIRY: tokenExpiry,
 } = process.env;
 
-if (
-  !activationKeyExpiry ||
-  !apiGatewayKey ||
-  !appName ||
-  !authFrontUrl ||
-  !debug ||
-  !emailSender ||
-  !jwtSecret ||
-  !mongoDbDebug ||
-  !mongoDbUrl ||
-  !port ||
-  !redisHost ||
-  !redisPassword ||
-  !redisPort ||
-  !smtpHost ||
-  !smtpPassword ||
-  !smtpPort ||
-  !smtpUsername ||
-  !swaggerBasicAuthPassword ||
-  !swaggerBasicAuthUsername ||
-  !tokenExpiry
-) {
-  console.error("Missing environmental variables");
-  process.exit(1);
-}
-
 export const environment = {
-  port: +port || 4000,
-  mongoDbUrl,
+  port: port ? +port : 4000,
+  mongoDbUrl: mongoDbUrl!,
   mongoDbDebug: mongoDbDebug === "true",
   jwt: {
-    jwtSecret,
-    tokenExpiry: +tokenExpiry,
+    jwtSecret: jwtSecret!,
+    tokenExpiry: +tokenExpiry!,
   },
   swaggerAuth: {
-    username: swaggerBasicAuthUsername,
-    password: swaggerBasicAuthPassword,
+    username: swaggerBasicAuthUsername!,
+    password: swaggerBasicAuthPassword!,
   },
   smtp: {
     host: smtpHost,
     username: smtpUsername,
     password: smtpPassword,
-    port: +smtpPort,
+    port: +smtpPort!,
     emailSender,
   },
-  appName,
+  appName: appName!,
   apiGatewayKey,
-  activationKeyExpiry: +activationKeyExpiry,
-  authFrontUrl,
+  activationKeyExpiry: +activationKeyExpiry!,
+  authFrontUrl: authFrontUrl!,
 };

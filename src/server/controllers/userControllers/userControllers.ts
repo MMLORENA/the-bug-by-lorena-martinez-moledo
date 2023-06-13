@@ -12,7 +12,7 @@ import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
 import createRegisterEmail from "../../../email/emailTemplates/createRegisterEmail.js";
 import sendEmail from "../../../email/sendEmail/sendEmail.js";
-import { environment } from "../../../loadEnvironments.js";
+import { environment } from "../../../environment/loadEnvironments.js";
 import HasherBcrypt from "../../../utils/HasherBcrypt/HasherBcrypt.js";
 import type {
   CustomRequest,

@@ -1,4 +1,4 @@
-import { environment } from "./loadEnvironments.js";
+import { environment } from "./environment/loadEnvironments.js";
 import debugConfig from "./utils/debugConfig/debugConfig.js";
 import chalk from "chalk";
 import { mongo } from "mongoose";

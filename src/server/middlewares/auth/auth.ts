@@ -2,7 +2,7 @@ import type { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "../../../config.js";
 import authErrors from "../../../constants/errors/authErrors.js";
-import { environment } from "../../../loadEnvironments.js";
+import { environment } from "../../../environment/loadEnvironments.js";
 import type { CustomRequest, CustomTokenPayload } from "../../types";
 
 const {

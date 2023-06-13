@@ -1,4 +1,4 @@
-import "../loadEnvironments.js";
+import "../environment/loadEnvironments.js";
 import app from "./app.js";
 
 const startServer = async (port: number) =>
