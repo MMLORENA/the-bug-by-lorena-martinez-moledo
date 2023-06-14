@@ -3,7 +3,7 @@ import sendEmail from "./sendEmail.js";
 import transporter from "../transporter.js";
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 import type { EmailOptions } from "../types.js";
-import { environment } from "../../loadEnvironments.js";
+import { environment } from "../../environment/loadEnvironments.js";
 import smtpStatusCodes from "../../constants/statusCodes/smtpStatusCodes.js";
 
 const {

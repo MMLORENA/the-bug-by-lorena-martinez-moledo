@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { environment } from "../loadEnvironments.js";
+import { environment } from "../environment/loadEnvironments.js";
 
 const connectDatabase = async (mongoDbUrl: string) => {
   mongoose.set("strictQuery", false);

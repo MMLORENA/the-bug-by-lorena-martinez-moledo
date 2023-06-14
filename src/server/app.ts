@@ -7,7 +7,7 @@ import pingPongProtocolRouter from "./routers/pingPongProtocolRouter/pingPongPro
 import generalError, { unknownEndpoint } from "./middlewares/errors/errors.js";
 import openApiDocument from "../openapi/index.js";
 import usersRouter from "./routers/usersRouter/usersRouter.js";
-import { environment } from "../loadEnvironments.js";
+import { environment } from "../environment/loadEnvironments.js";
 import { partialPaths, paths } from "./routers/paths.js";
 import setHeaderCredentials from "./middlewares/setHeaderCredentials/setHeaderCredentials.js";
 

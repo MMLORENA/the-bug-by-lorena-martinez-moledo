@@ -11,7 +11,7 @@ import connectDatabase from "../../../database/connectDatabase";
 import User from "../../../database/models/User.js";
 import { getMockUserData } from "../../../factories/userDataFactory";
 import { getMockUser } from "../../../factories/userFactory";
-import { environment } from "../../../loadEnvironments";
+import { environment } from "../../../environment/loadEnvironments";
 import cookieParser from "../../../testUtils/cookieParser";
 import {
   mockHeaderApiKey,

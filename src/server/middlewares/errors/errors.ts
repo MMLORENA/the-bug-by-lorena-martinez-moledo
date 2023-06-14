@@ -1,4 +1,4 @@
-import "../../../loadEnvironments.js";
+import "../../../environment/loadEnvironments.js";
 import chalk from "chalk";
 import type { NextFunction, Request, Response } from "express";
 import { ValidationError } from "express-validation";

@@ -28,9 +28,6 @@ jobs:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           ORIGIN_WHITELIST: ${{ secrets.ORIGIN_WHITELIST }}
           PORT: ${{ secrets.PORT }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST}}
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD}}
-          REDIS_PORT: ${{ secrets.REDIS_PORT}}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_PORT: ${{ secrets.JWT_SECRET }}

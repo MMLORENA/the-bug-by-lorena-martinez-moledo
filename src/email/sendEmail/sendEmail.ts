@@ -1,7 +1,7 @@
 import transporter from "../transporter.js";
 import debugConfig from "../../utils/debugConfig/debugConfig.js";
 import chalk from "chalk";
-import { environment } from "../../loadEnvironments.js";
+import { environment } from "../../environment/loadEnvironments.js";
 import type { EmailOptions } from "../types.js";
 import type SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
 
