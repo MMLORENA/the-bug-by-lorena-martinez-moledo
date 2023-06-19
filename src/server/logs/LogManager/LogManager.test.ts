@@ -1,39 +1,46 @@
 import fsSync from "fs";
 import path from "path";
 import LogManager from "./LogManager";
+import getDateParts from "./getDateParts/getDateParts";
 
 describe("Given an instance of LogManager", () => {
   const fakeLog = "log";
-  const fileName = "fakeFileName";
+  const date = new Date();
+  const { day, month, year } = getDateParts(date);
   const folderName = "fakeFolderName";
-  const fakePath = path.join(folderName, fileName);
+  const foldersFakePath = path.join(folderName, year, month);
+  const fakePathWithFile = path.join(
+    folderName,
+    year,
+    month,
+    `${day}${month}${year}`
+  );
 
   afterEach(() => {
-    jest.restoreAllMocks();
     fsSync.rmSync(folderName, { recursive: true, force: true });
   });
 
   describe("When the method writeLogToFile it's invoked with 'log'", () => {
-    test("Then it should be 'log' write into 'fakeFolderName/fakeFileName' path", async () => {
-      const logManager = new LogManager(fileName, folderName);
+    test("Then it should be 'log' write into 'fakeFolderName' path", () => {
+      const logManager = new LogManager(folderName);
 
-      await logManager.writeLogToFile(fakeLog);
-      const log = fsSync.readFileSync(fakePath, { encoding: "utf8" });
+      logManager.writeLogToFile(fakeLog);
+      const log = fsSync.readFileSync(fakePathWithFile, { encoding: "utf8" });
 
       expect(log).toBe(fakeLog);
     });
   });
 
-  describe("When the method readLogFromFile it's invoked with 'fakeFolderName/fakeFileName'", () => {
+  describe("When the method readLogFromFile it's invoked with a path", () => {
     beforeAll(() => {
-      fsSync.mkdirSync(folderName, { recursive: true });
-      fsSync.appendFileSync(fakePath, fakeLog);
+      fsSync.mkdirSync(foldersFakePath, { recursive: true });
+      fsSync.appendFileSync(fakePathWithFile, fakeLog);
     });
 
-    test("Then the method readLogFromFile should return the log inside the given path with 'log'", async () => {
-      const logManager = new LogManager(fileName, folderName);
+    test("Then the method readLogFromFile should return the log inside the given path with 'log'", () => {
+      const logManager = new LogManager(folderName);
 
-      const logData = await logManager.readLogFromFile(fakePath);
+      const logData = logManager.readLogFromFile(fakePathWithFile);
 
       expect(logData).toBe(fakeLog);
     });
@@ -64,7 +71,7 @@ describe("Given an instance of LogManager", () => {
         expectedYear,
         expectedMonth,
       ];
-      const logManager = new LogManager(fileName, folderName);
+      const logManager = new LogManager(folderName);
 
       const pathByDate = logManager.generatePathByDate(fakeDate);
 
