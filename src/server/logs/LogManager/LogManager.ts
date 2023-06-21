@@ -1,48 +1,49 @@
-import fsSync from "fs";
-import fs from "fs/promises";
+import fs from "fs";
 import path from "path";
+import type { DateParts } from "./getDateParts/getDateParts.js";
+import getDateParts from "./getDateParts/getDateParts.js";
 import type LogManagerStructure from "./types";
 
 class LogManager implements LogManagerStructure {
   private readonly filePath: string;
 
-  constructor(fileName: string, private readonly folderName: string) {
-    this.filePath = path.join(folderName, fileName);
+  constructor(private readonly folderRootName: string) {
+    this.filePath = this.generatePathByDate(new Date());
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    this.manageFilePath();
+    this.managePath();
   }
 
-  public async writeLogToFile(log: string): Promise<void> {
-    await fs.appendFile(this.filePath, log);
+  public writeLogToFile(log: string): void {
+    fs.appendFileSync(this.filePath, log);
   }
 
   public generatePathByDate(date: Date): string {
-    const dateMaxLength = 2;
-    const dateFormatFill = "0";
+    const { day, month, year }: DateParts = getDateParts(date);
 
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1)
-      .toString()
-      .padStart(dateMaxLength, dateFormatFill);
-    const day = date
-      .getDate()
-      .toString()
-      .padStart(dateMaxLength, dateFormatFill);
-
-    return path.join(this.folderName, year, month, `${day}${month}${year}`);
+    return path.join(this.folderRootName, year, month, `${day}${month}${year}`);
   }
 
-  public async readLogFromFile(path: string): Promise<string> {
-    return fs.readFile(path, { encoding: "utf8" });
+  public readLogFromFile(path: string): string {
+    return fs.readFileSync(path, { encoding: "utf8" });
   }
 
-  private async manageFilePath(): Promise<void> {
-    const isFile = fsSync.existsSync(this.filePath);
+  private managePath(): void {
+    const paths = this.filePath.split(path.sep);
 
-    if (!isFile) {
-      await fs.mkdir(this.folderName, { recursive: true });
-    }
+    let directoryPath = "";
+
+    paths.forEach((currentPath) => {
+      const existsPath = fs.existsSync(currentPath);
+
+      if (!existsPath) {
+        const directoryToCreate =
+          directoryPath === "" ? currentPath : directoryPath;
+
+        fs.mkdirSync(directoryToCreate, { recursive: true });
+      }
+
+      directoryPath = path.join(directoryPath, currentPath);
+    });
   }
 }
 

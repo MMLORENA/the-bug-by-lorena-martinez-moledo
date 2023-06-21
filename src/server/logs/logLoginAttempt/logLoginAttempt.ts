@@ -4,7 +4,7 @@ import Log from "../Log/Log.js";
 import LogManager from "../LogManager/LogManager.js";
 import { LoginAttemptStatus } from "../types.js";
 
-const logLoginAttempt = async (
+const logLoginAttempt = (
   req: Request<
     Record<string, unknown>,
     Record<string, unknown>,
@@ -15,9 +15,8 @@ const logLoginAttempt = async (
 ) => {
   const { email } = req.body;
 
-  const folderName = "sessions";
-  const fileName = "sessions";
-  const loginSessionManager = new LogManager(fileName, folderName);
+  const folderRootName = "sessions";
+  const loginSessionManager = new LogManager(folderRootName);
 
   res.on("close", () => {
     const log = new Log(email, res.statusCode);
@@ -28,9 +27,9 @@ const logLoginAttempt = async (
     const statusToString = LoginAttemptStatus[log.status];
     const userLoginSession = `[${timeToString}] User: ${log.email}, status: ${statusToString};\n`;
 
-    (async () => {
+    (() => {
       try {
-        await loginSessionManager.writeLogToFile(userLoginSession);
+        loginSessionManager.writeLogToFile(userLoginSession);
       } catch (error: unknown) {
         next(error);
       }
