@@ -1,5 +1,5 @@
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
-import type { LogData } from "../types.js";
+import type { DateLocaleFormat, LogData } from "../types.js";
 import { LoginAttemptStatus } from "../types.js";
 
 const {
@@ -10,13 +10,30 @@ class Log implements LogData {
   time: Date;
   status: LoginAttemptStatus;
 
-  constructor(public email: string, responseStatusCode: number) {
+  constructor(
+    private readonly email: string,
+    responseStatusCode: number,
+    private readonly dateLocaleFormat?: DateLocaleFormat
+  ) {
     this.setTime();
     this.checkLogAttemptStatus(responseStatusCode);
   }
 
+  public createLog(): string {
+    return `[${this.dateToString()}] User: ${this.email}, status: ${
+      LoginAttemptStatus[this.status]
+    };\n`;
+  }
+
   private setTime(): void {
     this.time = new Date();
+  }
+
+  private dateToString(): string {
+    return this.time.toLocaleString(
+      this.dateLocaleFormat?.locales,
+      this.dateLocaleFormat?.options
+    );
   }
 
   private checkLogAttemptStatus(responseStatusCode: number): void {
