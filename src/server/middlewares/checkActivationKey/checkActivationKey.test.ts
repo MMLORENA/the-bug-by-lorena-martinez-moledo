@@ -19,7 +19,7 @@ const userCredentials = getMockUser({
 });
 
 const req: Partial<ActivationKeyRequest> = {
-  params: {
+  query: {
     email: userCredentials.email,
     activationKey: userCredentials.activationKey!,
   },
