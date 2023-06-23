@@ -22,6 +22,7 @@ export const paths = {
     logout: `${partialPaths.users.base}${partialPaths.users.logout}`,
     userData: `${partialPaths.users.base}${partialPaths.users.userData}`,
     forgottenPassword: `${partialPaths.users.base}${partialPaths.users.forgottenPassword}`,
+    setNewPassword: `${partialPaths.users.base}${partialPaths.users.setNewPassword}`,
   },
   apiDocs: {
     base: "/api-docs",
