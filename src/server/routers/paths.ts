@@ -8,6 +8,7 @@ export const partialPaths = {
     logout: "/logout",
     userData: "/user-data",
     forgottenPassword: "/forgotten-password",
+    setNewPassword: "/set-new-password",
   },
 };
 
