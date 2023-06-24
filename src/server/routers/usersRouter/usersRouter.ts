@@ -10,7 +10,8 @@ import {
   registerUser,
   sendEmailForForgottenPassword,
 } from "../../controllers/userControllers/userControllers.js";
-import logLoginAttempt from "../../logs/logLoginAttempt/logLoginAttempt.js";
+import LogManager from "../../logs/LogManager/LogManager.js";
+import getLogLoginAttempt from "../../logs/getLogLoginAttempt/getLogLoginAttempt.js";
 import auth from "../../middlewares/auth/auth.js";
 import activateUserSchema from "../../schemas/activateUserSchema.js";
 import loginUserSchema from "../../schemas/loginUserSchema.js";
@@ -20,6 +21,7 @@ import { partialPaths } from "../paths.js";
 
 // eslint-disable-next-line new-cap
 const usersRouter = Router();
+const logManager = new LogManager("sessions");
 
 usersRouter.post(
   partialPaths.users.register,
@@ -30,7 +32,7 @@ usersRouter.post(
 usersRouter.post(
   partialPaths.users.login,
   validate(loginUserSchema, {}, noAbortEarly),
-  logLoginAttempt,
+  getLogLoginAttempt(logManager),
   loginUser
 );
 
