@@ -1,5 +1,6 @@
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
 import { luisEmail, martaEmail } from "../../../testUtils/mocks/mockUsers";
+import { LoginAttemptStatus } from "../types";
 import Log from "./Log";
 
 const {
@@ -41,7 +42,10 @@ describe("Given a Log Class", () => {
       test("Then it should return '[01/01/1970, 00:00:00] User: luisito@isdicoders.com, status: logged;'", () => {
         const expectedLogSession =
           "[01/01/1970, 00:00:00] User: luisito@isdicoders.com, status: logged;\n";
-        const log = new Log(luisEmail, okCode);
+        const log = new Log(luisEmail, okCode, {
+          locales: "en-GB",
+          options: { timeZone: "Europe/Madrid" },
+        });
 
         const logSession = log.createLog();
 
@@ -51,10 +55,10 @@ describe("Given a Log Class", () => {
   });
 
   describe("When it's instanciated and recives email: 'martita@isdicoders.com' and 401 as response statusCode", () => {
-    test("Then it should have properties email: 'luisito@isdicoders.com', time: 1970-01-01T00:00:00.000 and status: 0", () => {
+    test("Then it should have properties email: 'luisito@isdicoders.com', time: 1970-01-01T00:00:00.000 and status: unauthorized", () => {
       const expectedLogData = {
         email: martaEmail,
-        status: 0,
+        status: LoginAttemptStatus.unauthorized,
         time: fakeDate,
       };
 
