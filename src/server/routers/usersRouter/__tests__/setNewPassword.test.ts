@@ -6,9 +6,9 @@ import connectDatabase from "../../../../database/connectDatabase";
 import User from "../../../../database/models/User";
 import { getMockUser } from "../../../../factories/userFactory";
 import {
+  luisActivationKey,
   luisEmail,
   luisPassword,
-  luisUserId,
 } from "../../../../testUtils/mocks/mockUsers";
 import mongoose from "mongoose";
 import app from "../../../app";
@@ -17,7 +17,6 @@ import {
   mockHeaderApiKey,
   mockHeaderApiName,
 } from "../../../../testUtils/mocks/mockRequestHeaders";
-import HasherBcrypt from "../../../../utils/HasherBcrypt/HasherBcrypt";
 
 const { apiKeyHeader, apiNameHeader } = requestHeaders;
 
@@ -28,24 +27,20 @@ const {
 
 let server: MongoMemoryServer;
 
-const hasher = new HasherBcrypt();
-
 afterEach(async () => {
   await server.stop();
   await mongoose.connection.close();
 });
 
 describe("Given a POST /users/set-new-password endpoint", () => {
-  describe("When it receives a request with an email 'luisito@isdicoders.com' and an userId '64958cc023867fd1c89456ee'", () => {
+  describe("When it receives a request with an email 'luisito@isdicoders.com' and an activationKey 'yuk626sgdeuxwohpg891'", () => {
     beforeEach(async () => {
       server = await MongoMemoryServer.create();
       await connectDatabase(server.getUri());
 
       const luisUser = await User.create(
-        getMockUser({ email: luisEmail, _id: luisUserId.toString() })
+        getMockUser({ email: luisEmail, activationKey: luisActivationKey })
       );
-
-      luisUser.activationKey = await hasher.hash(luisUserId);
 
       await luisUser.save();
     });
@@ -55,9 +50,7 @@ describe("Given a POST /users/set-new-password endpoint", () => {
 
       const response: { body: { message: string } } = await request(app)
         .post(
-          `${
-            paths.users.setNewPassword
-          }?email=${luisEmail}&activationKey=${luisUserId.toString()}`
+          `${paths.users.setNewPassword}?email=${luisEmail}&activationKey=${luisActivationKey}`
         )
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
@@ -78,12 +71,10 @@ describe("Given a POST /users/set-new-password endpoint", () => {
       const luisUser = await User.create(
         getMockUser({
           email: luisEmail,
-          _id: luisUserId.toString(),
+          activationKey: luisActivationKey,
           activationKeyExpiry: expiredDate,
         })
       );
-
-      luisUser.activationKey = await hasher.hash(luisUserId);
 
       await luisUser.save();
     });
@@ -93,9 +84,7 @@ describe("Given a POST /users/set-new-password endpoint", () => {
 
       const response: { body: { message: string } } = await request(app)
         .post(
-          `${
-            paths.users.setNewPassword
-          }?email=${luisEmail}&activationKey=${luisUserId.toString()}`
+          `${paths.users.setNewPassword}?email=${luisEmail}&activationKey=${luisActivationKey}`
         )
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)

@@ -44,12 +44,18 @@ export interface UserDetails {
 export interface CustomRequest<
   P = core.ParamsDictionary,
   ResBody = any,
-  ReqBody = any
-> extends Request<P, ResBody, ReqBody> {
+  ReqBody = any,
+  ReqQuery = core.Query
+> extends Request<P, ResBody, ReqBody, ReqQuery> {
   userDetails: UserDetails;
 }
 
-export type ActivationKeyRequest = CustomRequest<{
-  email: string;
-  activationKey: string;
-}>;
+export type ActivationKeyRequest = CustomRequest<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  Record<string, unknown>,
+  {
+    email: string;
+    activationKey: string;
+  }
+>;
