@@ -1,7 +1,5 @@
-import getDateParts from "../../LogManager/getDateParts/getDateParts";
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const getLastNDays = (nLastDays: number): string[] => {
+export const getLastNDays = (nLastDays: number) => {
   const today = new Date();
   const days = [];
 
@@ -9,13 +7,8 @@ const getLastNDays = (nLastDays: number): string[] => {
     const date = new Date(today);
     date.setDate(today.getDate() - pastDays);
 
-    const { day, month, year } = getDateParts(date);
-
-    const formattedDate = `${day}${month}${year}`;
-    days.push(formattedDate);
+    days.push(date);
   }
 
   return days;
 };
-
-export default getLastNDays;

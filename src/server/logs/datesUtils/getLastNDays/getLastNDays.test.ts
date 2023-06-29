@@ -1,4 +1,4 @@
-import getLastNDays from "./getLastNDays";
+import { getLastNDays } from "./getLastNDays";
 
 describe("Given a getLastNDays function", () => {
   describe("When it receives 2 as last number of days", () => {
