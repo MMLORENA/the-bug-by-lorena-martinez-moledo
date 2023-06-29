@@ -27,22 +27,26 @@ const {
 
 let server: MongoMemoryServer;
 
-afterEach(async () => {
+beforeAll(async () => {
+  server = await MongoMemoryServer.create();
+  await connectDatabase(server.getUri());
+});
+
+afterAll(async () => {
   await server.stop();
   await mongoose.connection.close();
+});
+
+afterEach(async () => {
+  await User.deleteMany();
 });
 
 describe("Given a POST /users/set-new-password endpoint", () => {
   describe("When it receives a request with an email 'luisito@isdicoders.com' and an activationKey 'yuk626sgdeuxwohpg891'", () => {
     beforeEach(async () => {
-      server = await MongoMemoryServer.create();
-      await connectDatabase(server.getUri());
-
-      const luisUser = await User.create(
+      await User.create(
         getMockUser({ email: luisEmail, activationKey: luisActivationKey })
       );
-
-      await luisUser.save();
     });
 
     test("Then it should respond with status 200 and a message 'User's new password has been set'", async () => {
@@ -65,18 +69,13 @@ describe("Given a POST /users/set-new-password endpoint", () => {
     const expiredDate = new Date(1989, 9, 17);
 
     beforeEach(async () => {
-      server = await MongoMemoryServer.create();
-      await connectDatabase(server.getUri());
-
-      const luisUser = await User.create(
+      await User.create(
         getMockUser({
           email: luisEmail,
           activationKey: luisActivationKey,
           activationKeyExpiry: expiredDate,
         })
       );
-
-      await luisUser.save();
     });
 
     test("Then it should respond with status 401 and a message 'Invalid activation key'", async () => {

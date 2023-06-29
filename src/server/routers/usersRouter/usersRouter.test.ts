@@ -76,7 +76,7 @@ afterAll(async () => {
 
 describe("Given a POST /users/register endpoint", () => {
   afterEach(async () => {
-    await User.deleteMany({});
+    await User.deleteMany();
   });
 
   describe("When it receives a request with name 'Luis', email 'luisito@isdicoders.com' and a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
