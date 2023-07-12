@@ -96,7 +96,7 @@ describe("Given the checkActivationKey middleware", () => {
   });
 
   describe("When it receives a request with an email from an existing user and an expired activation key", () => {
-    test("Then it should invoke next with an error with status 401 and message 'Invalid activation key'", async () => {
+    test("Then it should invoke next with an error with status 401 and message 'Expired activation key'", async () => {
       const expiredDate = new Date(1990, 9, 1);
 
       const existingUserWithExpiredActivationKey = getMockUser({
@@ -116,7 +116,7 @@ describe("Given the checkActivationKey middleware", () => {
         next
       );
 
-      expect(next).toHaveBeenCalledWith(activateErrors.invalidActivationKey);
+      expect(next).toHaveBeenCalledWith(activateErrors.expiredActivationKey);
     });
   });
 

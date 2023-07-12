@@ -78,8 +78,8 @@ describe("Given a POST /users/set-new-password endpoint", () => {
       );
     });
 
-    test("Then it should respond with status 401 and a message 'Invalid activation key'", async () => {
-      const expectedErrorMessage = "Invalid activation key";
+    test("Then it should respond with status 401 and a message 'Expired activation key'", async () => {
+      const expectedErrorMessage = "Expired activation key";
 
       const response: { body: { message: string } } = await request(app)
         .post(
