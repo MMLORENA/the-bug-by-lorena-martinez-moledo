@@ -14,6 +14,11 @@ jobs:
       - name: Install modules
         run: npm ci
 
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Europe/Madrid
+
       - name: Testing
         run: npm test
         env:
