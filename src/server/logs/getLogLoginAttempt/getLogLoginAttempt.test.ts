@@ -4,6 +4,7 @@ import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
 import { getMockUserCredentials } from "../../../factories/userCredentialsFactory";
 import { luisEmail } from "../../../testUtils/mocks/mockUsers";
 import type { UserCredentials } from "../../types";
+import type LogManagerStructure from "../LogManager/types";
 import getLogLoginAttempt from "./getLogLoginAttempt";
 
 const {
@@ -15,7 +16,9 @@ beforeEach(() => {
 });
 
 describe("Given a getLogLoginAttempt function", () => {
-  const mockLogManager = new LogManagerMock("fakeFolderName");
+  const mockLogManager: LogManagerStructure = new LogManagerMock(
+    "fakeFolderName"
+  );
 
   const mockUserCredentials = getMockUserCredentials({ email: luisEmail });
 
@@ -41,9 +44,9 @@ describe("Given a getLogLoginAttempt function", () => {
   const next: NextFunction = jest.fn();
 
   describe("When it's invoked with a LogManager and it receives a request with email 'luisito@isdicoders.com' and a response", () => {
-    test("Then it should invoke the listener function on when the the response close with a statusCode 200'", () => {
-      const logLogLoginAttempt = getLogLoginAttempt(mockLogManager);
-      logLogLoginAttempt(req as Request, res as Response, next);
+    test("Then it should invoke the listener function on when the response close with a statusCode 200'", () => {
+      const logLoginAttempt = getLogLoginAttempt(mockLogManager);
+      logLoginAttempt(req as Request, res as Response, next);
 
       expect(mockResOnClose).toHaveBeenCalled();
     });
