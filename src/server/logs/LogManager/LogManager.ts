@@ -3,6 +3,7 @@ import path from "path";
 import type { DateParts } from "./getDateParts/getDateParts.js";
 import getDateParts from "./getDateParts/getDateParts.js";
 import type LogManagerStructure from "./types";
+import { getLastNDays } from "../datesUtils/getLastNDays/getLastNDays.js";
 
 class LogManager implements LogManagerStructure {
   private readonly filePath: string;
@@ -25,6 +26,28 @@ class LogManager implements LogManagerStructure {
 
   public readLogFromFile(path: string): string {
     return fs.readFileSync(path, { encoding: "utf8" });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  public getNameFilesFromLastNDays(lastNDays: number): string[] {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const lastNDaysList: Date[] = getLastNDays(lastNDays);
+
+    const nameFiles: string[] = [];
+
+    for (const date of lastNDaysList) {
+      const { year, day, month } = getDateParts(date);
+      const fileName = `${day}${month}${year}`;
+      const pathDate = path.join(this.folderRootName, year, month, fileName);
+
+      const existsFile = fs.existsSync(pathDate);
+
+      if (existsFile) {
+        nameFiles.push(fileName);
+      }
+    }
+
+    return nameFiles;
   }
 
   private managePath(): void {

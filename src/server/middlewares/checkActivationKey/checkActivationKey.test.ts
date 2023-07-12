@@ -11,7 +11,6 @@ import {
 import { getMockUser } from "../../../factories/userFactory";
 import type { ActivationKeyRequest } from "../../types";
 import type { Response } from "express";
-import type Hasher from "../../../utils/HasherBcrypt/Hasher";
 
 const userCredentials = getMockUser({
   email: luisEmail,
@@ -19,7 +18,7 @@ const userCredentials = getMockUser({
 });
 
 const req: Partial<ActivationKeyRequest> = {
-  params: {
+  query: {
     email: userCredentials.email,
     activationKey: userCredentials.activationKey!,
   },
@@ -28,15 +27,6 @@ const req: Partial<ActivationKeyRequest> = {
 const res: Partial<Response> = {};
 
 const next = jest.fn();
-
-const mockCompare: jest.Mock<Promise<boolean>> = jest.fn(async () => true);
-
-jest.mock("../../../utils/HasherBcrypt/HasherBcrypt", () =>
-  jest.fn().mockImplementation(() => ({
-    ...jest.requireActual<Hasher>("../../../utils/HasherBcrypt/HasherBcrypt"),
-    compare: async () => mockCompare(),
-  }))
-);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -89,8 +79,6 @@ describe("Given the checkActivationKey middleware", () => {
         activationKey: "yuk626sgdeuxwohpg777",
       });
 
-      mockCompare.mockResolvedValueOnce(false);
-
       User.findOne = jest.fn().mockReturnValueOnce({
         exec: jest
           .fn()
@@ -116,8 +104,6 @@ describe("Given the checkActivationKey middleware", () => {
         activationKeyExpiry: expiredDate,
       });
 
-      mockCompare.mockResolvedValueOnce(true);
-
       User.findOne = jest.fn().mockReturnValueOnce({
         exec: jest
           .fn()
@@ -140,8 +126,6 @@ describe("Given the checkActivationKey middleware", () => {
         ...userCredentials,
       });
 
-      mockCompare.mockResolvedValueOnce(true);
-
       User.findOne = jest.fn().mockReturnValueOnce({
         exec: jest.fn().mockResolvedValueOnce(existingUser),
       });
@@ -161,8 +145,6 @@ describe("Given the checkActivationKey middleware", () => {
       const existingUser = getMockUser({
         ...userCredentials,
       });
-
-      mockCompare.mockResolvedValueOnce(true);
 
       User.findOne = jest.fn().mockReturnValueOnce({
         exec: jest.fn().mockResolvedValueOnce(existingUser),
