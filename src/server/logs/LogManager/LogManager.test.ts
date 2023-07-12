@@ -4,9 +4,26 @@ import LogManager from "./LogManager";
 import getDateParts from "./getDateParts/getDateParts";
 
 describe("Given an instance of LogManager", () => {
+  const fakeDate = new Date("1970-01-01T00:00:00.000");
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  beforeEach(() => {
+    jest.setSystemTime(fakeDate);
+  });
+
+  afterEach(() => {
+    fsSync.rmSync(folderName, { recursive: true, force: true });
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   const fakeLog = "log";
-  const date = new Date();
-  const { day, month, year } = getDateParts(date);
+  const { day, month, year } = getDateParts(fakeDate);
   const folderName = "fakeFolderName";
   const foldersFakePath = path.join(folderName, year, month);
   const fakePathWithFile = path.join(
@@ -15,10 +32,6 @@ describe("Given an instance of LogManager", () => {
     month,
     `${day}${month}${year}`
   );
-
-  afterEach(() => {
-    fsSync.rmSync(folderName, { recursive: true, force: true });
-  });
 
   describe("When the method writeLogToFile it's invoked with 'log'", () => {
     test("Then it should be 'log' write into 'fakeFolderName' path", () => {
@@ -47,20 +60,6 @@ describe("Given an instance of LogManager", () => {
   });
 
   describe("When the method generatePathByDate it's invoked with date '1970-01-01T00:00:00.000Z' ", () => {
-    const fakeDate = new Date("1970-01-01T00:00:00.000");
-
-    beforeAll(() => {
-      jest.useFakeTimers();
-    });
-
-    beforeEach(() => {
-      jest.setSystemTime(fakeDate);
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
     test("Then it should return a path with 'fakeFolderName', '1970','01' and '01011970'", () => {
       const expectedDate = "01011970";
       const expectedYear = "1970";
@@ -77,6 +76,42 @@ describe("Given an instance of LogManager", () => {
 
       expectedPartialPaths.forEach((partialPath) => {
         expect(pathByDate).toContain(partialPath);
+      });
+    });
+  });
+
+  describe("When the method getNameFilesFromLastNDays it's invoked with 2", () => {
+    const logManager = new LogManager(folderName);
+    const lastTwoDays = 2;
+
+    describe("And exist a file with name '01011970'", () => {
+      beforeEach(() => {
+        fsSync.mkdirSync(foldersFakePath, { recursive: true });
+        fsSync.appendFileSync(fakePathWithFile, fakeLog);
+      });
+
+      test("Then it should return a list with '01011970' ", () => {
+        const expectedNameFromLastTwoDays = ["01011970"];
+
+        const nameFilesFromLastTwoDays =
+          logManager.getNameFilesFromLastNDays(lastTwoDays);
+
+        expect(nameFilesFromLastTwoDays).toStrictEqual(
+          expectedNameFromLastTwoDays
+        );
+      });
+    });
+
+    describe("And doesn't exist any file", () => {
+      test("Then it should return an empty list", () => {
+        const expectedNameFromLastTwoDays: string[] = [];
+
+        const nameFilesFromLastTwoDays =
+          logManager.getNameFilesFromLastNDays(lastTwoDays);
+
+        expect(nameFilesFromLastTwoDays).toStrictEqual(
+          expectedNameFromLastTwoDays
+        );
       });
     });
   });
