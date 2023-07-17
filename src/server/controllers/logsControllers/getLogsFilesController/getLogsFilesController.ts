@@ -1,9 +1,9 @@
 import { type NextFunction, type Response } from "express";
-import { loginErrors } from "../../../../constants/errors/userErrors";
-import User from "../../../../database/models/User";
+import { loginErrors } from "../../../../constants/errors/userErrors.js";
+import User from "../../../../database/models/User.js";
 import type LogManagerStructure from "../../../logs/LogManager/types";
 import type { CustomRequest } from "../../../types";
-import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes.js";
 
 const getLogsFilesController =
   (logManager: LogManagerStructure) =>
