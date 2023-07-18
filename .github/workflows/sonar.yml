@@ -42,6 +42,7 @@ jobs:
           SWAGGER_BASIC_AUTH_PASSWORD: ${{ secrets.SWAGGER_BASIC_AUTH_PASSWORD }}
           SWAGGER_BASIC_AUTH_USERNAME: ${{ secrets.SWAGGER_BASIC_AUTH_USERNAME }}
           TOKEN_EXPIRY: ${{ secrets.TOKEN_EXPIRY}}
+          LOGS_ROOT_FOLDER: ${{ secrets.LOGS_ROOT_FOLDER}}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
