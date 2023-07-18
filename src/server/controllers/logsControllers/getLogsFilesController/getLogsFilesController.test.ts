@@ -10,11 +10,13 @@ import type { Response } from "express";
 
 describe("Given a getLogs controller", () => {
   const next = jest.fn();
+  const {
+    successCodes: { okCode },
+  } = httpStatusCodes;
   const res: Partial<Response> = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
   };
-
   const mockLogManager: LogManagerStructure = new LogManagerMock(
     "fakeFolderName"
   );
@@ -25,9 +27,6 @@ describe("Given a getLogs controller", () => {
       const userDetails = {
         id: "1234",
       };
-      const {
-        successCodes: { okCode },
-      } = httpStatusCodes;
       const req: Partial<CustomRequest> = {
         userDetails,
       };
@@ -35,6 +34,7 @@ describe("Given a getLogs controller", () => {
       User.findById = jest.fn().mockReturnValue({
         exec: jest.fn().mockResolvedValue(getMockUser({ isAdmin: true })),
       });
+
       const logsFilesController = getLogsFilesController(mockLogManager);
       await logsFilesController(req as CustomRequest, res as Response, next);
 

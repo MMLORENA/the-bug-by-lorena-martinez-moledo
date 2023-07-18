@@ -20,9 +20,9 @@ const getLogsFilesController =
         throw loginErrors.userIsNotAdmin;
       }
 
-      const logNamesFiles = logManager.getNameFilesFromLastNDays(30);
+      const logFilenames = logManager.getFilenamesFromLastNDays(30);
 
-      res.status(okCode).json({ logFiles: logNamesFiles });
+      res.status(okCode).json({ logFiles: logFilenames });
     } catch (error: unknown) {
       next(error);
     }
