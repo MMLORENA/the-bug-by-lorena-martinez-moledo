@@ -2,7 +2,7 @@ import CustomError from "../../CustomError/CustomError.js";
 import httpStatusCodes from "../statusCodes/httpStatusCodes.js";
 
 const {
-  clientErrors: { unauthorizedCode },
+  clientErrors: { unauthorizedCode, forbiddenCode },
 } = httpStatusCodes;
 
 const authErrors = {
@@ -21,6 +21,7 @@ const authErrors = {
       unauthorizedMessage
     );
   },
+  userIsNotAdmin: new CustomError("User not Admin", forbiddenCode, "Forbidden"),
 };
 
 export default authErrors;
