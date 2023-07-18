@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import LogManagerMock from "../../../__mocks__/LogManagerMock";
-import logsErrors from "../../../constants/errors/logsErrors";
-import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
-import getLogByDateController from "./getLogByDateController";
+import LogManagerMock from "../../../../__mocks__/LogManagerMock";
+import logsErrors from "../../../../constants/errors/logsErrors";
+import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import { getLogByDateController } from "../getLogsControllers";
 
 const {
   successCodes: { okCode },

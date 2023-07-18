@@ -1,13 +1,36 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
+import authErrors from "../../../constants/errors/authErrors.js";
 import logsErrors from "../../../constants/errors/logsErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
-import type LogManagerStructure from "../LogManager/types";
+import User from "../../../database/models/User.js";
+import type LogManagerStructure from "../../logs/LogManager/types.js";
+import type { CustomRequest } from "../../types.js";
 
 const {
   successCodes: { okCode },
 } = httpStatusCodes;
 
-const getLogByDateController =
+export const getLogsFilesController =
+  (logManager: LogManagerStructure) =>
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const { id: userId } = req.userDetails;
+
+    try {
+      const user = await User.findById(userId).exec();
+
+      if (!user?.isAdmin) {
+        throw authErrors.userIsNotAdmin;
+      }
+
+      const logNamesFiles = logManager.getNameFilesFromLastNDays(30);
+
+      res.status(okCode).json({ logFiles: logNamesFiles });
+    } catch (error: unknown) {
+      next(error);
+    }
+  };
+
+export const getLogByDateController =
   (logManager: LogManagerStructure): RequestHandler =>
   (
     req: Request<
@@ -41,5 +64,3 @@ const getLogByDateController =
       next(customError);
     }
   };
-
-export default getLogByDateController;
