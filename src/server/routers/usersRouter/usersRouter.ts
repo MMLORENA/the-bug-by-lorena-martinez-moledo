@@ -13,13 +13,13 @@ import {
 } from "../../controllers/userControllers/userControllers.js";
 import LogManager from "../../logs/LogManager/LogManager.js";
 import getLogLoginAttempt from "../../logs/getLogLoginAttempt/getLogLoginAttempt.js";
-import auth from "../../middlewares/auth/auth.js";
+import { auth } from "../../middlewares/auth/auth.js";
+import checkActivationKey from "../../middlewares/checkActivationKey/checkActivationKey.js";
 import activateUserSchema from "../../schemas/activateUserSchema.js";
 import loginUserSchema from "../../schemas/loginUserSchema.js";
 import registerUserSchema from "../../schemas/registerUserSchema.js";
 import { noAbortEarly } from "../../schemas/validateOptions.js";
 import { partialPaths } from "../paths.js";
-import checkActivationKey from "../../middlewares/checkActivationKey/checkActivationKey.js";
 
 // eslint-disable-next-line new-cap
 const usersRouter = Router();
