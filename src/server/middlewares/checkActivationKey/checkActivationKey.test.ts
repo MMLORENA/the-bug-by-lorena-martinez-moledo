@@ -50,7 +50,7 @@ describe("Given the checkActivationKey middleware", () => {
   });
 
   describe("When it receives a request with an email from an existing user and has no activation key", () => {
-    test("Then it should invoke next with an error with status 401 and message 'Invalid activation key'", async () => {
+    test("Then it should invoke next with an error with status 401 and message 'No activation key'", async () => {
       const existingUserWithInvalidActivationkey = getMockUser({
         ...userCredentials,
         activationKey: "",
@@ -68,7 +68,7 @@ describe("Given the checkActivationKey middleware", () => {
         next
       );
 
-      expect(next).toHaveBeenCalledWith(activateErrors.invalidActivationKey);
+      expect(next).toHaveBeenCalledWith(activateErrors.noActivationKey);
     });
   });
 
