@@ -23,7 +23,7 @@ const checkActivationKey = async (
     const today = new Date();
 
     if (!user.activationKey) {
-      throw activateErrors.invalidActivationKey;
+      throw activateErrors.noActivationKey;
     }
 
     if (activationKey !== user.activationKey) {

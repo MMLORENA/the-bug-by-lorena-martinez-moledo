@@ -9,6 +9,8 @@ const {
 export const unauthorizedMessage = "Incorrect email or password";
 export const invalidActivationKeyMessage = "Invalid activation key";
 export const expiredActivationKeyMessage = "Expired activation key";
+export const noActivationKeyMessage = "No activation key";
+export const notActivatedUserMessage = "User can not be activated";
 
 export const loginErrors = {
   userNotFound: new CustomError(
@@ -53,16 +55,22 @@ export const registerErrors = {
 };
 
 export const activateErrors = {
+  noActivationKey: new CustomError(
+    noActivationKeyMessage,
+    unauthorizedCode,
+    notActivatedUserMessage
+  ),
+
   invalidActivationKey: new CustomError(
     invalidActivationKeyMessage,
     unauthorizedCode,
-    invalidActivationKeyMessage
+    notActivatedUserMessage
   ),
 
   expiredActivationKey: new CustomError(
     expiredActivationKeyMessage,
     unauthorizedCode,
-    expiredActivationKeyMessage
+    notActivatedUserMessage
   ),
 };
 
