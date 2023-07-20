@@ -10,6 +10,7 @@ import usersRouter from "./routers/usersRouter/usersRouter.js";
 import { environment } from "../environment/loadEnvironments.js";
 import { partialPaths, paths } from "./routers/paths.js";
 import setHeaderCredentials from "./middlewares/setHeaderCredentials/setHeaderCredentials.js";
+import logsRouter from "./routers/logsRouter/logsRouter.js";
 
 const { appName: currentApp } = environment;
 
@@ -39,6 +40,7 @@ app.use(
 );
 
 app.use(partialPaths.users.base, checkApiKey(currentApp), usersRouter);
+app.use(partialPaths.logs.base, checkApiKey(currentApp), logsRouter);
 
 app.use(unknownEndpoint);
 app.use(generalError);

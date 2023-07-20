@@ -10,50 +10,38 @@ const {
 } = httpStatusCodes;
 
 describe("Given a getLogs controller", () => {
-  const next = jest.fn();
   const res: Partial<Response> = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
   };
+  const req: Partial<CustomRequest> = {};
+  const next = jest.fn();
+  const mockRootFolderName = "fakeFolderName";
 
   describe("When it is called and receives a response", () => {
     test("Then it should invoke response's method status with 200 and json with a collection of the names of the log files existing in the last 30 days", () => {
+      const expectedLogFiles = ["01011970"];
       const mockLogManager: LogManagerStructure = new LogManagerMock(
-        "fakeFolderName"
+        mockRootFolderName
       );
-      const logFiles = ["01011970"];
-
-      const userDetails = {
-        id: "1234",
-      };
-      const req: Partial<CustomRequest> = {
-        userDetails,
-      };
 
       const logsFilesController = getLogsFilesController(mockLogManager);
       logsFilesController(req as CustomRequest, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(okCode);
       expect(res.json).toHaveBeenCalledWith({
-        logFiles,
+        logFiles: expectedLogFiles,
       });
     });
 
-    test("Then it should invoke next function when the method getNameFilesFromLastNDays throw an error with message 'Path is not a string'", () => {
-      const mockError = new Error("Path is not a string");
+    test("Then it should invoke next function with error 'Something went wrong' when the method getFilenamesFromLastNDays fails", () => {
       const mockLogManager: LogManagerStructure = new LogManagerMock(
-        "fakeFolderName"
+        mockRootFolderName
       );
-      mockLogManager.getNameFilesFromLastNDays = jest.fn(() => {
+      const mockError = new Error("Something went wrong");
+      mockLogManager.getFilenamesFromLastNDays = jest.fn(() => {
         throw mockError;
       });
-
-      const userDetails = {
-        id: "1234",
-      };
-      const req: Partial<CustomRequest> = {
-        userDetails,
-      };
 
       const logsFilesController = getLogsFilesController(mockLogManager);
       logsFilesController(req as CustomRequest, res as Response, next);

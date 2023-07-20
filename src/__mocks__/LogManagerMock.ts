@@ -3,7 +3,7 @@ import type LogManagerStructure from "../server/logs/LogManager/types";
 class LogManagerMock implements LogManagerStructure {
   constructor(private readonly fakeRootFolderName: string) {}
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  getNameFilesFromLastNDays(_lastNDays: number): string[] {
+  getFilenamesFromLastNDays(_lastNDays: number): string[] {
     return ["01011970"];
   }
 

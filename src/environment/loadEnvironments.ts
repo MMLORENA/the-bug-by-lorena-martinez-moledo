@@ -28,6 +28,7 @@ const {
   SWAGGER_BASIC_AUTH_PASSWORD: swaggerBasicAuthPassword,
   SWAGGER_BASIC_AUTH_USERNAME: swaggerBasicAuthUsername,
   TOKEN_EXPIRY: tokenExpiry,
+  LOGS_ROOT_FOLDER: logsRootFolder,
 } = process.env;
 
 export const environment = {
@@ -53,4 +54,5 @@ export const environment = {
   apiGatewayKey,
   activationKeyExpiry: +activationKeyExpiry!,
   authFrontUrl: authFrontUrl!,
+  logsRootFolder: logsRootFolder!,
 };

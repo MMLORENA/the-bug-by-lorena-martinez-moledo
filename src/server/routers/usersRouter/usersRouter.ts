@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import { Router } from "express";
 import { validate } from "express-validation";
+import { environment } from "../../../environment/loadEnvironments.js";
 import {
   activateUser,
   getUserData,
@@ -23,7 +24,7 @@ import { partialPaths } from "../paths.js";
 
 // eslint-disable-next-line new-cap
 const usersRouter = Router();
-const logManager = new LogManager("sessions");
+const logManager = new LogManager(environment.logsRootFolder);
 
 usersRouter.post(
   partialPaths.users.register,

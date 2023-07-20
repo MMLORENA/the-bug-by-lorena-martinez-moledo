@@ -22,12 +22,16 @@ const checkActivationKey = async (
 
     const today = new Date();
 
-    if (
-      !user.activationKey ||
-      activationKey !== user.activationKey ||
-      today >= user.activationKeyExpiry!
-    ) {
+    if (!user.activationKey) {
+      throw activateErrors.noActivationKey;
+    }
+
+    if (activationKey !== user.activationKey) {
       throw activateErrors.invalidActivationKey;
+    }
+
+    if (today >= user.activationKeyExpiry!) {
+      throw activateErrors.expiredActivationKey;
     }
 
     req.userDetails = { id: user._id.toString() };

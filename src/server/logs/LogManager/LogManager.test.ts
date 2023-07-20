@@ -80,7 +80,7 @@ describe("Given an instance of LogManager", () => {
     });
   });
 
-  describe("When the method getNameFilesFromLastNDays it's invoked with 2", () => {
+  describe("When the method getFilenamesFromLastNDays it's invoked with 2", () => {
     const logManager = new LogManager(folderName);
     const lastTwoDays = 2;
 
@@ -93,12 +93,9 @@ describe("Given an instance of LogManager", () => {
       test("Then it should return a list with '01011970' ", () => {
         const expectedNameFromLastTwoDays = ["01011970"];
 
-        const nameFilesFromLastTwoDays =
-          logManager.getNameFilesFromLastNDays(lastTwoDays);
+        const filenames = logManager.getFilenamesFromLastNDays(lastTwoDays);
 
-        expect(nameFilesFromLastTwoDays).toStrictEqual(
-          expectedNameFromLastTwoDays
-        );
+        expect(filenames).toStrictEqual(expectedNameFromLastTwoDays);
       });
     });
 
@@ -106,12 +103,9 @@ describe("Given an instance of LogManager", () => {
       test("Then it should return an empty list", () => {
         const expectedNameFromLastTwoDays: string[] = [];
 
-        const nameFilesFromLastTwoDays =
-          logManager.getNameFilesFromLastNDays(lastTwoDays);
+        const filenames = logManager.getFilenamesFromLastNDays(lastTwoDays);
 
-        expect(nameFilesFromLastTwoDays).toStrictEqual(
-          expectedNameFromLastTwoDays
-        );
+        expect(filenames).toStrictEqual(expectedNameFromLastTwoDays);
       });
     });
   });

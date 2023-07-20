@@ -8,6 +8,9 @@ const {
 
 export const unauthorizedMessage = "Incorrect email or password";
 export const invalidActivationKeyMessage = "Invalid activation key";
+export const expiredActivationKeyMessage = "Expired activation key";
+export const noActivationKeyMessage = "No activation key";
+export const notActivatedUserMessage = "User can not be activated";
 
 export const loginErrors = {
   userNotFound: new CustomError(
@@ -26,11 +29,6 @@ export const loginErrors = {
     "User is inactive",
     unauthorizedCode,
     "User is inactive, contact your administrator if you think this is a mistake"
-  ),
-  userIsNotAdmin: new CustomError(
-    "User does not have administrator permissions",
-    unauthorizedCode,
-    "User does not have administrator permissions"
   ),
 };
 
@@ -57,10 +55,22 @@ export const registerErrors = {
 };
 
 export const activateErrors = {
+  noActivationKey: new CustomError(
+    noActivationKeyMessage,
+    unauthorizedCode,
+    notActivatedUserMessage
+  ),
+
   invalidActivationKey: new CustomError(
     invalidActivationKeyMessage,
     unauthorizedCode,
-    invalidActivationKeyMessage
+    notActivatedUserMessage
+  ),
+
+  expiredActivationKey: new CustomError(
+    expiredActivationKeyMessage,
+    unauthorizedCode,
+    notActivatedUserMessage
   ),
 };
 
