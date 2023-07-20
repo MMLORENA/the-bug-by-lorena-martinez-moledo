@@ -1,12 +1,12 @@
+import type { Response } from "express";
 import LogManagerMock from "../../../../__mocks__/LogManagerMock";
-import { loginErrors } from "../../../../constants/errors/userErrors";
+import authErrors from "../../../../constants/errors/authErrors";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import User from "../../../../database/models/User";
 import { getMockUser } from "../../../../factories/userFactory";
 import type LogManagerStructure from "../../../logs/LogManager/types";
 import type { CustomRequest } from "../../../types";
-import getLogsFilesController from "./getLogsFilesController";
-import type { Response } from "express";
+import { getLogsFilesController } from "../getLogsControllers";
 
 describe("Given a getLogs controller", () => {
   const next = jest.fn();
@@ -47,7 +47,6 @@ describe("Given a getLogs controller", () => {
 
   describe("When it is called and the returning controller receives a CustomRequest with user details id: '4321' which does NOT belong to a user who is an administrator.", () => {
     test("Then it should call next function with 'User does not have administrator permissions'", async () => {
-      const { userIsNotAdmin } = loginErrors;
       const userDetails = {
         id: "4321",
       };
@@ -62,7 +61,7 @@ describe("Given a getLogs controller", () => {
       const logsFilesController = getLogsFilesController(mockLogManager);
       await logsFilesController(req as CustomRequest, res as Response, next);
 
-      expect(next).toHaveBeenCalledWith(userIsNotAdmin);
+      expect(next).toHaveBeenCalledWith(authErrors.userIsNotAdmin);
     });
   });
 });

@@ -1,9 +1,9 @@
+import cookieParser from "cookie-parser";
 import { Router } from "express";
-import { partialPaths } from "../paths.js";
-import getLogsFilesController from "../../controllers/logsControllers/getLogsFilesController/getLogsFilesController.js";
+import { getLogsFilesController } from "../../controllers/getLogsControllers/getLogsControllers.js";
 import LogManager from "../../logs/LogManager/LogManager.js";
 import auth from "../../middlewares/auth/auth.js";
-import cookieParser from "cookie-parser";
+import { partialPaths } from "../paths.js";
 
 // eslint-disable-next-line new-cap
 const logsRouter = Router();

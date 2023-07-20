@@ -5,6 +5,8 @@ const {
   clientErrors: { unauthorizedCode },
 } = httpStatusCodes;
 
+const userIsNotAdmin = "User does not have administrator permissions";
+
 const authErrors = {
   noToken: new CustomError(
     "No Token provided",
@@ -21,6 +23,11 @@ const authErrors = {
       unauthorizedMessage
     );
   },
+  userIsNotAdmin: new CustomError(
+    userIsNotAdmin,
+    unauthorizedCode,
+    userIsNotAdmin
+  ),
 };
 
 export default authErrors;
