@@ -1,8 +1,6 @@
 import type { NextFunction, RequestHandler, Response } from "express";
-import authErrors from "../../../constants/errors/authErrors.js";
 import logsErrors from "../../../constants/errors/logsErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
-import User from "../../../database/models/User.js";
 import type LogManagerStructure from "../../logs/LogManager/types.js";
 import type { CustomRequest, LogByDateRequest } from "../../types.js";
 
@@ -12,17 +10,11 @@ const {
 
 export const getLogsFilesController =
   (logManager: LogManagerStructure) =>
-  async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const { id: userId } = req.userDetails;
-
+  (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
-      const user = await User.findById(userId).exec();
-
-      if (!user?.isAdmin) {
-        throw authErrors.userIsNotAdmin;
-      }
-
-      const logNamesFiles = logManager.getFilenamesFromLastNDays(30);
+      const lastThirteenDays = 30;
+      const logNamesFiles =
+        logManager.getFilenamesFromLastNDays(lastThirteenDays);
 
       res.status(okCode).json({ logFiles: logNamesFiles });
     } catch (error: unknown) {

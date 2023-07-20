@@ -2,6 +2,7 @@ import type { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "../../../config.js";
 import authErrors from "../../../constants/errors/authErrors.js";
+import User from "../../../database/models/User.js";
 import { environment } from "../../../environment/loadEnvironments.js";
 import type { CustomRequest, CustomTokenPayload } from "../../types";
 
@@ -13,7 +14,7 @@ const {
   singleSignOnCookie: { cookieName },
 } = config;
 
-const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
+export const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const authToken = (req.cookies as Record<string, string>)[cookieName];
 
@@ -43,4 +44,22 @@ const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
   }
 };
 
-export default auth;
+export const checkIsUserAdmin = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id: userId } = req.userDetails;
+
+  try {
+    const user = await User.findById(userId).exec();
+
+    if (!user?.isAdmin) {
+      throw authErrors.userIsNotAdmin;
+    }
+
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};

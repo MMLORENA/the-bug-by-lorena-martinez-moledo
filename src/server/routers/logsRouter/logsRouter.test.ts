@@ -1,21 +1,21 @@
-import request from "supertest";
 import jwt from "jsonwebtoken";
+import request from "supertest";
 import User from "../../../database/models/User";
 import { getMockUser } from "../../../factories/userFactory";
 
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
+import config from "../../../config";
+import requestHeaders from "../../../constants/requestHeaders";
+import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
+import connectDatabase from "../../../database/connectDatabase";
+import { environment } from "../../../environment/loadEnvironments";
 import {
   mockHeaderApiKey,
   mockHeaderApiName,
 } from "../../../testUtils/mocks/mockRequestHeaders";
 import app from "../../app";
 import { paths } from "../paths";
-import { environment } from "../../../environment/loadEnvironments";
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
-import connectDatabase from "../../../database/connectDatabase";
-import requestHeaders from "../../../constants/requestHeaders";
-import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
-import config from "../../../config";
 
 const {
   jwt: { jwtSecret },
@@ -23,7 +23,7 @@ const {
 
 const {
   successCodes: { okCode },
-  clientErrors: { unauthorizedCode },
+  clientErrors: { forbiddenCode },
 } = httpStatusCodes;
 const { apiKeyHeader, apiNameHeader } = requestHeaders;
 
@@ -92,8 +92,8 @@ describe("Given a GET /users/get-logs endpoint", () => {
     });
 
     test("Then it should respond with status 401 and a error message 'User does not have administrator permissions'", async () => {
-      const expectedStatus = unauthorizedCode;
-      const expectedError = "User does not have administrator permissions";
+      const expectedStatus = forbiddenCode;
+      const expectedError = "Forbidden";
       const mockNotAdminUserPayload = {
         name: newNotAdminUserData.name,
         isAdmin: newNotAdminUserData.isAdmin,

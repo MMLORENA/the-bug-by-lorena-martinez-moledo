@@ -2,10 +2,8 @@ import CustomError from "../../CustomError/CustomError.js";
 import httpStatusCodes from "../statusCodes/httpStatusCodes.js";
 
 const {
-  clientErrors: { unauthorizedCode },
+  clientErrors: { unauthorizedCode, forbiddenCode },
 } = httpStatusCodes;
-
-const userIsNotAdmin = "User does not have administrator permissions";
 
 const authErrors = {
   noToken: new CustomError(
@@ -23,11 +21,7 @@ const authErrors = {
       unauthorizedMessage
     );
   },
-  userIsNotAdmin: new CustomError(
-    userIsNotAdmin,
-    unauthorizedCode,
-    userIsNotAdmin
-  ),
+  userIsNotAdmin: new CustomError("User not Admin", forbiddenCode, "Forbidden"),
 };
 
 export default authErrors;
