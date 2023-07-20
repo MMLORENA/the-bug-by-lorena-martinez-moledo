@@ -65,6 +65,57 @@ describe("Given a POST /users/set-new-password endpoint", () => {
     });
   });
 
+  describe("When it receives a request with an email 'luisito@isdicoders.com' and has no activationKey", () => {
+    beforeEach(async () => {
+      await User.create(
+        getMockUser({
+          email: luisEmail,
+          activationKey: "",
+        })
+      );
+    });
+
+    test("Then it should respond with status 401 and a message 'User can not be activated'", async () => {
+      const expectedErrorMessage = "User can not be activated";
+
+      const response: { body: { message: string } } = await request(app)
+        .post(
+          `${paths.users.setNewPassword}?email=${luisEmail}&activationKey=${luisActivationKey}`
+        )
+        .set(apiKeyHeader, mockHeaderApiKey)
+        .set(apiNameHeader, mockHeaderApiName)
+        .send({ password: luisPassword })
+        .expect(unauthorizedCode);
+
+      expect(response.body).toHaveProperty("error", expectedErrorMessage);
+    });
+  });
+
+  describe("When it receives a request with an email 'luisito@isdicoders.com' and a different activtionKey than the one saved in the data base", () => {
+    beforeEach(async () => {
+      await User.create(
+        getMockUser({
+          email: luisEmail,
+          activationKey: "afgsdfgsgh",
+        })
+      );
+    });
+    test("Then it should respond with status 401 and the message 'User can not be activated'", async () => {
+      const expectedErrorMessage = "User can not be activated";
+
+      const response: { body: { message: string } } = await request(app)
+        .post(
+          `${paths.users.setNewPassword}?email=${luisEmail}&activationKey=${luisActivationKey}`
+        )
+        .set(apiKeyHeader, mockHeaderApiKey)
+        .set(apiNameHeader, mockHeaderApiName)
+        .send({ password: luisPassword })
+        .expect(unauthorizedCode);
+
+      expect(response.body).toHaveProperty("error", expectedErrorMessage);
+    });
+  });
+
   describe("When it receives a request with an email 'luisito@isdicoders.com' and an expired activationKey", () => {
     const expiredDate = new Date(1989, 9, 17);
 
@@ -78,8 +129,8 @@ describe("Given a POST /users/set-new-password endpoint", () => {
       );
     });
 
-    test("Then it should respond with status 401 and a message 'Invalid activation key'", async () => {
-      const expectedErrorMessage = "Invalid activation key";
+    test("Then it should respond with status 401 and a message 'User can not be activated'", async () => {
+      const expectedErrorMessage = "User can not be activated";
 
       const response: { body: { message: string } } = await request(app)
         .post(
