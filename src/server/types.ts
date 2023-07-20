@@ -59,3 +59,9 @@ export type ActivationKeyRequest = CustomRequest<
     activationKey: string;
   }
 >;
+
+export type LogByDateRequest = Request<
+  { date: string },
+  Record<string, unknown>,
+  Record<string, unknown>
+>;

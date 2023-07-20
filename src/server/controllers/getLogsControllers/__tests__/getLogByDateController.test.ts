@@ -1,7 +1,8 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
 import LogManagerMock from "../../../../__mocks__/LogManagerMock";
 import logsErrors from "../../../../constants/errors/logsErrors";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import type { LogByDateRequest } from "../../../types";
 import { getLogByDateController } from "../getLogsControllers";
 
 const {
@@ -16,15 +17,9 @@ describe("Given a getLogByDateController", () => {
   const next = jest.fn();
 
   describe("When it's invoked with a logManager and it receives a request with date in params '1970-01-01T00:00:00.000' and a response", () => {
-    const req: Partial<
-      Request<
-        { dateToString: string },
-        Record<string, unknown>,
-        Record<string, unknown>
-      >
-    > = {
+    const req: Partial<LogByDateRequest> = {
       params: {
-        dateToString: "1970-01-01T00:00:00.000",
+        date: "1970-01-01T00:00:00.000",
       },
     };
 
@@ -34,11 +29,7 @@ describe("Given a getLogByDateController", () => {
       const logByDateController = getLogByDateController(mockLockManager);
 
       logByDateController(
-        req as Request<
-          { dateToString: string },
-          Record<string, unknown>,
-          Record<string, unknown>
-        >,
+        req as LogByDateRequest,
         res as Response,
         next as NextFunction
       );
@@ -59,11 +50,7 @@ describe("Given a getLogByDateController", () => {
       const logByDateController = getLogByDateController(mockLockManager);
 
       logByDateController(
-        req as Request<
-          { dateToString: string },
-          Record<string, unknown>,
-          Record<string, unknown>
-        >,
+        req as LogByDateRequest,
         res as Response,
         next as NextFunction
       );
@@ -76,20 +63,10 @@ describe("Given a getLogByDateController", () => {
     test("Then it should invoke next function with error 'Log not available'", () => {
       const mockLockManager = new LogManagerMock("fakeRootFolderName");
       const logByDateController = getLogByDateController(mockLockManager);
-      const req: Partial<
-        Request<
-          { dateToString: string },
-          Record<string, unknown>,
-          Record<string, unknown>
-        >
-      > = {};
+      const req: Partial<LogByDateRequest> = {};
 
       logByDateController(
-        req as Request<
-          { dateToString: string },
-          Record<string, unknown>,
-          Record<string, unknown>
-        >,
+        req as LogByDateRequest,
         res as Response,
         next as NextFunction
       );

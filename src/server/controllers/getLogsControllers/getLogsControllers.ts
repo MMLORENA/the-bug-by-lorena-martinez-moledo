@@ -1,10 +1,10 @@
-import type { NextFunction, Request, RequestHandler, Response } from "express";
+import type { NextFunction, RequestHandler, Response } from "express";
 import authErrors from "../../../constants/errors/authErrors.js";
 import logsErrors from "../../../constants/errors/logsErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
 import type LogManagerStructure from "../../logs/LogManager/types.js";
-import type { CustomRequest } from "../../types.js";
+import type { CustomRequest, LogByDateRequest } from "../../types.js";
 
 const {
   successCodes: { okCode },
@@ -32,15 +32,7 @@ export const getLogsFilesController =
 
 export const getLogByDateController =
   (logManager: LogManagerStructure): RequestHandler =>
-  (
-    req: Request<
-      { date: string },
-      Record<string, unknown>,
-      Record<string, unknown>
-    >,
-    res: Response,
-    next: NextFunction
-  ) => {
+  (req: LogByDateRequest, res: Response, next: NextFunction) => {
     try {
       if (!req.params) {
         throw logsErrors.noDate;
