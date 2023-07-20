@@ -29,25 +29,25 @@ class LogManager implements LogManagerStructure {
   }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  public getNameFilesFromLastNDays(lastNDays: number): string[] {
+  public getFilenamesFromLastNDays(lastNDays: number): string[] {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const lastNDaysList: Date[] = getLastNDays(lastNDays);
 
-    const nameFiles: string[] = [];
+    const filenames: string[] = [];
 
     for (const date of lastNDaysList) {
       const { year, day, month } = getDateParts(date);
-      const fileName = `${day}${month}${year}`;
-      const pathDate = path.join(this.folderRootName, year, month, fileName);
+      const filename = `${day}${month}${year}`;
+      const pathDate = path.join(this.folderRootName, year, month, filename);
 
       const existsFile = fs.existsSync(pathDate);
 
       if (existsFile) {
-        nameFiles.push(fileName);
+        filenames.push(filename);
       }
     }
 
-    return nameFiles;
+    return filenames;
   }
 
   private managePath(): void {

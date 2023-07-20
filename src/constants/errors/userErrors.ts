@@ -30,6 +30,11 @@ export const loginErrors = {
     unauthorizedCode,
     "User is inactive, contact your administrator if you think this is a mistake"
   ),
+  userIsNotAdmin: new CustomError(
+    "User does not have administrator permissions",
+    unauthorizedCode,
+    "User does not have administrator permissions"
+  ),
 };
 
 export const registerErrors = {

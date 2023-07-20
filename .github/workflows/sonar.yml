@@ -15,6 +15,12 @@ jobs:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: Node Modules
         run: npm ci
+
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Europe/Madrid
+
       - name: Coverage
         run: npm run test:coverage
         env:
@@ -36,6 +42,7 @@ jobs:
           SWAGGER_BASIC_AUTH_PASSWORD: ${{ secrets.SWAGGER_BASIC_AUTH_PASSWORD }}
           SWAGGER_BASIC_AUTH_USERNAME: ${{ secrets.SWAGGER_BASIC_AUTH_USERNAME }}
           TOKEN_EXPIRY: ${{ secrets.TOKEN_EXPIRY}}
+          LOGS_ROOT_FOLDER: ${{ secrets.LOGS_ROOT_FOLDER}}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

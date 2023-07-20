@@ -14,5 +14,6 @@ module.exports = {
     "!src/server/startServer.ts",
     "!src/database/connectDatabase.ts",
     "!src/loadEnvironments.ts",
+    "!src/__mocks__/**/*.ts",
   ],
 };

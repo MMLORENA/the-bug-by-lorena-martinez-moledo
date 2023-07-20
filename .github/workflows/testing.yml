@@ -14,6 +14,11 @@ jobs:
       - name: Install modules
         run: npm ci
 
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Europe/Madrid
+
       - name: Testing
         run: npm test
         env:
@@ -35,3 +40,4 @@ jobs:
           SWAGGER_BASIC_AUTH_PASSWORD: ${{ secrets.SWAGGER_BASIC_AUTH_PASSWORD }}
           SWAGGER_BASIC_AUTH_USERNAME: ${{ secrets.SWAGGER_BASIC_AUTH_USERNAME }}
           TOKEN_EXPIRY: ${{ secrets.TOKEN_EXPIRY}}
+          LOGS_ROOT_FOLDER: ${{ secrets.LOGS_ROOT_FOLDER}}

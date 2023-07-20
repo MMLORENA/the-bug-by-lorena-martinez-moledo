@@ -5,7 +5,12 @@ export enum LoginAttemptStatus {
 }
 
 export interface LogData {
-  email: string;
   time: Date;
   status: LoginAttemptStatus;
+  createLog: () => string;
+}
+
+export interface DateLocaleFormat {
+  locales?: Intl.LocalesArgument;
+  options?: Intl.DateTimeFormatOptions;
 }
