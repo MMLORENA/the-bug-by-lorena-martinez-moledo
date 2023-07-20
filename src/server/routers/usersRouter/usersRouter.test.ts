@@ -317,10 +317,10 @@ describe("Given a POST /users/activate endpoint", () => {
   });
 
   describe("When it receives query string activationKey and it is invalid and it receives a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
-    test("Then it should respond with status 401 'Invalid activation key'", async () => {
+    test("Then it should respond with status 401 'User can not be activated'", async () => {
       const invalidActivationKey = new mongoose.Types.ObjectId().toString();
       const expectedMessage = {
-        error: "Invalid activation key",
+        error: "User can not be activated",
       };
 
       const response = await request(app)
@@ -353,9 +353,9 @@ describe("Given a POST /users/activate endpoint", () => {
       await martitaUser.save();
     });
 
-    test("Then it should respond with status 401 and message 'Invalid activation key'", async () => {
+    test("Then it should respond with status 401 and message 'User can not be activated'", async () => {
       const expectedMessage = {
-        error: "Invalid activation key",
+        error: "User can not be activated",
       };
 
       const response = await request(app)
