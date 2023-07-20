@@ -22,7 +22,7 @@ export const getLogsFilesController =
         throw authErrors.userIsNotAdmin;
       }
 
-      const logNamesFiles = logManager.getNameFilesFromLastNDays(30);
+      const logNamesFiles = logManager.getFilenamesFromLastNDays(30);
 
       res.status(okCode).json({ logFiles: logNamesFiles });
     } catch (error: unknown) {
@@ -34,7 +34,7 @@ export const getLogByDateController =
   (logManager: LogManagerStructure): RequestHandler =>
   (
     req: Request<
-      { dateToString: string },
+      { date: string },
       Record<string, unknown>,
       Record<string, unknown>
     >,
@@ -46,7 +46,7 @@ export const getLogByDateController =
         throw logsErrors.noDate;
       }
 
-      const { dateToString } = req.params;
+      const { date: dateToString } = req.params;
 
       const date = new Date(dateToString);
       const filePath = logManager.generatePathByDate(date);

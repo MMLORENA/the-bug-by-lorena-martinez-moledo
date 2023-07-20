@@ -20,10 +20,11 @@ import registerUserSchema from "../../schemas/registerUserSchema.js";
 import { noAbortEarly } from "../../schemas/validateOptions.js";
 import { partialPaths } from "../paths.js";
 import checkActivationKey from "../../middlewares/checkActivationKey/checkActivationKey.js";
+import { environment } from "../../../environment/loadEnvironments.js";
 
 // eslint-disable-next-line new-cap
 const usersRouter = Router();
-const logManager = new LogManager("sessions");
+const logManager = new LogManager(environment.logsRootFolder);
 
 usersRouter.post(
   partialPaths.users.register,
