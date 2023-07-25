@@ -22,7 +22,6 @@ import registerUserSchema from "../../schemas/registerUserSchema.js";
 import { noAbortEarly } from "../../schemas/validateOptions.js";
 import { partialPaths } from "../paths.js";
 
-// eslint-disable-next-line new-cap
 const usersRouter = Router();
 const logManager = new LogManager(environment.logsRootFolder);
 
