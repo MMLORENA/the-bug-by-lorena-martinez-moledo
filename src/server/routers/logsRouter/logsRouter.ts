@@ -5,7 +5,6 @@ import LogManager from "../../logs/LogManager/LogManager.js";
 import { auth, checkIsUserAdmin } from "../../middlewares/auth/auth.js";
 import { partialPaths } from "../paths.js";
 
-// eslint-disable-next-line new-cap
 const logsRouter = Router();
 const logManager = new LogManager("sessions");
 
