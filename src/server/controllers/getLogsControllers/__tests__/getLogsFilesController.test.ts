@@ -39,7 +39,7 @@ describe("Given a getLogs controller", () => {
         mockRootFolderName
       );
       const mockError = new Error("Something went wrong");
-      mockLogManager.getFilenamesFromLastNDays = jest.fn(() => {
+      mockLogManager.getFilenamesFromLastNumberOfDays = jest.fn(() => {
         throw mockError;
       });
 
