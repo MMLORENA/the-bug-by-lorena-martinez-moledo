@@ -12,9 +12,9 @@ export const getLogsFilesController =
   (logManager: LogManagerStructure) =>
   (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
-      const lastThirteenDays = 30;
+      const lastNumberOfDays = 30;
       const logNamesFiles =
-        logManager.getFilenamesFromLastNDays(lastThirteenDays);
+        logManager.getFilenamesFromLastNumberOfDays(lastNumberOfDays);
 
       res.status(okCode).json({ logFiles: logNamesFiles });
     } catch (error: unknown) {

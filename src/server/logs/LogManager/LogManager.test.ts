@@ -80,9 +80,9 @@ describe("Given an instance of LogManager", () => {
     });
   });
 
-  describe("When the method getFilenamesFromLastNDays it's invoked with 2", () => {
+  describe("When the method getFilenamesFromLastNumberOfDays it's invoked with 2", () => {
     const logManager = new LogManager(folderName);
-    const lastTwoDays = 2;
+    const lastDaysNumber = 2;
 
     describe("And exist a file with name '01011970'", () => {
       beforeEach(() => {
@@ -90,22 +90,24 @@ describe("Given an instance of LogManager", () => {
         fsSync.appendFileSync(fakePathWithFile, fakeLog);
       });
 
-      test("Then it should return a list with '01011970' ", () => {
-        const expectedNameFromLastTwoDays = ["01011970"];
+      test("Then it should return a list of file names with '01011970' ", () => {
+        const expecedFileNames = ["01011970"];
 
-        const filenames = logManager.getFilenamesFromLastNDays(lastTwoDays);
+        const filenames =
+          logManager.getFilenamesFromLastNumberOfDays(lastDaysNumber);
 
-        expect(filenames).toStrictEqual(expectedNameFromLastTwoDays);
+        expect(filenames).toStrictEqual(expecedFileNames);
       });
     });
 
     describe("And doesn't exist any file", () => {
       test("Then it should return an empty list", () => {
-        const expectedNameFromLastTwoDays: string[] = [];
+        const exectedFileNames: string[] = [];
 
-        const filenames = logManager.getFilenamesFromLastNDays(lastTwoDays);
+        const filenames =
+          logManager.getFilenamesFromLastNumberOfDays(lastDaysNumber);
 
-        expect(filenames).toStrictEqual(expectedNameFromLastTwoDays);
+        expect(filenames).toStrictEqual(exectedFileNames);
       });
     });
   });
