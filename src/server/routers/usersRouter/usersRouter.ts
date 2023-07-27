@@ -41,6 +41,7 @@ usersRouter.post(
 usersRouter.post(
   partialPaths.users.activate,
   validate(activateUserSchema, {}, noAbortEarly),
+  checkActivationKey,
   activateUser
 );
 

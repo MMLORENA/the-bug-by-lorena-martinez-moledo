@@ -1,9 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import config from "../../../config.js";
 import {
-  activateErrors,
   loginErrors,
   registerErrors,
   userDataErrors,
@@ -17,7 +15,6 @@ import HasherBcrypt from "../../../utils/HasherBcrypt/HasherBcrypt.js";
 import type {
   CustomRequest,
   CustomTokenPayload,
-  UserActivationCredentials,
   UserCredentials,
   UserData,
   UserEmail,
@@ -142,35 +139,20 @@ export const loginUser = async (
 };
 
 export const activateUser = async (
-  req: Request<
+  req: CustomRequest<
     Record<string, unknown>,
     Record<string, unknown>,
-    UserActivationCredentials
+    Pick<UserCredentials, "password">
   >,
   res: Response,
   next: NextFunction
 ) => {
-  const { activationKey: userId } = req.query;
+  const { email } = req.query;
 
   const { password } = req.body;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
-      throw activateErrors.invalidActivationKey;
-    }
-
-    const user = await User.findById(userId).exec();
-
-    if (!user) {
-      throw activateErrors.invalidActivationKey;
-    }
-
-    if (
-      !user.activationKey ||
-      !(await hasher.compare(userId as string, user.activationKey))
-    ) {
-      throw activateErrors.invalidActivationKey;
-    }
+    const user = (await User.findOne({ email }).exec())!;
 
     const hashedPassword = await hasher.hash(password);
 
