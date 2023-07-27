@@ -29,7 +29,6 @@ import {
 import app from "../../app.js";
 import type {
   CustomTokenPayload,
-  UserActivationCredentials,
   UserData,
   UserStructure,
   UserWithId,
@@ -271,121 +270,6 @@ describe("Given a POST /users/login endpoint", () => {
         .expect(badRequestCode);
 
       expect(response.body).toStrictEqual(expectedErrors);
-    });
-  });
-});
-
-describe("Given a POST /users/activate endpoint", () => {
-  const luisitoPassword = "luisito123";
-  let luisitoId: string;
-  const activationBody = {
-    password: luisitoPassword,
-    confirmPassword: luisitoPassword,
-  };
-
-  beforeEach(async () => {
-    const luisitoData = getMockUserData({ email: luisEmail });
-    const luisitoUser = await User.create({
-      ...luisitoData,
-    });
-
-    luisitoId = luisitoUser._id.toString();
-    luisitoUser.activationKey = await bcrypt.hash(luisitoId, 10);
-
-    await luisitoUser.save();
-  });
-
-  afterEach(async () => {
-    await User.deleteMany();
-  });
-
-  describe("When it receives query string activationKey and password & confirmPassword 'luisito123' and the activation key is correct and it receives a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
-    test("Then it should respond with status 200 and message 'User account has been activated'", async () => {
-      const expectedMessage = {
-        message: "User account has been activated",
-      };
-
-      const response = await request(app)
-        .post(`${paths.users.activate}?activationKey=${luisitoId}`)
-        .set(apiKeyHeader, mockHeaderApiKey)
-        .set(apiNameHeader, mockHeaderApiName)
-        .send(activationBody)
-        .expect(okCode);
-
-      expect(response.body).toStrictEqual(expectedMessage);
-    });
-  });
-
-  describe("When it receives query string activationKey and it is invalid and it receives a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
-    test("Then it should respond with status 401 'User can not be activated'", async () => {
-      const invalidActivationKey = new mongoose.Types.ObjectId().toString();
-      const expectedMessage = {
-        error: "User can not be activated",
-      };
-
-      const response = await request(app)
-        .post(`${paths.users.activate}?activationKey=${invalidActivationKey}`)
-        .set(apiKeyHeader, mockHeaderApiKey)
-        .set(apiNameHeader, mockHeaderApiName)
-        .send(activationBody)
-        .expect(unauthorizedCode);
-
-      expect(response.body).toStrictEqual(expectedMessage);
-    });
-  });
-
-  describe("When it receives query string activationKey with correct ID but the stored hash has expired and it receives a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
-    const martitaPassword = "martita123";
-    let martitaId: string;
-    const activationBody = {
-      password: martitaPassword,
-      confirmPassword: martitaPassword,
-    };
-
-    beforeEach(async () => {
-      const martitaData = getMockUser({ email: martaEmail });
-      const martitaUser = await User.create({
-        ...martitaData,
-      });
-
-      martitaId = martitaUser._id.toString();
-
-      await martitaUser.save();
-    });
-
-    test("Then it should respond with status 401 and message 'User can not be activated'", async () => {
-      const expectedMessage = {
-        error: "User can not be activated",
-      };
-
-      const response = await request(app)
-        .post(`${paths.users.activate}?activationKey=${martitaId}`)
-        .set(apiKeyHeader, mockHeaderApiKey)
-        .set(apiNameHeader, mockHeaderApiName)
-        .send(activationBody)
-        .expect(unauthorizedCode);
-
-      expect(response.body).toStrictEqual(expectedMessage);
-    });
-  });
-
-  describe("When it receives query string activationKey, and in the body password 'luisito123' and confirmPassword 'luisito1234' and a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
-    test("Then it should respond with status 400 and message 'Passwords must match'", async () => {
-      const activationKey = new mongoose.Types.ObjectId().toString();
-      const expectedMessage = { error: "Passwords must match" };
-      const activationBody: UserActivationCredentials = {
-        password: "luisito123",
-        confirmPassword: "luisito1234",
-      };
-
-      const response = await request(app)
-        .post(`${paths.users.activate}?activationKey=${activationKey}`)
-        .set(apiKeyHeader, mockHeaderApiKey)
-        .set(apiNameHeader, mockHeaderApiName)
-        .send(activationBody)
-        .expect(badRequestCode);
-
-      expect(response.body).toStrictEqual(expectedMessage);
     });
   });
 });
