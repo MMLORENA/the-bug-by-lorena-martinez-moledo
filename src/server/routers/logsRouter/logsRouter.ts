@@ -4,9 +4,12 @@ import { getLogsFilesController } from "../../controllers/getLogsControllers/get
 import LogManager from "../../logs/LogManager/LogManager.js";
 import { auth, checkIsUserAdmin } from "../../middlewares/auth/auth.js";
 import { partialPaths } from "../paths.js";
+import { environment } from "../../../environment/loadEnvironments.js";
+
+const { logsRootFolder } = environment;
 
 const logsRouter = Router();
-const logManager = new LogManager("sessions");
+const logManager = new LogManager(logsRootFolder);
 
 logsRouter.use(cookieParser());
 
