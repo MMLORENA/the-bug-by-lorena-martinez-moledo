@@ -1,11 +1,13 @@
-import "../../../environment/loadEnvironments.js";
 import chalk from "chalk";
 import type { NextFunction, Request, Response } from "express";
+import type { errors } from "express-validation";
 import { ValidationError } from "express-validation";
 import type CustomError from "../../../CustomError/CustomError.js";
-import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
-import debugConfig from "../../../utils/debugConfig/debugConfig.js";
 import generalErrors from "../../../constants/errors/generalErrors.js";
+import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
+import "../../../environment/loadEnvironments.js";
+import debugConfig from "../../../utils/debugConfig/debugConfig.js";
+import getValidationErrors from "./getValidationErrors/getValidationErrors.js";
 
 const {
   serverErrors: { internalServerErrorCode },
@@ -20,15 +22,16 @@ const generalError = (
   // eslint-disable-next-line no-unused-vars
   next: NextFunction
 ) => {
-  if (error instanceof ValidationError && error.details.body) {
-    const validationErrors = error.details.body
-      // eslint-disable-next-line no-useless-escape
-      .map((joiError) => joiError.message.replaceAll(`\"`, ""))
-      .join(" & ");
+  if (error instanceof ValidationError && error.details) {
+    const detailsErrorKeys = Object.keys(error.details);
 
-    (error as CustomError).publicMessage = validationErrors;
+    for (const key of detailsErrorKeys) {
+      const validationErrors = getValidationErrors(error, key as keyof errors);
 
-    debug(chalk.blueBright(validationErrors));
+      (error as CustomError).publicMessage = validationErrors;
+
+      debug(chalk.blueBright(validationErrors));
+    }
   }
 
   const statusCode = error.statusCode || internalServerErrorCode;
