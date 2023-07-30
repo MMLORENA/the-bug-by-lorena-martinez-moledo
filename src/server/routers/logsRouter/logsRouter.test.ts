@@ -69,7 +69,7 @@ describe("Given a GET /users/get-logs endpoint", () => {
       const expectedStatus = okCode;
 
       const response = await request(app)
-        .get(paths.logs.getLogsFiles)
+        .get(paths.logs.logs)
         .set("Cookie", [userCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
@@ -103,7 +103,7 @@ describe("Given a GET /users/get-logs endpoint", () => {
       const userCookie = `${cookieName}=${mockToken}`;
 
       const response = await request(app)
-        .get(paths.logs.getLogsFiles)
+        .get(paths.logs.logs)
         .set("Cookie", [userCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
