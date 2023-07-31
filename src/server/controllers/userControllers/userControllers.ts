@@ -139,7 +139,7 @@ export const loginUser = async (
 };
 
 export const activateUser = async (
-  req: CustomRequest<
+  req: Request<
     Record<string, unknown>,
     Record<string, unknown>,
     Pick<UserCredentials, "password">
