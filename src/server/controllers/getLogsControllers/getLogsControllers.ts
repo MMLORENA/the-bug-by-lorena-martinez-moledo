@@ -26,13 +26,9 @@ export const getLogByDateController =
   (logManager: LogManagerStructure): RequestHandler =>
   (req: LogByDateRequest, res: Response, next: NextFunction) => {
     try {
-      if (!req.params) {
-        throw logsErrors.noDate;
-      }
+      const { date: dateString } = req.params;
 
-      const { date: dateToString } = req.params;
-
-      const date = new Date(dateToString);
+      const date = new Date(dateString);
       const filePath = logManager.generatePathByDate(date);
 
       const log = logManager.readLogFromFile(filePath);
