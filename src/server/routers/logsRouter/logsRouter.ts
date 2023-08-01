@@ -4,6 +4,7 @@ import { getLogsFilesController } from "../../controllers/getLogsControllers/get
 import LogManager from "../../logs/LogManager/LogManager.js";
 import { auth, checkIsUserAdmin } from "../../middlewares/auth/auth.js";
 import { environment } from "../../../environment/loadEnvironments.js";
+import { paths } from "../paths.js";
 
 const { logsRootFolder } = environment;
 
@@ -12,6 +13,11 @@ const logManager = new LogManager(logsRootFolder);
 
 logsRouter.use(cookieParser());
 
-logsRouter.get("/", auth, checkIsUserAdmin, getLogsFilesController(logManager));
+logsRouter.get(
+  paths.root,
+  auth,
+  checkIsUserAdmin,
+  getLogsFilesController(logManager)
+);
 
 export default logsRouter;

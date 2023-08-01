@@ -40,7 +40,7 @@ app.use(
 );
 
 app.use(partialPaths.users.base, checkApiKey(currentApp), usersRouter);
-app.use(partialPaths.logs.base, checkApiKey(currentApp), logsRouter);
+app.use(paths.logs.base, checkApiKey(currentApp), logsRouter);
 
 app.use(unknownEndpoint);
 app.use(generalError);
