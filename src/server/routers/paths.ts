@@ -12,7 +12,6 @@ export const partialPaths = {
   },
   logs: {
     base: "/logs",
-    getLogsFiles: "/get-logs-files",
   },
 };
 
@@ -32,6 +31,6 @@ export const paths = {
     base: "/api-docs",
   },
   logs: {
-    getLogsFiles: `${partialPaths.logs.base}${partialPaths.logs.getLogsFiles}`,
+    logs: `${partialPaths.logs.base}`,
   },
 };
