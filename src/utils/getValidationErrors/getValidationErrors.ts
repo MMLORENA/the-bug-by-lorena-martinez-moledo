@@ -1,5 +1,5 @@
 import type { ValidationError, errors } from "express-validation";
-import type CustomError from "../../../../CustomError/CustomError.js";
+import type CustomError from "../../CustomError/CustomError.js";
 
 const getValidationErrors = (
   error: CustomError,

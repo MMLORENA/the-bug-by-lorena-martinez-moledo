@@ -7,7 +7,7 @@ import generalErrors from "../../../constants/errors/generalErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import "../../../environment/loadEnvironments.js";
 import debugConfig from "../../../utils/debugConfig/debugConfig.js";
-import getValidationErrors from "./getValidationErrors/getValidationErrors.js";
+import getValidationErrors from "../../../utils/getValidationErrors/getValidationErrors.js";
 
 const {
   serverErrors: { internalServerErrorCode },
