@@ -11,7 +11,6 @@ import connectDatabase from "../../../database/connectDatabase";
 import User from "../../../database/models/User.js";
 import { getMockUserData } from "../../../factories/userDataFactory";
 import { getMockUser } from "../../../factories/userFactory";
-import { environment } from "../../../environment/loadEnvironments";
 import cookieParser from "../../../testUtils/cookieParser";
 import {
   mockHeaderApiKey,
@@ -57,10 +56,6 @@ const {
     notFoundCode,
   },
 } = httpStatusCodes;
-
-const {
-  jwt: { jwtSecret },
-} = environment;
 
 let server: MongoMemoryServer;
 
@@ -478,13 +473,7 @@ describe("Given a GET /users/user-data endpoint", () => {
 
   describe("When it receives a request with a correct api-key and api-name with a valid token cookie with an existant user name 'luis' in DB", () => {
     test("Then it should respond with status 200 and the 'luis' user data information in the body", async () => {
-      const mockUserPayload: CustomTokenPayload = {
-        name: newUserData.name,
-        isAdmin: newUserData.isAdmin,
-        id: userId,
-      };
-
-      const mockLuisToken = jwt.sign(mockUserPayload, jwtSecret);
+      const mockLuisToken = generateMockToken({ id: userId });
       const userLuisCookie = `${cookieName}=${mockLuisToken}`;
 
       const expectedStatus = okCode;

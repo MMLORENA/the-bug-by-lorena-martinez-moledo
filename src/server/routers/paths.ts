@@ -10,6 +10,10 @@ export const partialPaths = {
     forgottenPassword: "/forgotten-password",
     setNewPassword: "/set-new-password",
   },
+  logs: {
+    base: "/logs",
+    logByDate: "/:date",
+  },
 };
 
 export const paths = {
@@ -28,6 +32,7 @@ export const paths = {
     base: "/api-docs",
   },
   logs: {
-    base: "/logs",
+    base: partialPaths.logs.base,
+    logByDate: `${partialPaths.logs.base}${partialPaths.logs.logByDate}`,
   },
 };

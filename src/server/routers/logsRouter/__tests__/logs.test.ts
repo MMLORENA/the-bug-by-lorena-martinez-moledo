@@ -1,21 +1,21 @@
 import jwt from "jsonwebtoken";
-import request from "supertest";
-import User from "../../../database/models/User";
-import { getMockUser } from "../../../factories/userFactory";
-
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import config from "../../../config";
-import requestHeaders from "../../../constants/requestHeaders";
-import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes";
-import connectDatabase from "../../../database/connectDatabase";
-import { environment } from "../../../environment/loadEnvironments";
+import request from "supertest";
+import config from "../../../../config";
+import requestHeaders from "../../../../constants/requestHeaders";
+import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import connectDatabase from "../../../../database/connectDatabase";
+import User from "../../../../database/models/User";
+import { environment } from "../../../../environment/loadEnvironments";
+import { getMockUser } from "../../../../factories/userFactory";
 import {
   mockHeaderApiKey,
   mockHeaderApiName,
-} from "../../../testUtils/mocks/mockRequestHeaders";
-import app from "../../app";
-import { paths } from "../paths";
+} from "../../../../testUtils/mocks/mockRequestHeaders";
+import { generateMockToken } from "../../../../testUtils/mocks/mockToken";
+import app from "../../../app";
+import { paths } from "../../paths";
 
 const {
   jwt: { jwtSecret },
@@ -25,6 +25,7 @@ const {
   successCodes: { okCode },
   clientErrors: { forbiddenCode },
 } = httpStatusCodes;
+
 const { apiKeyHeader, apiNameHeader } = requestHeaders;
 
 const {
@@ -59,12 +60,7 @@ describe("Given a GET /users/get-logs endpoint", () => {
     });
 
     test("Then it should respond with status 200 and a collection of the names of the log files existing in the last 30 days", async () => {
-      const mockAdminUserPayload = {
-        name: newAdminUserData.name,
-        isAdmin: newAdminUserData.isAdmin,
-        id: userId,
-      };
-      const mockToken = jwt.sign(mockAdminUserPayload, jwtSecret);
+      const mockToken = generateMockToken({ id: userId });
       const userCookie = `${cookieName}=${mockToken}`;
       const expectedStatus = okCode;
 

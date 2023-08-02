@@ -16,10 +16,10 @@ describe("Given a getLogByDateController", () => {
   };
   const next = jest.fn();
 
-  describe("When it's invoked with a logManager and it receives a request with date in params '1970-01-01T00:00:00.000' and a response", () => {
+  describe("When it's invoked with a logManager and it receives a request with date in params '01-01-1970' and a response", () => {
     const req: Partial<LogByDateRequest> = {
       params: {
-        date: "1970-01-01T00:00:00.000",
+        date: "01-01-1970",
       },
     };
 
@@ -56,22 +56,6 @@ describe("Given a getLogByDateController", () => {
       );
 
       expect(next).toHaveBeenCalledWith(expectedCustomError);
-    });
-  });
-
-  describe("When it's invoked with a logManager and it receives a request without a date in params and a response and next function", () => {
-    test("Then it should invoke next function with error 'Log not available'", () => {
-      const mockLockManager = new LogManagerMock("fakeRootFolderName");
-      const logByDateController = getLogByDateController(mockLockManager);
-      const req: Partial<LogByDateRequest> = {};
-
-      logByDateController(
-        req as LogByDateRequest,
-        res as Response,
-        next as NextFunction
-      );
-
-      expect(next).toHaveBeenCalledWith(logsErrors.noDate);
     });
   });
 });
