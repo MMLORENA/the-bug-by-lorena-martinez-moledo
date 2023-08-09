@@ -1,64 +1,79 @@
-import type { NextFunction, Request, Response } from "express";
-import mongoose from "mongoose";
-import { activateErrors } from "../../../../constants/errors/userErrors";
+import type { Request } from "express";
+import { type NextFunction, type Response } from "express";
+import { loginErrors } from "../../../../constants/errors/userErrors";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import User from "../../../../database/models/User";
-import { getMockUserCredentials } from "../../../../factories/userCredentialsFactory";
+import { getMockUser } from "../../../../factories/userFactory";
+import type { UserActivationCredentials, UserEmail } from "../../../types";
 import { activateUser } from "../userControllers";
-
-const req: Partial<Request> = {};
-const res: Partial<Response> = {
-  status: jest.fn().mockReturnThis(),
-  sendStatus: jest.fn(),
-  cookie: jest.fn().mockReturnThis(),
-  clearCookie: jest.fn().mockReturnThis(),
-  json: jest.fn(),
-};
-const next = jest.fn();
 
 const {
   successCodes: { okCode },
 } = httpStatusCodes;
 
-const mockHash: jest.Mock<Promise<string>> = jest.fn(async () => "");
-const mockCompare: jest.Mock<Promise<boolean>> = jest.fn(async () => true);
+const mockHash = jest.fn();
+const mockCompare: jest.Mock<boolean | Promise<Error>> = jest.fn(() => true);
 
 jest.mock("../../../../utils/HasherBcrypt/HasherBcrypt.js", () =>
   jest.fn().mockImplementation(() => ({
-    compare: async () => mockCompare(),
-    hash: async () => mockHash(),
+    hash: async () => (mockHash as jest.Mock<Promise<string>>)(),
+    compare: () => mockCompare(),
   }))
 );
 
 jest.mock("../../../../email/sendEmail/sendEmail.js");
 
+const user = getMockUser();
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("Given an activateUser function", () => {
-  describe("When it receives a request with query string activationKey and body password and confirmPassword 'test-password' and the activationKey is valid", () => {
+  const req: Partial<
+    Request<
+      Record<string, unknown>,
+      Record<string, unknown>,
+      UserActivationCredentials,
+      UserEmail
+    >
+  > = {
+    query: { email: user.email },
+    body: {
+      password: user.password,
+      confirmPassword: user.password,
+    },
+  };
+  const res: Partial<Response> = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+  const next = jest.fn();
+
+  const email = "";
+  const password = "";
+  const nullUser = {
+    ...user,
+    email,
+    password,
+  };
+
+  describe("When it receives a request with query string email, and body password and confirmPassword and the activationKey is valid", () => {
     test("Then it should invoke response's method status with 200 and json with the message 'User account has been activated'", async () => {
-      const activationKey = new mongoose.Types.ObjectId().toString();
-
-      req.query = {
-        activationKey,
-      };
-
-      const user = getMockUserCredentials();
-      const { password } = user;
-
-      req.body = {
-        password,
-        confirmPassword: password,
-      };
-
-      User.findById = jest.fn().mockReturnValue({
-        exec: jest
-          .fn()
-          .mockResolvedValueOnce({ ...user, activationKey, save: jest.fn() }),
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue({ user, save: jest.fn() }),
       });
 
-      mockCompare.mockResolvedValueOnce(true);
-      mockHash.mockResolvedValueOnce(password);
-
-      await activateUser(req as Request, res as Response, next);
+      await activateUser(
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >,
+        res as Response,
+        next as NextFunction
+      );
 
       expect(res.status).toHaveBeenCalledWith(okCode);
       expect(res.json).toHaveBeenCalledWith({
@@ -67,18 +82,77 @@ describe("Given an activateUser function", () => {
     });
   });
 
-  describe("When it receives an invalid activation key and a next function", () => {
-    test("Then it should call next function with an invalid activation key error", async () => {
-      const activationKey = "invalid-key";
-      const invalidKeyError = activateErrors.invalidActivationKey;
+  describe("When it receives a request with an inexistent email and a next function", () => {
+    test("Then it should call the next function with an user not found error", async () => {
+      const req: Partial<
+        Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >
+      > = {
+        query: { email: nullUser.email },
+        body: {
+          password: nullUser.password,
+          confirmPassword: nullUser.password,
+        },
+      };
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockRejectedValue(loginErrors.userNotFound),
+      });
 
-      req.query = {
-        activationKey,
+      await activateUser(
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(next).toHaveBeenCalledWith(loginErrors.userNotFound);
+    });
+  });
+
+  describe("When it receives a next function and the hash function fails with an error", () => {
+    test("Then it shoul call the next function with the error", async () => {
+      const expectedMessage = "Error on hashing password";
+      const req: Partial<
+        Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >
+      > = {
+        query: { email: nullUser.email },
+        body: {
+          password: nullUser.password,
+          confirmPassword: nullUser.password,
+        },
       };
 
-      await activateUser(req as Request, res as Response, next as NextFunction);
+      User.findOne = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue({ nullUser, save: jest.fn() }),
+      });
 
-      expect(next).toHaveBeenCalledWith(invalidKeyError);
+      mockHash.mockRejectedValue(expectedMessage);
+
+      await activateUser(
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(next).toHaveBeenCalledWith(expectedMessage);
     });
   });
 });

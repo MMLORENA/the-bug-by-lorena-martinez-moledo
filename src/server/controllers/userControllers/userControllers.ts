@@ -1,15 +1,15 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+import CustomError from "../../../CustomError/CustomError.js";
 import config from "../../../config.js";
 import {
-  activateErrors,
   loginErrors,
   registerErrors,
   userDataErrors,
 } from "../../../constants/errors/userErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
+import createForgottenPasswordEmail from "../../../email/emailTemplates/createForgottenPasswordEmail.js";
 import createRegisterEmail from "../../../email/emailTemplates/createRegisterEmail.js";
 import sendEmail from "../../../email/sendEmail/sendEmail.js";
 import { environment } from "../../../environment/loadEnvironments.js";
@@ -22,8 +22,6 @@ import type {
   UserData,
   UserEmail,
 } from "../../types.js";
-import CustomError from "../../../CustomError/CustomError.js";
-import createForgottenPasswordEmail from "../../../email/emailTemplates/createForgottenPasswordEmail.js";
 
 const {
   jwt: { jwtSecret, tokenExpiry },
@@ -145,32 +143,18 @@ export const activateUser = async (
   req: Request<
     Record<string, unknown>,
     Record<string, unknown>,
-    UserActivationCredentials
+    UserActivationCredentials,
+    UserEmail
   >,
   res: Response,
   next: NextFunction
 ) => {
-  const { activationKey: userId } = req.query;
+  const { email } = req.query;
 
   const { password } = req.body;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(userId as string)) {
-      throw activateErrors.invalidActivationKey;
-    }
-
-    const user = await User.findById(userId).exec();
-
-    if (!user) {
-      throw activateErrors.invalidActivationKey;
-    }
-
-    if (
-      !user.activationKey ||
-      !(await hasher.compare(userId as string, user.activationKey))
-    ) {
-      throw activateErrors.invalidActivationKey;
-    }
+    const user = (await User.findOne({ email }).exec())!;
 
     const hashedPassword = await hasher.hash(password);
 
