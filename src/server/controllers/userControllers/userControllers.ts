@@ -160,6 +160,7 @@ export const activateUser = async (
 
     user.password = hashedPassword;
     user.isActive = true;
+    user.activationKey = "";
 
     await user.save();
 
@@ -228,6 +229,7 @@ export const setUserNewPassword = async (
 
     const hashedPassword = await hasher.hash(newPassword);
     user.password = hashedPassword;
+    user.activationKey = "";
 
     await user.save();
 
@@ -265,7 +267,8 @@ export const sendEmailForForgottenPassword = async (
 
     const { text, subject } = createForgottenPasswordEmail(
       user.name,
-      user._id.toString(),
+      email,
+      activationKey,
       activationKeyExpiry.getTime()
     );
 

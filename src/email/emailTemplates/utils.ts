@@ -1,7 +1,9 @@
 import { environment } from "../../environment/loadEnvironments.js";
 
-export const getNewPasswordLink = (activationKey: string) =>
-  `${environment.authFrontUrl}/set-password?key=${activationKey}`;
+export const getNewPasswordLink = (activationKey: string, email?: string) =>
+  `${environment.authFrontUrl}/set-password?${
+    email ? `email=${email}&` : ""
+  }key=${activationKey}`;
 
 export const getTimeToExpirationString = (activationKeyExpiry: number) => {
   const timeToExpirationInHours = activationKeyExpiry / 1000 / 60 / 60;
