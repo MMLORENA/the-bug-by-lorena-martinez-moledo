@@ -23,7 +23,8 @@ import { noAbortEarly } from "../../schemas/validateOptions.js";
 import { partialPaths } from "../paths.js";
 
 const usersRouter = Router();
-const logManager = new LogManager(environment.logsRootFolder);
+const { logsRootFolder } = environment;
+const logManager = new LogManager(logsRootFolder);
 
 usersRouter.post(
   partialPaths.users.register,

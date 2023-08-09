@@ -3,6 +3,7 @@ const joiTypesError = {
   emailInvalid: "email.invalid",
   stringMin: "string.min",
   anyOnly: "any.only",
+  stringPatternName: "string.pattern.name",
 };
 
 export default joiTypesError;
