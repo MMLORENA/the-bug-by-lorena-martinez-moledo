@@ -1,4 +1,4 @@
-import { luisName } from "../../testUtils/mocks/mockUsers";
+import { luisEmail, luisName } from "../../testUtils/mocks/mockUsers";
 import createForgottenPasswordEmail from "./createForgottenPasswordEmail";
 import { getNewPasswordLink } from "./utils";
 
@@ -12,6 +12,7 @@ describe("Given the function createForgottenPasswordEmail", () => {
 
       const forgottenPasswordEmail = createForgottenPasswordEmail(
         luisName,
+        luisEmail,
         activationKey,
         activationKeyExpiry
       );
@@ -27,6 +28,7 @@ describe("Given the function createForgottenPasswordEmail", () => {
 
       const forgottenPasswordEmail = createForgottenPasswordEmail(
         luisName,
+        luisEmail,
         activationKey,
         activationKeyExpiry
       );
@@ -35,10 +37,14 @@ describe("Given the function createForgottenPasswordEmail", () => {
     });
 
     test("Then it should return a text with an activation link", () => {
-      const expectedEmailActivationLink = getNewPasswordLink(activationKey);
+      const expectedEmailActivationLink = getNewPasswordLink(
+        activationKey,
+        luisEmail
+      );
 
       const forgottenPasswordEmail = createForgottenPasswordEmail(
         luisName,
+        luisEmail,
         activationKey,
         activationKeyExpiry
       );
