@@ -1,10 +1,11 @@
+import type { Request } from "express";
 import { type NextFunction, type Response } from "express";
+import { loginErrors } from "../../../../constants/errors/userErrors";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import User from "../../../../database/models/User";
-import { activateUser } from "../userControllers";
-import type { CustomRequest } from "../../../types";
 import { getMockUser } from "../../../../factories/userFactory";
-import { loginErrors } from "../../../../constants/errors/userErrors";
+import type { UserActivationCredentials, UserEmail } from "../../../types";
+import { activateUser } from "../userControllers";
 
 const {
   successCodes: { okCode },
@@ -29,7 +30,14 @@ afterEach(() => {
 });
 
 describe("Given an activateUser function", () => {
-  const req: Partial<CustomRequest> = {
+  const req: Partial<
+    Request<
+      Record<string, unknown>,
+      Record<string, unknown>,
+      UserActivationCredentials,
+      UserEmail
+    >
+  > = {
     query: { email: user.email },
     body: {
       password: user.password,
@@ -57,7 +65,12 @@ describe("Given an activateUser function", () => {
       });
 
       await activateUser(
-        req as CustomRequest,
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >,
         res as Response,
         next as NextFunction
       );
@@ -71,7 +84,14 @@ describe("Given an activateUser function", () => {
 
   describe("When it receives a request with an invalid email and a next function", () => {
     test("Then it should call the next function with an incorrect email error", async () => {
-      const req: Partial<CustomRequest> = {
+      const req: Partial<
+        Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >
+      > = {
         query: { email: nullUser.email },
         body: {
           password: nullUser.password,
@@ -83,7 +103,12 @@ describe("Given an activateUser function", () => {
       });
 
       await activateUser(
-        req as CustomRequest,
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >,
         res as Response,
         next as NextFunction
       );
@@ -95,7 +120,14 @@ describe("Given an activateUser function", () => {
   describe("When it receives a request with no password and a next function", () => {
     test("Then it shoul call the next function with an incorrect password error", async () => {
       const expectedMessage = "Password shouldn't be empty";
-      const req: Partial<CustomRequest> = {
+      const req: Partial<
+        Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >
+      > = {
         query: { email: nullUser.email },
         body: {
           password: nullUser.password,
@@ -110,7 +142,12 @@ describe("Given an activateUser function", () => {
       mockHash.mockRejectedValue(expectedMessage);
 
       await activateUser(
-        req as CustomRequest,
+        req as Request<
+          Record<string, unknown>,
+          Record<string, unknown>,
+          UserActivationCredentials,
+          UserEmail
+        >,
         res as Response,
         next as NextFunction
       );

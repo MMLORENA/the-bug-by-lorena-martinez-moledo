@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import CustomError from "../../../CustomError/CustomError.js";
 import config from "../../../config.js";
 import {
   loginErrors,
@@ -8,6 +9,7 @@ import {
 } from "../../../constants/errors/userErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import User from "../../../database/models/User.js";
+import createForgottenPasswordEmail from "../../../email/emailTemplates/createForgottenPasswordEmail.js";
 import createRegisterEmail from "../../../email/emailTemplates/createRegisterEmail.js";
 import sendEmail from "../../../email/sendEmail/sendEmail.js";
 import { environment } from "../../../environment/loadEnvironments.js";
@@ -15,12 +17,11 @@ import HasherBcrypt from "../../../utils/HasherBcrypt/HasherBcrypt.js";
 import type {
   CustomRequest,
   CustomTokenPayload,
+  UserActivationCredentials,
   UserCredentials,
   UserData,
   UserEmail,
 } from "../../types.js";
-import CustomError from "../../../CustomError/CustomError.js";
-import createForgottenPasswordEmail from "../../../email/emailTemplates/createForgottenPasswordEmail.js";
 
 const {
   jwt: { jwtSecret, tokenExpiry },
@@ -142,7 +143,8 @@ export const activateUser = async (
   req: Request<
     Record<string, unknown>,
     Record<string, unknown>,
-    Pick<UserCredentials, "password">
+    UserActivationCredentials,
+    UserEmail
   >,
   res: Response,
   next: NextFunction
