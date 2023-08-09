@@ -82,8 +82,8 @@ describe("Given an activateUser function", () => {
     });
   });
 
-  describe("When it receives a request with an invalid email and a next function", () => {
-    test("Then it should call the next function with an incorrect email error", async () => {
+  describe("When it receives a request with an inexistent email and a next function", () => {
+    test("Then it should call the next function with an user not found error", async () => {
       const req: Partial<
         Request<
           Record<string, unknown>,
@@ -117,9 +117,9 @@ describe("Given an activateUser function", () => {
     });
   });
 
-  describe("When it receives a request with no password and a next function", () => {
-    test("Then it shoul call the next function with an incorrect password error", async () => {
-      const expectedMessage = "Password shouldn't be empty";
+  describe("When it receives a next function and the hash function fails with an error", () => {
+    test("Then it shoul call the next function with the error", async () => {
+      const expectedMessage = "Error on hashing password";
       const req: Partial<
         Request<
           Record<string, unknown>,
