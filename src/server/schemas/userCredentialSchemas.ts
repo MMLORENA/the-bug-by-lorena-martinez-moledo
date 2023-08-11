@@ -26,3 +26,9 @@ export const loginPasswordSchema = Joi.string()
   .messages({
     [stringEmpty]: "Password shouldn't be empty",
   });
+
+export const activationKeySchema = Joi.string()
+  .required()
+  .messages({
+    [stringEmpty]: "Activation key shouldn't be empty",
+  });

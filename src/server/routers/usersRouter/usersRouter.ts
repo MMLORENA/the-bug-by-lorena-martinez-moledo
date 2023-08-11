@@ -19,6 +19,7 @@ import checkActivationKey from "../../middlewares/checkActivationKey/checkActiva
 import activateUserSchema from "../../schemas/activateUserSchema.js";
 import loginUserSchema from "../../schemas/loginUserSchema.js";
 import registerUserSchema from "../../schemas/registerUserSchema.js";
+import setNewPasswordSchema from "../../schemas/setNewPasswordSchema.js";
 import { noAbortEarly } from "../../schemas/validateOptions.js";
 import { partialPaths } from "../paths.js";
 
@@ -48,6 +49,7 @@ usersRouter.post(
 
 usersRouter.post(
   partialPaths.users.setNewPassword,
+  validate(setNewPasswordSchema, {}, noAbortEarly),
   checkActivationKey,
   setUserNewPassword
 );
