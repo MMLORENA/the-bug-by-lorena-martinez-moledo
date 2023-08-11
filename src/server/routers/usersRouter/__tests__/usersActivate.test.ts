@@ -1,23 +1,23 @@
-import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
+import request from "supertest";
 import requestHeaders from "../../../../constants/requestHeaders";
+import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import connectDatabase from "../../../../database/connectDatabase";
 import User from "../../../../database/models/User";
 import { getMockUser } from "../../../../factories/userFactory";
+import {
+  mockHeaderApiKey,
+  mockHeaderApiName,
+} from "../../../../testUtils/mocks/mockRequestHeaders";
 import {
   luisActivationKey,
   luisEmail,
   luisPassword,
 } from "../../../../testUtils/mocks/mockUsers";
-import mongoose from "mongoose";
 import app from "../../../app";
-import { paths } from "../../paths";
-import {
-  mockHeaderApiKey,
-  mockHeaderApiName,
-} from "../../../../testUtils/mocks/mockRequestHeaders";
-import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import type { UserActivationCredentials } from "../../../types";
+import { paths } from "../../paths";
 
 const { apiKeyHeader, apiNameHeader } = requestHeaders;
 
@@ -126,12 +126,6 @@ describe("Given a POST /users/activate endpoint", () => {
   });
 
   describe("When it receives a request with an email 'luisito@isdicoders.com', a valid activationKey and password 'luisito123' and confirmPassword 'luisito1234'", () => {
-    beforeEach(async () => {
-      await User.create(
-        getMockUser({ email: luisEmail, activationKey: luisActivationKey })
-      );
-    });
-
     test("Then it should respond with status 400 and message 'Passwords must match'", async () => {
       const expectedMessage = { error: "Passwords must match" };
       const activationBody: UserActivationCredentials = {
@@ -141,8 +135,29 @@ describe("Given a POST /users/activate endpoint", () => {
 
       const response = await request(app)
         .post(
-          `${paths.users.activate}?email=${luisEmail}activationKey=${luisActivationKey}`
+          `${paths.users.activate}?email=${luisEmail}&activationKey=${luisActivationKey}`
         )
+        .set(apiKeyHeader, mockHeaderApiKey)
+        .set(apiNameHeader, mockHeaderApiName)
+        .send(activationBody)
+        .expect(badRequestCode);
+
+      expect(response.body).toStrictEqual(expectedMessage);
+    });
+  });
+
+  describe("When it receives a request without email nor activation key", () => {
+    test("Then it should respond with status 400 and message 'Email is required & activationKey is required'", async () => {
+      const expectedMessage = {
+        error: "Email is required & activationKey is required",
+      };
+      const activationBody: UserActivationCredentials = {
+        password: luisPassword,
+        confirmPassword: luisPassword,
+      };
+
+      const response = await request(app)
+        .post(`${paths.users.activate}`)
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
         .send(activationBody)
