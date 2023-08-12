@@ -4,12 +4,12 @@ import joiTypesError from "./joiTypesErrors.js";
 const { stringEmpty, stringPatternName } = joiTypesError;
 
 const getLogByDateSchema = {
-  params: Joi.object({
+  query: Joi.object({
     date: Joi.string()
-      .pattern(/^\d{2}-\d{2}-\d{4}$/, "DD-MM-YYYY")
+      .pattern(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD")
       .required()
       .messages({
-        [stringPatternName]: "Invalid date format. Format must be DD-MM-YYYY",
+        [stringPatternName]: "Invalid date format. Format must be YYYY-MM-DD",
         [stringEmpty]: "Date params is required",
       }),
   }),

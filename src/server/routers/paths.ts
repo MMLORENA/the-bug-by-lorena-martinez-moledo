@@ -12,7 +12,8 @@ export const partialPaths = {
   },
   logs: {
     base: "/logs",
-    logByDate: "/:date",
+    logByDate: "/",
+    downloadLogByDate: "/download",
   },
 };
 
@@ -34,5 +35,6 @@ export const paths = {
   logs: {
     base: partialPaths.logs.base,
     logByDate: `${partialPaths.logs.base}${partialPaths.logs.logByDate}`,
+    downloadLogByDate: `${partialPaths.logs.base}${partialPaths.logs.downloadLogByDate}`,
   },
 };
