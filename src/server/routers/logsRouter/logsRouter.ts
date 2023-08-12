@@ -3,7 +3,7 @@ import { Router } from "express";
 import { validate } from "express-validation";
 import { environment } from "../../../environment/loadEnvironments.js";
 import {
-  downloadLogByDate,
+  getDownloadLogByDateController,
   getLogByDateController,
   getLogsFilesController,
 } from "../../controllers/getLogsControllers/getLogsControllers.js";
@@ -30,7 +30,9 @@ logsRouter.get(
 logsRouter.get(
   partialPaths.logs.downloadLogByDate,
   validate(getLogByDateSchema, {}, noAbortEarly),
-  downloadLogByDate(logManager)
+  auth,
+  checkIsUserAdmin,
+  getDownloadLogByDateController(logManager)
 );
 
 logsRouter.get(

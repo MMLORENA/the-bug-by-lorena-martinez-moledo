@@ -1,8 +1,8 @@
 import type { NextFunction, Response } from "express";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import logsErrors from "../../../constants/errors/logsErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
+import __dirname from "../../../utils/dirname.js";
 import type LogManagerStructure from "../../logs/LogManager/types.js";
 import type { CustomRequest, LogByDateRequest } from "../../types.js";
 
@@ -47,7 +47,7 @@ export const getLogByDateController =
     }
   };
 
-export const downloadLogByDate =
+export const getDownloadLogByDateController =
   (logManager: LogManagerStructure) =>
   (req: LogByDateRequest, res: Response, next: NextFunction) => {
     try {
@@ -55,9 +55,6 @@ export const downloadLogByDate =
 
       const date = new Date(formattedDate);
       const filePath = logManager.generatePathByDate(date);
-
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = path.dirname(__filename);
 
       res
         .status(200)
