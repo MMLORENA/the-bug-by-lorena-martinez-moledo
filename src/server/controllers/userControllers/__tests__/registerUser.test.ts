@@ -42,7 +42,7 @@ describe("Given a registerUser Controller", () => {
   const registerUserBody = getMockUserData({ email: luisEmail });
 
   describe("When it receives a request with a user data with email: 'luisito@isdicoders.com'", () => {
-    test.only("Then it should call the response method status with a 201, and method json with a user with email 'luisito@isdicoders.com", async () => {
+    test("Then it should call the response method status with a 201, and method json with a user with email 'luisito@isdicoders.com", async () => {
       const userCreatedMock: UserWithId = getMockUser(registerUserBody);
       const expectedStatus = createdCode;
 
@@ -68,7 +68,7 @@ describe("Given a registerUser Controller", () => {
   });
 
   describe("When it receives a request with a user name that already exist", () => {
-    test("Then it should call next with an error message 'User already exists'", async () => {
+    test("Then it should call next with an error message 'Duplicate key'", async () => {
       const errorDuplicateKeyMessage = "duplicate key";
       const duplicateKeyError = registerErrors.duplicateUser(
         errorDuplicateKeyMessage
