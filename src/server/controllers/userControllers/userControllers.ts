@@ -85,7 +85,7 @@ export const registerUser = async (
       return;
     }
 
-    next(registerErrors.generalRegisterError(errorMessage));
+    next(registerErrors.generalRegisterError());
   }
 };
 
