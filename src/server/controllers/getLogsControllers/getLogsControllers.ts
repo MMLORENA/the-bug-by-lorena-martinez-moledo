@@ -1,6 +1,8 @@
-import type { NextFunction, RequestHandler, Response } from "express";
+import type { NextFunction, Response } from "express";
+import path from "node:path";
 import logsErrors from "../../../constants/errors/logsErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
+import __dirname from "../../../utils/dirname.js";
 import type LogManagerStructure from "../../logs/LogManager/types.js";
 import type { LogFile } from "../../logs/types.js";
 import type { CustomRequest, LogByDateRequest } from "../../types.js";
@@ -24,13 +26,14 @@ export const getLogsFilesController =
   };
 
 export const getLogByDateController =
-  (logManager: LogManagerStructure): RequestHandler =>
+  (logManager: LogManagerStructure) =>
   (req: LogByDateRequest, res: Response, next: NextFunction) => {
     try {
-      const { date: dateString } = req.params;
-      const [day, month, year] = dateString.split("-");
+      const { date: formattedDate } = req.query;
+      const [day, month, year] = formattedDate.split("-");
 
       const date = new Date(+year, +month - 1, +day);
+
       const filePath = logManager.generatePathByDate(date);
 
       const logDetails = logManager.readLogFromFile(filePath);
@@ -50,5 +53,42 @@ export const getLogByDateController =
       }
 
       next(customError);
+    }
+  };
+
+export const getDownloadLogByDateController =
+  (logManager: LogManagerStructure) =>
+  (req: LogByDateRequest, res: Response, next: NextFunction) => {
+    try {
+      const { date: formattedDate } = req.query;
+      const [day, month, year] = formattedDate.split("-");
+
+      const date = new Date(+year, +month - 1, +day);
+      const filePath = logManager.generatePathByDate(date);
+
+      res
+        .status(200)
+        .attachment(filePath)
+        .sendFile(
+          filePath,
+          {
+            root: path.join(__dirname, "../../../../"),
+          },
+          (error) => {
+            if (!error) {
+              return;
+            }
+
+            let customError = error;
+
+            if (error.message.includes("ENOENT")) {
+              customError = logsErrors.noLogAvailable(error.message);
+            }
+
+            throw customError;
+          }
+        );
+    } catch (error: unknown) {
+      next(error);
     }
   };

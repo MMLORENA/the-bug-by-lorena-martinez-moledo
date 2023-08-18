@@ -54,7 +54,7 @@ const {
   singleSignOnCookie: { cookieName },
 } = config;
 
-describe("Given a GET '/logs/:date' endpoint", () => {
+describe("Given a GET '/logs/log' endpoint", () => {
   let userId: string;
 
   const newAdminUserData = getMockUser({ isAdmin: true });
@@ -83,7 +83,7 @@ describe("Given a GET '/logs/:date' endpoint", () => {
 
       test("Then it should respond with status 200 and logFile with name '01011970' and details 'log'", async () => {
         const response = await request(app)
-          .get(`${paths.logs.base}/${validDate}`)
+          .get(`${paths.logs.logByDate}?date=${validDate}`)
           .set("Cookie", [adminCookie])
           .set(apiKeyHeader, mockHeaderApiKey)
           .set(apiNameHeader, mockHeaderApiName)
@@ -106,7 +106,7 @@ describe("Given a GET '/logs/:date' endpoint", () => {
         const expectedErrorMessage = "Log not available";
 
         const response = await request(app)
-          .get(`${paths.logs.base}/${validDate}`)
+          .get(`${paths.logs.logByDate}?date=${validDate}`)
           .set("Cookie", [adminCookie])
           .set(apiKeyHeader, mockHeaderApiKey)
           .set(apiNameHeader, mockHeaderApiName)
@@ -123,7 +123,7 @@ describe("Given a GET '/logs/:date' endpoint", () => {
       const expectedError = "Invalid date format. Format must be DD-MM-YYYY";
 
       const response = await request(app)
-        .get(`${paths.logs.base}/${invalidDateFormat}`)
+        .get(`${paths.logs.logByDate}?date=${invalidDateFormat}`)
         .set("Cookie", [adminCookie])
         .set(apiKeyHeader, mockHeaderApiKey)
         .set(apiNameHeader, mockHeaderApiName)
@@ -139,7 +139,7 @@ describe("Given a GET '/logs/:date' endpoint", () => {
         const notAdminCookie = `${cookieName}=${mockNotAdminToken}`;
 
         const response = await request(app)
-          .get(`${paths.logs.base}/${validDate}`)
+          .get(`${paths.logs.logByDate}?date=${validDate}`)
           .set("Cookie", [notAdminCookie])
           .set(apiKeyHeader, mockHeaderApiKey)
           .set(apiNameHeader, mockHeaderApiName)

@@ -61,7 +61,8 @@ export type ActivationKeyRequest = CustomRequest<
 >;
 
 export type LogByDateRequest = Request<
-  { date: string },
   Record<string, unknown>,
-  Record<string, unknown>
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { date: string }
 >;

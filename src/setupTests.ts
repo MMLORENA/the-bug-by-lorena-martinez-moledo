@@ -37,3 +37,5 @@ jest.mock("coders-app-api-key-authenticator", () => ({
       }
     ),
 }));
+
+jest.mock("./utils/dirname.ts", () => "dir");
