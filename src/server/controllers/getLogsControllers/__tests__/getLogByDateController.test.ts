@@ -2,6 +2,8 @@ import type { NextFunction, Response } from "express";
 import LogManagerMock from "../../../../__mocks__/LogManagerMock";
 import logsErrors from "../../../../constants/errors/logsErrors";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
+import getMockLogFile from "../../../../testUtils/mocks/mockLogFile";
+import type { LogFile } from "../../../logs/types";
 import type { LogByDateRequest } from "../../../types";
 import { getLogByDateController } from "../getLogsControllers";
 
@@ -17,14 +19,16 @@ describe("Given a getLogByDateController", () => {
   const next = jest.fn();
 
   describe("When it's invoked with a logManager and it receives a request with date in params '01-01-1970' and a response", () => {
+    const fakeDate = "01-01-1970";
     const req: Partial<LogByDateRequest> = {
       params: {
-        date: "01-01-1970",
+        date: fakeDate,
       },
     };
 
     test("Then it should invoke response's method status with 200 and json with the log", () => {
-      const expectedLog = "log";
+      const expectedLogFile: LogFile = getMockLogFile();
+
       const mockLockManager = new LogManagerMock("fakeRootFolderName");
       const logByDateController = getLogByDateController(mockLockManager);
 
@@ -35,7 +39,7 @@ describe("Given a getLogByDateController", () => {
       );
 
       expect(res.status).toHaveBeenCalledWith(okCode);
-      expect(res.json).toHaveBeenCalledWith({ log: expectedLog });
+      expect(res.json).toHaveBeenCalledWith({ logFile: expectedLogFile });
     });
 
     test("Then it should invoke next function with error 'ENOENT: no such file or directory' when the log is not found", () => {

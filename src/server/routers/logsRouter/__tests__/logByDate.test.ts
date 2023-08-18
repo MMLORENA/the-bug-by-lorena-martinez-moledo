@@ -10,12 +10,14 @@ import connectDatabase from "../../../../database/connectDatabase";
 import User from "../../../../database/models/User";
 import { environment } from "../../../../environment/loadEnvironments";
 import { getMockUser } from "../../../../factories/userFactory";
+import getMockLogFile from "../../../../testUtils/mocks/mockLogFile";
 import {
   mockHeaderApiKey,
   mockHeaderApiName,
 } from "../../../../testUtils/mocks/mockRequestHeaders";
 import { generateMockToken } from "../../../../testUtils/mocks/mockToken";
 import app from "../../../app";
+import type { LogFile } from "../../../logs/types";
 import { paths } from "../../paths";
 
 const { apiKeyHeader, apiNameHeader } = requestHeaders;
@@ -68,11 +70,11 @@ describe("Given a GET '/logs/:date' endpoint", () => {
 
   describe("When it receives a request with '01-01-1970' and a cookie of an admin user", () => {
     describe("And exists a log for that date", () => {
-      const mockLog = "log";
+      const mockLogFile: LogFile = getMockLogFile("01011970");
 
       beforeEach(() => {
         fs.mkdirSync(fakeFoldersPath, { recursive: true });
-        fs.writeFileSync(fakePath, mockLog);
+        fs.writeFileSync(fakePath, mockLogFile.details);
       });
 
       afterEach(() => {
@@ -87,7 +89,7 @@ describe("Given a GET '/logs/:date' endpoint", () => {
           .set(apiNameHeader, mockHeaderApiName)
           .expect(okCode);
 
-        expect(response.body).toHaveProperty("log", mockLog);
+        expect(response.body).toHaveProperty("logFile", mockLogFile);
       });
     });
 
