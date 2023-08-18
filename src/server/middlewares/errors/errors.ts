@@ -19,7 +19,6 @@ const generalError = (
   error: CustomError,
   req: Request,
   res: Response,
-  // eslint-disable-next-line no-unused-vars
   next: NextFunction
 ) => {
   if (error instanceof ValidationError && error.details) {

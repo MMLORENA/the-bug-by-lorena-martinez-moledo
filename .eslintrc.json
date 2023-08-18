@@ -38,6 +38,12 @@
       "rules": {
         "@typescript-eslint/naming-convention": "off"
       }
+    },
+    {
+      "files": ["**/middlewares/**/errors.ts"],
+      "rules": {
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^(next|_)" }]
+      }
     }
   ],
   "parserOptions": {
