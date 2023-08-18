@@ -102,10 +102,9 @@ describe("Given a setUserNewPassword controller", () => {
           password: "",
         };
 
-        // eslint-disable-next-line max-nested-callbacks
-        User.findById = jest.fn().mockImplementation(() => ({
+        User.findById = jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValueOnce(userWithoutPassword),
-        }));
+        });
 
         await setUserNewPassword(
           req as CustomRequest,
