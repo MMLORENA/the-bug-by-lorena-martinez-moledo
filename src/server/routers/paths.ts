@@ -12,7 +12,7 @@ export const partialPaths = {
   },
   logs: {
     base: "/logs",
-    logByDate: "/",
+    logByDate: "/log",
     downloadLogByDate: "/download",
   },
 };
