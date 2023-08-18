@@ -2,6 +2,7 @@ import type { NextFunction, RequestHandler, Response } from "express";
 import logsErrors from "../../../constants/errors/logsErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import type LogManagerStructure from "../../logs/LogManager/types.js";
+import type { LogFile } from "../../logs/types.js";
 import type { CustomRequest, LogByDateRequest } from "../../types.js";
 
 const {
@@ -32,9 +33,15 @@ export const getLogByDateController =
       const date = new Date(+year, +month - 1, +day);
       const filePath = logManager.generatePathByDate(date);
 
-      const log = logManager.readLogFromFile(filePath);
+      const logDetails = logManager.readLogFromFile(filePath);
+      const logFile: LogFile = {
+        name: `${day}${month}${year}`,
+        details: logDetails,
+      };
 
-      res.status(okCode).json({ log });
+      res.status(okCode).json({
+        logFile,
+      });
     } catch (error: unknown) {
       let customError = error;
 

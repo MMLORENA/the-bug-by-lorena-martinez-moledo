@@ -14,3 +14,8 @@ export interface DateLocaleFormat {
   locales?: Intl.LocalesArgument;
   options?: Intl.DateTimeFormatOptions;
 }
+
+export interface LogFile {
+  name: string;
+  details: string;
+}
