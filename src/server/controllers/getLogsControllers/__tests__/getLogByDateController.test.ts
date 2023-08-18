@@ -18,7 +18,7 @@ describe("Given a getLogByDateController", () => {
 
   describe("When it's invoked with a logManager and it receives a request with date in params '01-01-1970' and a response", () => {
     const req: Partial<LogByDateRequest> = {
-      params: {
+      query: {
         date: "01-01-1970",
       },
     };
