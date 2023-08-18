@@ -6,11 +6,11 @@ const {
 } = httpStatusCodes;
 
 const generalErrors = {
-  unknownEndpoint(path?: string) {
+  unknownEndpoint(path: string) {
     const unknownEndpointMessage = "Unknown endpoint";
 
     return new CustomError(
-      path ? `${unknownEndpointMessage}: ${path}` : unknownEndpointMessage,
+      `${unknownEndpointMessage}: ${path}`,
       notFoundCode,
       unknownEndpointMessage
     );

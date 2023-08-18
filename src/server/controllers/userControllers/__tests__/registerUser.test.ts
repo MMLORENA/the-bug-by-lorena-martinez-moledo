@@ -14,6 +14,10 @@ const {
 
 const req: Partial<Request> = {};
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const res: Partial<Response> = {
   status: jest.fn().mockReturnThis(),
   sendStatus: jest.fn(),
@@ -64,14 +68,35 @@ describe("Given a registerUser Controller", () => {
   });
 
   describe("When it receives a request with a user name that already exist", () => {
-    test("Then it should call next with an error message 'User already exists'", async () => {
-      const duplicateKeyError = registerErrors.duplicateUser("Duplicate key");
+    test("Then it should call next with an error message 'Duplicate key'", async () => {
+      const errorDuplicateKeyMessage = "duplicate key";
+      const duplicateKeyError = registerErrors.duplicateUser(
+        errorDuplicateKeyMessage
+      );
 
       User.create = jest.fn().mockRejectedValue(duplicateKeyError);
 
       await registerUser(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(duplicateKeyError);
+    });
+  });
+
+  describe("When it receives a request with a valid user name and email and there's is an error saving the user to database", () => {
+    test("Then it should call next with an error message 'Error creating a new user'", async () => {
+      const expectedGeneralError = registerErrors.generalRegisterError();
+      const userCreatedMock: UserWithId = getMockUser(registerUserBody);
+
+      req.body = registerUserBody;
+
+      User.create = jest.fn().mockReturnValueOnce({
+        ...userCreatedMock,
+        save: jest.fn().mockRejectedValue(new Error()),
+      });
+
+      await registerUser(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(expectedGeneralError);
     });
   });
 });

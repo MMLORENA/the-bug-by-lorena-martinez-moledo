@@ -271,7 +271,7 @@ describe("Given a POST /users/login endpoint", () => {
 
 describe("Given a GET /users/verify-token endpoint", () => {
   describe("When it receives a request with no cookie and a correct api key in the header 'X-API-KEY' and 'api-gateway' in the header 'X-API-NAME'", () => {
-    test("Then it should respond with status 401 and 'Unauthorized' error message ", async () => {
+    test("Then it should respond with status 401 and 'No token provided' error message ", async () => {
       const expectedStatus = unauthorizedCode;
       const { publicMessage: expectedMessage } = authErrors.noToken;
 
