@@ -81,7 +81,7 @@ describe("Given a GET '/logs/:date' endpoint", () => {
         fs.rmSync(fakeFolderYearPath, { recursive: true, force: true });
       });
 
-      test("Then it should respond with status 200 and log: 'log'", async () => {
+      test("Then it should respond with status 200 and logFile with name '01011970' and details 'log'", async () => {
         const response = await request(app)
           .get(`${paths.logs.base}/${validDate}`)
           .set("Cookie", [adminCookie])
@@ -90,6 +90,14 @@ describe("Given a GET '/logs/:date' endpoint", () => {
           .expect(okCode);
 
         expect(response.body).toHaveProperty("logFile", mockLogFile);
+        expect((response.body as { logFile: LogFile }).logFile).toHaveProperty(
+          "name",
+          "01011970"
+        );
+        expect((response.body as { logFile: LogFile }).logFile).toHaveProperty(
+          "details",
+          "log"
+        );
       });
     });
 
