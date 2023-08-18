@@ -75,16 +75,10 @@ export const getDownloadLogByDateController =
               customError = logsErrors.noLogAvailable(error.message);
             }
 
-            next(customError);
+            throw customError;
           }
         );
     } catch (error: unknown) {
-      let customError = error;
-
-      if ((error as Error).message.includes("ENOENT")) {
-        customError = logsErrors.noLogAvailable((error as Error).message);
-      }
-
-      next(customError);
+      next(error);
     }
   };
