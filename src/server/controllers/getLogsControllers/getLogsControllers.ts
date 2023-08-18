@@ -27,8 +27,9 @@ export const getLogByDateController =
   (req: LogByDateRequest, res: Response, next: NextFunction) => {
     try {
       const { date: dateString } = req.params;
+      const [day, month, year] = dateString.split("-");
 
-      const date = new Date(dateString);
+      const date = new Date(+year, +month - 1, +day);
       const filePath = logManager.generatePathByDate(date);
 
       const log = logManager.readLogFromFile(filePath);
