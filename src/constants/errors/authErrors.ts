@@ -12,14 +12,10 @@ const authErrors = {
     "No Token provided"
   ),
 
-  generalAuthError(message?: string) {
+  generalAuthError(message: string) {
     const unauthorizedMessage = "Unauthorized";
 
-    return new CustomError(
-      message ?? unauthorizedMessage,
-      unauthorizedCode,
-      unauthorizedMessage
-    );
+    return new CustomError(message, unauthorizedCode, unauthorizedMessage);
   },
   userIsNotAdmin: new CustomError("User not Admin", forbiddenCode, "Forbidden"),
 };

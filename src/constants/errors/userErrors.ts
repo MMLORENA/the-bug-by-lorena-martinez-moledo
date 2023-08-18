@@ -36,18 +36,14 @@ export const registerErrors = {
   duplicateUser(message: string) {
     const duplicateUserMessage = "User already exists";
 
-    return new CustomError(
-      message ?? duplicateUserMessage,
-      conflictCode,
-      duplicateUserMessage
-    );
+    return new CustomError(message, conflictCode, duplicateUserMessage);
   },
 
-  generalRegisterError(message?: string) {
+  generalRegisterError() {
     const generalRegisterErrorMessage = "Error creating a new user";
 
     return new CustomError(
-      message ?? generalRegisterErrorMessage,
+      generalRegisterErrorMessage,
       internalServerErrorCode,
       generalRegisterErrorMessage
     );

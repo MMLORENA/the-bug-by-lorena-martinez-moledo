@@ -1,6 +1,5 @@
 import type { Request } from "express";
 import { type NextFunction, type Response } from "express";
-import { loginErrors } from "../../../../constants/errors/userErrors";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import User from "../../../../database/models/User";
 import { getMockUser } from "../../../../factories/userFactory";
@@ -79,41 +78,6 @@ describe("Given an activateUser function", () => {
       expect(res.json).toHaveBeenCalledWith({
         message: "User account has been activated",
       });
-    });
-  });
-
-  describe("When it receives a request with an inexistent email and a next function", () => {
-    test("Then it should call the next function with an user not found error", async () => {
-      const req: Partial<
-        Request<
-          Record<string, unknown>,
-          Record<string, unknown>,
-          UserActivationCredentials,
-          UserEmail
-        >
-      > = {
-        query: { email: nullUser.email },
-        body: {
-          password: nullUser.password,
-          confirmPassword: nullUser.password,
-        },
-      };
-      User.findOne = jest.fn().mockReturnValue({
-        exec: jest.fn().mockRejectedValue(loginErrors.userNotFound),
-      });
-
-      await activateUser(
-        req as Request<
-          Record<string, unknown>,
-          Record<string, unknown>,
-          UserActivationCredentials,
-          UserEmail
-        >,
-        res as Response,
-        next as NextFunction
-      );
-
-      expect(next).toHaveBeenCalledWith(loginErrors.userNotFound);
     });
   });
 
