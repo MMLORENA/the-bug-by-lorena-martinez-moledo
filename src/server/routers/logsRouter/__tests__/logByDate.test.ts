@@ -10,12 +10,14 @@ import connectDatabase from "../../../../database/connectDatabase";
 import User from "../../../../database/models/User";
 import { environment } from "../../../../environment/loadEnvironments";
 import { getMockUser } from "../../../../factories/userFactory";
+import getMockLogFile from "../../../../testUtils/mocks/mockLogFile";
 import {
   mockHeaderApiKey,
   mockHeaderApiName,
 } from "../../../../testUtils/mocks/mockRequestHeaders";
 import { generateMockToken } from "../../../../testUtils/mocks/mockToken";
 import app from "../../../app";
+import type { LogFile } from "../../../logs/types";
 import { paths } from "../../paths";
 
 const { apiKeyHeader, apiNameHeader } = requestHeaders;
@@ -68,18 +70,18 @@ describe("Given a GET '/logs/log' endpoint", () => {
 
   describe("When it receives a request with '01-01-1970' and a cookie of an admin user", () => {
     describe("And exists a log for that date", () => {
-      const mockLog = "log";
+      const mockLogFile: LogFile = getMockLogFile("01011970");
 
       beforeEach(() => {
         fs.mkdirSync(fakeFoldersPath, { recursive: true });
-        fs.writeFileSync(fakePath, mockLog);
+        fs.writeFileSync(fakePath, mockLogFile.details);
       });
 
       afterEach(() => {
         fs.rmSync(fakeFolderYearPath, { recursive: true, force: true });
       });
 
-      test("Then it should respond with status 200 and log: 'log'", async () => {
+      test("Then it should respond with status 200 and logFile with name '01011970' and details 'log'", async () => {
         const response = await request(app)
           .get(`${paths.logs.logByDate}?date=${validDate}`)
           .set("Cookie", [adminCookie])
@@ -87,7 +89,15 @@ describe("Given a GET '/logs/log' endpoint", () => {
           .set(apiNameHeader, mockHeaderApiName)
           .expect(okCode);
 
-        expect(response.body).toHaveProperty("log", mockLog);
+        expect(response.body).toHaveProperty("logFile", mockLogFile);
+        expect((response.body as { logFile: LogFile }).logFile).toHaveProperty(
+          "name",
+          "01011970"
+        );
+        expect((response.body as { logFile: LogFile }).logFile).toHaveProperty(
+          "details",
+          "log"
+        );
       });
     });
 

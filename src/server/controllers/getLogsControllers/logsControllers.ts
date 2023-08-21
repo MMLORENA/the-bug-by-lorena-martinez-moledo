@@ -2,6 +2,7 @@ import type { NextFunction, Response } from "express";
 import logsErrors from "../../../constants/errors/logsErrors.js";
 import httpStatusCodes from "../../../constants/statusCodes/httpStatusCodes.js";
 import type LogManagerStructure from "../../logs/LogManager/types.js";
+import type { LogFile } from "../../logs/types.js";
 import type { CustomRequest, LogByDateRequest } from "../../types.js";
 import appPath from "../../../appRoot.js";
 import type CustomError from "../../../CustomError/CustomError.js";
@@ -29,13 +30,21 @@ export const getLogByDateController =
   (req: LogByDateRequest, res: Response, next: NextFunction) => {
     try {
       const { date: formattedDate } = req.query;
+      const [day, month, year] = formattedDate.split("-");
 
-      const date = new Date(formattedDate);
+      const date = new Date(+year, +month - 1, +day);
+
       const filePath = logManager.generatePathByDate(date);
 
-      const log = logManager.readLogFromFile(filePath);
+      const logDetails = logManager.readLogFromFile(filePath);
+      const logFile: LogFile = {
+        name: `${day}${month}${year}`,
+        details: logDetails,
+      };
 
-      res.status(okCode).json({ log });
+      res.status(okCode).json({
+        logFile,
+      });
     } catch (error: unknown) {
       let customError = error;
 
@@ -51,8 +60,9 @@ export const downloadLogByDateController =
   (logManager: LogManagerStructure) =>
   (req: LogByDateRequest, res: Response, next: NextFunction) => {
     const { date: formattedDate } = req.query;
+    const [day, month, year] = formattedDate.split("-");
 
-    const date = new Date(formattedDate);
+    const date = new Date(+year, +month - 1, +day);
     const filePath = logManager.generatePathByDate(date);
 
     res
