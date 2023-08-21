@@ -3,7 +3,7 @@ import LogManagerMock from "../../../../__mocks__/LogManagerMock";
 import logsErrors from "../../../../constants/errors/logsErrors";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import type { LogByDateRequest } from "../../../types";
-import { getLogByDateController } from "../getLogsControllers";
+import { getLogByDateController } from "../logsControllers";
 
 const {
   successCodes: { okCode },

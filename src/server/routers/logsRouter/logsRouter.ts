@@ -3,10 +3,10 @@ import { Router } from "express";
 import { validate } from "express-validation";
 import { environment } from "../../../environment/loadEnvironments.js";
 import {
-  getDownloadLogByDateController,
+  downloadLogByDateController,
   getLogByDateController,
   getLogsFilesController,
-} from "../../controllers/getLogsControllers/getLogsControllers.js";
+} from "../../controllers/getLogsControllers/logsControllers.js";
 import LogManager from "../../logs/LogManager/LogManager.js";
 import { auth, checkIsUserAdmin } from "../../middlewares/auth/auth.js";
 import getLogByDateSchema from "../../schemas/getLogByDateSchema.js";
@@ -32,7 +32,7 @@ logsRouter.get(
   validate(getLogByDateSchema, {}, noAbortEarly),
   auth,
   checkIsUserAdmin,
-  getDownloadLogByDateController(logManager)
+  downloadLogByDateController(logManager)
 );
 
 logsRouter.get(
