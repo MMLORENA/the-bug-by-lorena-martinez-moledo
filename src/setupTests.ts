@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import path from "node:path";
 import CustomError from "./CustomError/CustomError";
 import requestHeaders from "./constants/requestHeaders";
 import {
@@ -38,4 +39,4 @@ jest.mock("coders-app-api-key-authenticator", () => ({
     ),
 }));
 
-jest.mock("./utils/dirname.ts", () => "dir");
+jest.mock("./utils/dirname.ts", () => path.resolve(__dirname) + "/test");
