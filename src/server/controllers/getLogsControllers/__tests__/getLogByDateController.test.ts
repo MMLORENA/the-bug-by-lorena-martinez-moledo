@@ -5,7 +5,7 @@ import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import getMockLogFile from "../../../../testUtils/mocks/mockLogFile";
 import type { LogFile } from "../../../logs/types";
 import type { LogByDateRequest } from "../../../types";
-import { getLogByDateController } from "../getLogsControllers";
+import { getLogByDateController } from "../logsControllers";
 
 const {
   successCodes: { okCode },

@@ -3,7 +3,7 @@ import LogManagerMock from "../../../../__mocks__/LogManagerMock";
 import httpStatusCodes from "../../../../constants/statusCodes/httpStatusCodes";
 import type LogManagerStructure from "../../../logs/LogManager/types";
 import type { CustomRequest } from "../../../types";
-import { getLogsFilesController } from "../getLogsControllers";
+import { getLogsFilesController } from "../logsControllers";
 
 const {
   successCodes: { okCode },
