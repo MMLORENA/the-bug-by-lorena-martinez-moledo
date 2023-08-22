@@ -6,7 +6,7 @@ export const getLastDays = (lastDaysNumber: number) => {
     const date = new Date(today);
     date.setDate(today.getDate() - pastDays);
 
-    days.push(date);
+    days.unshift(date);
   }
 
   return days;
