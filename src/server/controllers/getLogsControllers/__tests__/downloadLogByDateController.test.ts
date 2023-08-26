@@ -12,6 +12,7 @@ describe("Given a downloadByDateController", () => {
   const res: Partial<Response> = {
     status: jest.fn().mockReturnThis(),
     attachment: jest.fn().mockReturnThis(),
+    set: jest.fn().mockReturnThis(),
     sendFile: jest.fn(),
   };
   const next = jest.fn();

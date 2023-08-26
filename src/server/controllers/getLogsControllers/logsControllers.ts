@@ -68,6 +68,7 @@ export const downloadLogByDateController =
     res
       .status(200)
       .attachment(filePath)
+      .set("Access-Control-Expose-Headers", "Content-Disposition")
       .sendFile(
         filePath,
         {
