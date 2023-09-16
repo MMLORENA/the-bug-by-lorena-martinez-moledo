@@ -1,0 +1,19 @@
+@use "../../../styles/_variables/colors";
+@use "../../../styles/_variables/fonts";
+@use "../../../styles/_variables/breakpoints";
+
+.main-header {
+  border-bottom: 0.5px solid colors.$color-accent;
+
+  &__title {
+    font-family: fonts.$font-secondary;
+    color: colors.$color-accent;
+    font-size: 3rem;
+    display: block;
+    text-align: center;
+
+    @media (min-width: breakpoints.$breakpoint-medium) {
+      text-align: start;
+    }
+  }
+}
