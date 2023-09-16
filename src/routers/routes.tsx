@@ -1,5 +1,5 @@
 import { Navigate, RouteObject } from "react-router-dom";
-import routerPaths from "../constants/routerPaths";
+import routerPaths from "../constants/routerPaths/routerPaths";
 import App from "../components/App/App";
 
 const routes: RouteObject[] = [

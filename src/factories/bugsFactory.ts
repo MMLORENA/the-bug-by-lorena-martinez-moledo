@@ -22,3 +22,5 @@ const bugFactory = Factory.define<Bug>(() => ({
 export const getMockBug = (bug?: Partial<Bug>) => bugFactory.build(bug);
 export const getMockBugs = (numberOfBugs = 2) =>
   bugFactory.buildList(numberOfBugs);
+
+export const mocksBugs = getMockBugs(2);
