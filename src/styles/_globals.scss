@@ -1,7 +1,13 @@
+@use "_variables/fonts";
+
 *,
 ::before,
 ::after {
   box-sizing: border-box;
+}
+
+html {
+  font-family: fonts.$font-primary;
 }
 
 body {
@@ -13,6 +19,7 @@ h2,
 h3,
 h4 {
   margin: 0;
+  font-family: fonts.$font-secondary;
 }
 
 ul,
