@@ -4,8 +4,11 @@ import {
   configureStore,
 } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { bugsReducer } from "./bugs/bugsSlice";
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  bugsStore: bugsReducer,
+});
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   return configureStore({
