@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BugsState } from "./types";
 import { Bugs } from "../../types";
 
-const initialBugsState: BugsState = {
+export const initialBugsState: BugsState = {
   bugs: [],
 };
 
