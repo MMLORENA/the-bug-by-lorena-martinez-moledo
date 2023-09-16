@@ -1,9 +1,5 @@
 const App = (): React.ReactElement => {
-  return (
-    <div className="container">
-      <h1>The Bug</h1>
-    </div>
-  );
+  return <div className="container"></div>;
 };
 
 export default App;
