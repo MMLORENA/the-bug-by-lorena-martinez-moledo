@@ -1,9 +1,7 @@
-@use "../../styles/_variables/breakpoints";
+@use "../../styles/_variables/paddings";
 @use "../../styles/_variables/colors";
 
 .table {
-  margin: 0 auto;
-  max-width: breakpoints.$breakpoint-big;
   width: 100%;
   border-collapse: collapse;
   overflow-x: auto;
@@ -22,7 +20,7 @@
 
   & td,
   th {
-    padding: 20px 10px;
+    padding: paddings.$padding-block-vertical 10px;
     border-bottom: 0.5px solid rgba((colors.$color-accent), 0.1);
     border-collapse: collapse;
   }

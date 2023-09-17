@@ -1,5 +1,8 @@
+@use "../../styles/_variables/breakpoints";
+
 .container {
   margin: 0 auto;
+  max-width: breakpoints.$breakpoint-big;
   height: 100vh;
   padding: 40px;
 }

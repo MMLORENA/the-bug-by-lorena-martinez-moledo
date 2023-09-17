@@ -1,3 +1,8 @@
-.bugs-page-title {
-  text-align: center;
+@use "../../styles/_variables/paddings";
+
+.bugs-page {
+  &__title {
+    text-align: start;
+    padding: paddings.$padding-block-vertical 0;
+  }
 }
