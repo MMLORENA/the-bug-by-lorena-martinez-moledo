@@ -8,17 +8,17 @@ import { errorsHandlers } from "../../mocks/handlers";
 import server from "../../mocks/server";
 
 describe("Given a useBugs custom hook", () => {
-  describe("When it's function getBugs it's invoked", () => {
-    const {
-      result: {
-        current: { getBugs },
-      },
-    } = renderHook(() => useBugs(), {
-      wrapper({ children }) {
-        return <Provider store={store}>{children}</Provider>;
-      },
-    });
+  const {
+    result: {
+      current: { getBugs, deleteBug },
+    },
+  } = renderHook(() => useBugs(), {
+    wrapper({ children }) {
+      return <Provider store={store}>{children}</Provider>;
+    },
+  });
 
+  describe("When it's function getBugs it's invoked", () => {
     test("Then it should return a list of two bugs ", async () => {
       const bugs: Bugs = await getBugs();
 
@@ -31,6 +31,21 @@ describe("Given a useBugs custom hook", () => {
 
         await expect(getBugs()).rejects.toThrowError();
       });
+    });
+  });
+  const bugToDelete = "1";
+
+  describe("When its function deleteBug it's invoked with '1' and the bug is correctly deleted", () => {
+    test("Then it should not to throw an error", async () => {
+      await expect(deleteBug(bugToDelete)).resolves.not.toThrow();
+    });
+  });
+
+  describe("When its function deleteBug it's invoked with '1' and there is an error", () => {
+    test("Then it should not to throw an error", async () => {
+      server.use(...errorsHandlers);
+
+      await expect(deleteBug(bugToDelete)).rejects.toThrowError();
     });
   });
 });

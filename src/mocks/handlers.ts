@@ -8,10 +8,16 @@ export const handlers = [
   rest.get(`${apiUrl}${apiPartialPaths.base}`, (_req, res, ctx) =>
     res(ctx.status(200), ctx.json(mocksBugs))
   ),
+  rest.delete(`${apiUrl}${apiPartialPaths.base}1`, (_req, res, ctx) =>
+    res(ctx.status(200), ctx.json({}))
+  ),
 ];
 
 export const errorsHandlers = [
   rest.get(`${apiUrl}${apiPartialPaths.base}`, (_req, res, ctx) =>
     res(ctx.status(500))
+  ),
+  rest.delete(`${apiUrl}${apiPartialPaths.base}1`, (_req, res, ctx) =>
+    res(ctx.status(400))
   ),
 ];
