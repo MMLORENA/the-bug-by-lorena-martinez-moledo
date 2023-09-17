@@ -28,8 +28,23 @@ const useBugs = () => {
     }
   }, [dispatch]);
 
+  const deleteBug = async (bugId: string): Promise<void> => {
+    dispatch(showLoadingActionCreator());
+
+    try {
+      await axios.delete(`${apiPartialPaths.base}${bugId}`);
+
+      dispatch(hideLoadingActionCreator());
+    } catch {
+      dispatch(hideLoadingActionCreator());
+
+      throw new Error("Error on delete bug");
+    }
+  };
+
   return {
     getBugs,
+    deleteBug,
   };
 };
 
