@@ -1,0 +1,87 @@
+@use "../../styles/_variables/colors";
+@use "../../styles/_getPxToRem/getPxToRem";
+
+.loading {
+  background-color: rgba(colors.$color-main-dark, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(3px);
+}
+
+.loader {
+  position: relative;
+  display: block;
+  width: getPxToRem.getPxToRem(48);
+  animation: flix 3s ease-in infinite alternate;
+
+  &::before {
+    content: "";
+    display: block;
+    font-size: 0;
+    width: 48px;
+    height: 48px;
+    background-color: colors.$color-main-light;
+    background-image: radial-gradient(
+        circle 12px at 22px 22px,
+        colors.$color-brand 100%,
+        transparent 0
+      ),
+      radial-gradient(
+        circle 10px at 6px 40px,
+        colors.$color-brand 100%,
+        transparent 0
+      ),
+      radial-gradient(
+        circle 14px at 31px -6px,
+        colors.$color-brand 100%,
+        transparent 0
+      ),
+      radial-gradient(
+        circle 5px at 40px 30px,
+        colors.$color-brand 100%,
+        transparent 0
+      );
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0%;
+    transform: translate(-50%, -100%);
+    left: 50%;
+    width: 24px;
+    height: 12px;
+    background: colors.$color-main-light;
+    border-radius: 50px 50px 0 0;
+  }
+
+  @keyframes flix {
+    0%,
+    60% {
+      transform: rotate(-10deg);
+    }
+    100%,
+    30%,
+    80% {
+      transform: rotate(5deg);
+    }
+  }
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader,
+  .loader::before,
+  .loader::after {
+    animation: none;
+  }
+}
