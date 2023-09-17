@@ -14,8 +14,18 @@ const bugsSlice = createSlice({
       ...currentBugsState,
       bugs: action.payload,
     }),
+    deleteBug: (
+      currentBugsState,
+      action: PayloadAction<string>
+    ): BugsState => ({
+      ...currentBugsState,
+      bugs: currentBugsState.bugs.filter((bug) => bug.id !== action.payload),
+    }),
   },
 });
 
 export const bugsReducer = bugsSlice.reducer;
-export const { loadBugs: loadBugsActionCreator } = bugsSlice.actions;
+export const {
+  loadBugs: loadBugsActionCreator,
+  deleteBug: deleteBugActionCreator,
+} = bugsSlice.actions;
