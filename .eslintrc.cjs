@@ -8,6 +8,7 @@ module.exports = {
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
+    "plugin:storybook/recommended",
   ],
   ignorePatterns: ["*.js", "*.cjs"],
   parser: "@typescript-eslint/parser",
