@@ -24,20 +24,32 @@ describe("Given a BugsTable component", () => {
   });
 
   describe("When it receives 'Bugzilla' bug data", () => {
+    const mockBugzilla = getMockBug({ name: bugzillaName });
+
+    const mockPreloadedBugState: Partial<PreloadedState<RootState>> = {
+      bugsStore: {
+        bugs: [mockBugzilla],
+      },
+    };
+
     test("Then it should show 'Bugzilla' text", () => {
-      const mockBugzilla = getMockBug({ name: bugzillaName });
-
-      const mockPreloadedBugState: Partial<PreloadedState<RootState>> = {
-        bugsStore: {
-          bugs: [mockBugzilla],
-        },
-      };
-
       renderWithProviders(<BugsTable />, mockPreloadedBugState);
 
       const bugzilla = screen.getByText(mockBugzilla.name);
 
       expect(bugzilla).toBeInTheDocument();
+    });
+
+    test("Then it should show two buttons with text 'Modify' 'Delete'", () => {
+      const buttonTexts = ["Modify", "Delete"];
+
+      renderWithProviders(<BugsTable />, mockPreloadedBugState);
+
+      buttonTexts.forEach((buttonText) => {
+        const button = screen.getByRole("button", { name: buttonText });
+
+        expect(button).toBeInTheDocument();
+      });
     });
   });
 });
