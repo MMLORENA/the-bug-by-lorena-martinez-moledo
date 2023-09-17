@@ -40,4 +40,10 @@
   &__name {
     font-weight: bold;
   }
+
+  &__actions {
+    & > :not(:first-child).button {
+      margin-left: 50px;
+    }
+  }
 }

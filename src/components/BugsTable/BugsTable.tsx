@@ -1,4 +1,5 @@
 import { useAppSelector } from "../../store";
+import Button from "../Button/Button";
 import "./BugsTable.scss";
 
 const BugsTable = (): React.ReactElement => {
@@ -27,8 +28,8 @@ const BugsTable = (): React.ReactElement => {
             <td className="bug__name">{bug.name}</td>
             <td className="bug__category">{bug.category}</td>
             <td className="bug__actions">
-              <button>Modify</button>
-              <button>Delete</button>
+              <Button>Modify</Button>
+              <Button>Delete</Button>
             </td>
           </tr>
         ))}
