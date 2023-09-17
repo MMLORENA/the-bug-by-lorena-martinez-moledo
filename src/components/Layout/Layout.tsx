@@ -1,4 +1,6 @@
 import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Layout.scss";
 import Header from "../Header/Header";
 import Loading from "../Loading/Loading";
@@ -16,6 +18,7 @@ const Layout = (): React.ReactElement => {
         </main>
       </div>
       {isLoading && <Loading />}
+      <ToastContainer />
     </>
   );
 };
