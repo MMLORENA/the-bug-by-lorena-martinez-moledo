@@ -16,11 +16,16 @@ const useBugs = () => {
   const getBugs = useCallback(async (): Promise<Bugs> => {
     dispatch(showLoadingActionCreator());
 
-    const { data: bugs } = await axios.get(apiPartialPaths.base);
+    try {
+      const { data: bugs } = await axios.get(apiPartialPaths.base);
+      dispatch(hideLoadingActionCreator());
 
-    dispatch(hideLoadingActionCreator());
+      return bugs;
+    } catch {
+      dispatch(hideLoadingActionCreator());
 
-    return bugs;
+      throw new Error("Error on load bugs");
+    }
   }, [dispatch]);
 
   return {

@@ -4,6 +4,7 @@ import { useAppDispatch } from "../../store";
 import { loadBugsActionCreator } from "../../store/bugs/bugsSlice";
 import "./BugsPage.scss";
 import BugsTable from "../../components/BugsTable/BugsTable";
+import showFeedback from "../../utils/showFeedback";
 
 const BugsPage = (): React.ReactElement => {
   const { getBugs } = useBugs();
@@ -11,9 +12,14 @@ const BugsPage = (): React.ReactElement => {
 
   useEffect(() => {
     (async () => {
-      const bugs = await getBugs();
+      try {
+        const bugs = await getBugs();
 
-      dispatch(loadBugsActionCreator(bugs));
+        dispatch(loadBugsActionCreator(bugs));
+      } catch {
+        const errorText = "Ups, error on load bugs";
+        showFeedback(errorText, "error");
+      }
     })();
   }, [getBugs, dispatch]);
 
