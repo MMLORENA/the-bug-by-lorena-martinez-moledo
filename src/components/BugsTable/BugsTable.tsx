@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../store";
-import Button from "../Button/Button";
+import BugRow from "../BugRow/BugRow";
 import "./BugsTable.scss";
 
 const BugsTable = (): React.ReactElement => {
@@ -17,21 +17,7 @@ const BugsTable = (): React.ReactElement => {
       </thead>
       <tbody>
         {bugs.map((bug) => (
-          <tr className="bug" key={bug.id}>
-            <td>
-              <img
-                src={bug.picture}
-                alt={`${bug.name} avatar`}
-                className="bug__image"
-              />
-            </td>
-            <td className="bug__name">{bug.name}</td>
-            <td className="bug__category">{bug.category}</td>
-            <td className="bug__actions">
-              <Button>Modify</Button>
-              <Button>Delete</Button>
-            </td>
-          </tr>
+          <BugRow key={bug.id} bug={bug} />
         ))}
       </tbody>
     </table>

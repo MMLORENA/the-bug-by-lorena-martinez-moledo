@@ -39,17 +39,5 @@ describe("Given a BugsTable component", () => {
 
       expect(bugzilla).toBeInTheDocument();
     });
-
-    test("Then it should show two buttons with text 'Modify' 'Delete'", () => {
-      const buttonTexts = ["Modify", "Delete"];
-
-      renderWithProviders(<BugsTable />, mockPreloadedBugState);
-
-      buttonTexts.forEach((buttonText) => {
-        const button = screen.getByRole("button", { name: buttonText });
-
-        expect(button).toBeInTheDocument();
-      });
-    });
   });
 });

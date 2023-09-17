@@ -29,21 +29,3 @@
     background-color: rgba((colors.$color-brand), 0.1);
   }
 }
-
-.bug {
-  &__image {
-    border-radius: 50%;
-    width: 70px;
-    aspect-ratio: 1;
-  }
-
-  &__name {
-    font-weight: bold;
-  }
-
-  &__actions {
-    & > :not(:first-child).button {
-      margin-left: 50px;
-    }
-  }
-}
