@@ -9,3 +9,9 @@ export const handlers = [
     res(ctx.status(200), ctx.json(mocksBugs))
   ),
 ];
+
+export const errorsHandlers = [
+  rest.get(`${apiUrl}${apiPartialPaths.base}`, (_req, res, ctx) =>
+    res(ctx.status(500))
+  ),
+];
