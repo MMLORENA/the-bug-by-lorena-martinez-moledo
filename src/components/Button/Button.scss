@@ -1,0 +1,24 @@
+@use "../../styles/_variables/colors";
+
+.button {
+  background-color: colors.$color-main-dark;
+  border: 2px solid colors.$color-main-dark;
+  color: colors.$color-main-light;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  padding: 10px 40px;
+  max-width: 200px;
+  white-space: normal;
+
+  &:disabled {
+    background-color: transparent;
+    border: 2px solid rgba(colors.$color-main-dark, 0.5);
+    color: rgba(colors.$color-main-dark, 0.5);
+  }
+
+  &:hover {
+    background-color: transparent;
+    border: 2px solid colors.$color-accent;
+    color: colors.$color-accent;
+  }
+}
