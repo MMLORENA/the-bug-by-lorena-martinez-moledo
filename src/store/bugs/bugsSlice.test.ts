@@ -1,8 +1,9 @@
-import { getMockBug } from "../../factories/bugsFactory";
+import { getMockBug, getMockBugs } from "../../factories/bugsFactory";
 import { bugzillaName, notFoundSpiderName } from "../../mocks/bugs/bugs";
 import { Bugs } from "../../types";
 import {
   bugsReducer,
+  deleteBugActionCreator,
   initialBugsState,
   loadBugsActionCreator,
 } from "./bugsSlice";
@@ -21,6 +22,22 @@ describe("Given a bugsReducer function", () => {
       const newBugsState = bugsReducer(currentState, loadBugsAction);
 
       expect(newBugsState).toHaveProperty("bugs", mockBugs);
+    });
+  });
+
+  describe("When it receives a current bugs state and deleteBug action with '1'", () => {
+    test("Then it should return a new bugs state without the bug with the received id '1'", () => {
+      const idToDelete = "1";
+      const mockBugToDelete = getMockBug({ id: idToDelete });
+      const currentState: BugsState = {
+        bugs: [...getMockBugs(2), mockBugToDelete],
+      };
+
+      const deleteBugAction = deleteBugActionCreator(idToDelete);
+
+      const newBugsState = bugsReducer(currentState, deleteBugAction);
+
+      expect(newBugsState).not.toContain(mockBugToDelete);
     });
   });
 });
