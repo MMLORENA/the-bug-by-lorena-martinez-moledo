@@ -21,12 +21,12 @@
   & td,
   th {
     padding: paddings.$padding-block-vertical 10px;
-    border-bottom: 0.5px solid rgba((colors.$color-accent), 0.1);
+    border-bottom: 0.5px solid rgba((colors.$color-brand), 0.1);
     border-collapse: collapse;
   }
 
   & tr:nth-child(even) {
-    background-color: rgba((colors.$color-accent), 0.1);
+    background-color: rgba((colors.$color-brand), 0.1);
   }
 }
 

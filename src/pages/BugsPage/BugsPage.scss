@@ -1,8 +1,10 @@
+@use "../../styles/_variables/colors";
 @use "../../styles/_variables/paddings";
 
 .bugs-page {
-  &__title {
+  &-title {
     text-align: start;
     padding: paddings.$padding-block-vertical 0;
+    color: colors.$color-brand;
   }
 }
