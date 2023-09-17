@@ -20,7 +20,9 @@ describe("Given a Button component", () => {
         const mockActionOnClick = vi.fn();
 
         renderWithProviders(
-          <Button onClick={mockActionOnClick}>{buttonText}</Button>
+          <Button onClick={mockActionOnClick} className="small">
+            {buttonText}
+          </Button>
         );
 
         const button = screen.getByRole("button", { name: buttonText });
