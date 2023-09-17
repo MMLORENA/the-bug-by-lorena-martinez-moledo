@@ -1,0 +1,45 @@
+@use "../../styles/_variables/breakpoints";
+@use "../../styles/_variables/colors";
+
+.table {
+  margin: 0 auto;
+  max-width: breakpoints.$breakpoint-big;
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  border-spacing: 0;
+
+  & tbody {
+    white-space: nowrap;
+  }
+
+  &__heading {
+    text-align: start;
+    position: sticky;
+    top: 0;
+    vertical-align: bottom;
+  }
+
+  & td,
+  th {
+    padding: 20px 10px;
+    border-bottom: 0.5px solid rgba((colors.$color-accent), 0.1);
+    border-collapse: collapse;
+  }
+
+  & tr:nth-child(even) {
+    background-color: rgba((colors.$color-accent), 0.1);
+  }
+}
+
+.bug {
+  &__image {
+    border-radius: 50%;
+    width: 70px;
+    aspect-ratio: 1;
+  }
+
+  &__name {
+    font-weight: bold;
+  }
+}
