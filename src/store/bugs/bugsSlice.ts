@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BugsState } from "./types";
-import { Bugs } from "../../types";
+import { Bug, Bugs } from "../../types";
 
 export const initialBugsState: BugsState = {
   bugs: [],
@@ -21,6 +21,10 @@ const bugsSlice = createSlice({
       ...currentBugsState,
       bugs: currentBugsState.bugs.filter((bug) => bug.id !== action.payload),
     }),
+    createBug: (currentBugsState, action: PayloadAction<Bug>): BugsState => ({
+      ...currentBugsState,
+      bugs: [...currentBugsState.bugs, action.payload],
+    }),
   },
 });
 
@@ -28,4 +32,5 @@ export const bugsReducer = bugsSlice.reducer;
 export const {
   loadBugs: loadBugsActionCreator,
   deleteBug: deleteBugActionCreator,
+  createBug: createBugActionCreator,
 } = bugsSlice.actions;
