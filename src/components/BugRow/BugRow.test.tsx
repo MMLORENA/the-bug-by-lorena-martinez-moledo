@@ -9,7 +9,13 @@ describe("Given a BugRow component", () => {
     const mockBugzilla = getMockBug({ name: bugzillaName });
 
     test("Then it should show 'Bugzilla' text", () => {
-      renderWithProviders(<BugRow bug={mockBugzilla} />);
+      renderWithProviders(
+        <table>
+          <tbody>
+            <BugRow bug={mockBugzilla} />
+          </tbody>
+        </table>
+      );
 
       const bugzilla = screen.getByText(mockBugzilla.name);
 
@@ -19,7 +25,13 @@ describe("Given a BugRow component", () => {
     test("Then it should show two buttons with text 'Modify' 'Delete'", () => {
       const buttonTexts = ["Modify", "Delete"];
 
-      renderWithProviders(<BugRow bug={mockBugzilla} />);
+      renderWithProviders(
+        <table>
+          <tbody>
+            <BugRow bug={mockBugzilla} />
+          </tbody>
+        </table>
+      );
 
       buttonTexts.forEach((buttonText) => {
         const button = screen.getByRole("button", { name: buttonText });
