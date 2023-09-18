@@ -1,5 +1,9 @@
-import { getMockBug, getMockBugs } from "../../factories/bugsFactory";
-import { bugzillaName, notFoundSpiderName } from "../../mocks/bugs/bugs";
+import {
+  getMockBug,
+  getMockBugs,
+  mockBugZilla,
+  mockNotFoundSpider,
+} from "../../factories/bugsFactory";
 import { Bugs } from "../../types";
 import {
   bugsReducer,
@@ -11,8 +15,6 @@ import {
 import { BugsState } from "./types";
 
 describe("Given a bugsReducer function", () => {
-  const mockBugZilla = getMockBug({ name: bugzillaName });
-  const mockNotFoundSpider = getMockBug({ name: notFoundSpiderName });
   const mockBugsList = getMockBugs(2);
 
   describe("When it receives current bugs state and loadBugs action with 'Bugzilla' and '404 Spider'", () => {
