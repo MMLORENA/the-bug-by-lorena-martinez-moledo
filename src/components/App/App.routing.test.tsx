@@ -1,12 +1,13 @@
 import { screen, waitFor } from "@testing-library/react";
 import { RouterProvider } from "react-router-dom";
-import { appRouter } from "../../routers/routers";
+import { appRouter, getMemoryRouter } from "../../routers/routers";
 import renderWithProviders from "../../testUtils/renderWithProviders";
 import { PreloadedState } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import server from "../../mocks/server";
 import { errorsHandlers } from "../../mocks/handlers";
 import feedbackMessages from "../../constants/feedbackMessages/feedbackMessages";
+import routerPaths from "../../constants/routerPaths/routerPaths";
 
 describe("Given a root '/' path", () => {
   describe("When it's render", () => {
@@ -59,6 +60,21 @@ describe("Given a root '/' path", () => {
           expect(error).toBeInTheDocument();
         });
       });
+    });
+  });
+});
+
+describe("Given a '/create' path", () => {
+  describe("When it's rendered", () => {
+    test("Then it should show a 'Create new bug' heading", () => {
+      const headingText = /Create a new bug/i;
+      const router = getMemoryRouter([routerPaths.create]);
+
+      renderWithProviders(<RouterProvider router={router} />);
+
+      const heading = screen.getByRole("heading", { name: headingText });
+
+      expect(heading).toBeInTheDocument();
     });
   });
 });
