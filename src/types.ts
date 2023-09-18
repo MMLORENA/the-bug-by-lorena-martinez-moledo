@@ -4,6 +4,7 @@ export enum BugCategory {
   uIuXProblems = "UI/UX Problems",
   performanceIssues = "Performance Issues",
   securityVulnerabilities = "Security Vulnerabilities",
+  default = "Unknown category",
 }
 
 export interface Bug {

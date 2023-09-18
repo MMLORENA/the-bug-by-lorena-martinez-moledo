@@ -8,9 +8,7 @@ const Button = ({ children, ...props }: ButtonProps): React.ReactElement => {
   return (
     <button
       {...props}
-      className={`button${
-        props.className ? ` button--${props.className}` : ""
-      }`}
+      className={`button ${props.className} ? ${props.className} : ""}`}
     >
       {children}
     </button>
