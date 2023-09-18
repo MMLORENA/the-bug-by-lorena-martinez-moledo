@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import useBugs from "../../hooks/useBugs/useBugs";
 import { useAppDispatch } from "../../store";
 import { loadBugsActionCreator } from "../../store/bugs/bugsSlice";
-import "./BugsPage.scss";
 import BugsTable from "../../components/BugsTable/BugsTable";
 import showFeedback from "../../utils/showFeedback";
 import feedbackMessages from "../../constants/feedbackMessages/feedbackMessages";
@@ -25,7 +24,7 @@ const BugsPage = (): React.ReactElement => {
 
   return (
     <>
-      <h1 className="bugs-page-title">Debug Directory</h1>
+      <h1 className="page-title">Debug Directory</h1>
       <BugsTable />
     </>
   );

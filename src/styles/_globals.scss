@@ -1,5 +1,6 @@
 @use "_variables/fonts";
 @use "_variables/colors";
+@use "_variables/paddings";
 @use "_getPxToRem/getPxToRem";
 
 *,
@@ -50,4 +51,9 @@ a {
 
 img {
   max-width: 100%;
+}
+
+.page-title {
+  color: colors.$color-brand;
+  padding: paddings.$padding-block-vertical 0;
 }
