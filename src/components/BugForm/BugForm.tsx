@@ -3,7 +3,7 @@ import "./BugForm.scss";
 
 const BugForm = (): React.ReactElement => {
   return (
-    <form className="form" noValidate>
+    <form className="form" noValidate aria-label="form">
       <div className="form-group">
         <label className="form-group__heading" htmlFor="name">
           Name
