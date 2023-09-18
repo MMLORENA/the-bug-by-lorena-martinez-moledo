@@ -42,13 +42,13 @@ const useBugs = () => {
     }
   };
 
-  const createBug = async (bug: BugData): Promise<Bug> => {
+  const createBug = async (bugData: BugData): Promise<Bug> => {
     dispatch(showLoadingActionCreator());
 
     try {
       const { data: newBug } = await axios.post<Bug>(
         `${apiPartialPaths.base}`,
-        { data: bug }
+        bugData
       );
 
       dispatch(hideLoadingActionCreator());
