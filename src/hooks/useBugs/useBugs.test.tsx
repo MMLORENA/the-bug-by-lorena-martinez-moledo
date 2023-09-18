@@ -2,15 +2,16 @@ import { renderHook } from "@testing-library/react";
 import useBugs from "./useBugs";
 import { Provider } from "react-redux";
 import { store } from "../../store";
-import { Bugs } from "../../types";
-import { mocksBugs } from "../../factories/bugsFactory";
+import { Bug, Bugs } from "../../types";
+import { mockBugZilla, mocksBugs } from "../../factories/bugsFactory";
 import { errorsHandlers } from "../../mocks/handlers";
 import server from "../../mocks/server";
+import { mockBugzillaData } from "../../mocks/bugs/bugs";
 
 describe("Given a useBugs custom hook", () => {
   const {
     result: {
-      current: { getBugs, deleteBug },
+      current: { getBugs, deleteBug, createBug },
     },
   } = renderHook(() => useBugs(), {
     wrapper({ children }) {
@@ -33,6 +34,7 @@ describe("Given a useBugs custom hook", () => {
       });
     });
   });
+
   const bugToDelete = "1";
 
   describe("When its function deleteBug it's invoked with '1' and the bug is correctly deleted", () => {
@@ -46,6 +48,22 @@ describe("Given a useBugs custom hook", () => {
       server.use(...errorsHandlers);
 
       await expect(deleteBug(bugToDelete)).rejects.toThrowError();
+    });
+  });
+
+  describe("When it's function createBug it's invoked with 'Bugzilla' data without id", () => {
+    test("Then it should return 'Bugzilla' bug with id ''", async () => {
+      const newBug: Bug = await createBug(mockBugzillaData);
+
+      expect(newBug).toStrictEqual(mockBugZilla);
+    });
+
+    describe("And there is an error", () => {
+      test("Then it should throw an error", async () => {
+        server.use(...errorsHandlers);
+
+        await expect(createBug({} as Bug)).rejects.toThrowError();
+      });
     });
   });
 });

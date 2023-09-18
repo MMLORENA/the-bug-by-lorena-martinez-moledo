@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useCallback } from "react";
-import { Bugs } from "../../types";
+import { Bug, BugData, Bugs } from "../../types";
 import { apiPartialPaths, apiUrl } from "../../constants/apiPaths/apiPaths";
 import { useAppDispatch } from "../../store";
 import {
@@ -17,7 +17,7 @@ const useBugs = () => {
     dispatch(showLoadingActionCreator());
 
     try {
-      const { data: bugs } = await axios.get(apiPartialPaths.base);
+      const { data: bugs } = await axios.get<Bugs>(apiPartialPaths.base);
       dispatch(hideLoadingActionCreator());
 
       return bugs;
@@ -42,9 +42,29 @@ const useBugs = () => {
     }
   };
 
+  const createBug = async (bug: BugData): Promise<Bug> => {
+    dispatch(showLoadingActionCreator());
+
+    try {
+      const { data: newBug } = await axios.post<Bug>(
+        `${apiPartialPaths.base}`,
+        { data: bug }
+      );
+
+      dispatch(hideLoadingActionCreator());
+
+      return newBug;
+    } catch {
+      dispatch(hideLoadingActionCreator());
+
+      throw new Error("Error creating bug");
+    }
+  };
+
   return {
     getBugs,
     deleteBug,
+    createBug,
   };
 };
 
