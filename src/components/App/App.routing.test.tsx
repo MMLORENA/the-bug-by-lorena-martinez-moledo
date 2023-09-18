@@ -6,6 +6,7 @@ import { PreloadedState } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import server from "../../mocks/server";
 import { errorsHandlers } from "../../mocks/handlers";
+import feedbackMessages from "../../constants/feedbackMessages/feedbackMessages";
 
 describe("Given a root '/' path", () => {
   describe("When it's render", () => {
@@ -44,8 +45,6 @@ describe("Given a root '/' path", () => {
       test("Then it should show a text 'Ups, error on load bugs'", async () => {
         server.use(...errorsHandlers);
 
-        const errorText = "Ups, error on load bugs";
-
         renderWithProviders(<RouterProvider router={appRouter} />);
 
         await waitFor(() => {
@@ -55,7 +54,7 @@ describe("Given a root '/' path", () => {
         });
 
         await waitFor(() => {
-          const error = screen.getByText(errorText);
+          const error = screen.getByText(feedbackMessages.errorLoadBugs);
 
           expect(error).toBeInTheDocument();
         });

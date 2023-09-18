@@ -32,7 +32,7 @@ const useBugs = () => {
     dispatch(showLoadingActionCreator());
 
     try {
-      await axios.delete(`${apiPartialPaths.base}${bugId}`);
+      await axios.delete(`${apiPartialPaths.base}/${bugId}`);
 
       dispatch(hideLoadingActionCreator());
     } catch {

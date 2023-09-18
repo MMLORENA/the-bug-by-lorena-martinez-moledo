@@ -5,6 +5,7 @@ import { loadBugsActionCreator } from "../../store/bugs/bugsSlice";
 import "./BugsPage.scss";
 import BugsTable from "../../components/BugsTable/BugsTable";
 import showFeedback from "../../utils/showFeedback";
+import feedbackMessages from "../../constants/feedbackMessages/feedbackMessages";
 
 const BugsPage = (): React.ReactElement => {
   const { getBugs } = useBugs();
@@ -17,8 +18,7 @@ const BugsPage = (): React.ReactElement => {
 
         dispatch(loadBugsActionCreator(bugs));
       } catch {
-        const errorText = "Ups, error on load bugs";
-        showFeedback(errorText, "error");
+        showFeedback(feedbackMessages.errorLoadBugs, "error");
       }
     })();
   }, [getBugs, dispatch]);
