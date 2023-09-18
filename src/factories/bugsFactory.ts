@@ -1,11 +1,11 @@
 import { Factory } from "fishery";
 import { faker } from "@faker-js/faker";
-import { Bug, BugCategory } from "../types";
+import { Bug } from "../types";
 import { bugzillaName, notFoundSpiderName } from "../mocks/bugs/bugs";
 
 const bugFactory = Factory.define<Bug>(() => ({
   id: faker.string.uuid(),
-  category: BugCategory.logicalBugs,
+  category: faker.lorem.word(),
   description: faker.lorem.sentence(),
   picture: faker.image.url(),
   name: faker.lorem.words(2),
