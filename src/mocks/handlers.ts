@@ -28,3 +28,9 @@ export const errorsHandlers = [
     res(ctx.status(409))
   ),
 ];
+
+export const createPageErrorHandlers = [
+  rest.post(`${apiUrl}${apiPartialPaths.base}`, (_req, res, ctx) =>
+    res(ctx.status(409))
+  ),
+];

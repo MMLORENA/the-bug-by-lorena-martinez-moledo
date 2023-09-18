@@ -9,3 +9,11 @@ export const getMemoryRouter = (initialEntries: InitialEntry[]) => {
     initialEntries,
   });
 };
+
+export const getBrowserRouter = (ui: React.ReactElement) =>
+  createBrowserRouter([
+    {
+      path: "/",
+      element: ui,
+    },
+  ]);
