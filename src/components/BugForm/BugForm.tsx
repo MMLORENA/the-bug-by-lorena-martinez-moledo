@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { BugCategory, BugData } from "../../types";
+import { BugData } from "../../types";
 import Button from "../Button/Button";
 import "./BugForm.scss";
 
 const BugForm = (): React.ReactElement => {
   const initialBugDataState: BugData = {
-    category: BugCategory.default,
+    category: "",
     description: "",
     name: "",
     picture: "",
