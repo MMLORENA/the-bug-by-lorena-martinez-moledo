@@ -4,7 +4,7 @@ export const bugzillaName = "Bugzilla";
 export const notFoundSpiderName = "404 Spider";
 export const mockBugzillaData: BugData = {
   category: BugCategory.performanceIssues,
-  description: "",
-  picture: "",
+  description: "Bugzilla Bug",
+  picture: "Bugzilla.jpg",
   name: bugzillaName,
 };
