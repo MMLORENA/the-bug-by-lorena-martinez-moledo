@@ -47,7 +47,7 @@ describe("Given a root '/' path", () => {
     });
 
     describe("And there is an error geting the bugs data", () => {
-      test("Then it should show a text 'Ups, error on load bugs'", async () => {
+      test("Then it should show a text 'Oops, error on load bugs'", async () => {
         server.use(...errorsHandlers);
 
         renderWithProviders(<RouterProvider router={appRouter} />);
@@ -112,17 +112,17 @@ describe("Given a '/create' path", () => {
       });
 
       await waitFor(() => {
-        const feedbackMessageSuccessfullyCreated = screen.getByText(
+        const successfullyCreatedMessage = screen.getByText(
           feedbackMessages.createBug.success
         );
 
-        expect(feedbackMessageSuccessfullyCreated).toBeInTheDocument();
+        expect(successfullyCreatedMessage).toBeInTheDocument();
       });
     });
   });
 
   describe("When the user types bug data and the user clicks the button 'Create' and there is an error", () => {
-    test("Then it should show 'Ups, error creating a new bug'", async () => {
+    test("Then it should show 'Oops, error creating a new bug'", async () => {
       server.use(...createPageErrorHandlers);
       const router = getMemoryRouter([routerPaths.create]);
 
