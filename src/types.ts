@@ -15,3 +15,4 @@ export interface Bug {
 }
 
 export type Bugs = Bug[];
+export type BugData = Omit<Bug, "id">;

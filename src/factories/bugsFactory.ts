@@ -1,19 +1,11 @@
 import { Factory } from "fishery";
 import { faker } from "@faker-js/faker";
 import { Bug, BugCategory } from "../types";
-
-const getRandomBugCategory = () => {
-  const bugsCategories: BugCategory[] = Object.values(BugCategory);
-  const randomBugCategoryPosition = Math.floor(
-    Math.random() * bugsCategories.length
-  );
-
-  return bugsCategories[randomBugCategoryPosition];
-};
+import { bugzillaName, notFoundSpiderName } from "../mocks/bugs/bugs";
 
 const bugFactory = Factory.define<Bug>(() => ({
   id: faker.string.uuid(),
-  category: getRandomBugCategory(),
+  category: BugCategory.logicalBugs,
   description: faker.lorem.sentence(),
   picture: faker.image.url(),
   name: faker.lorem.words(2),
@@ -24,3 +16,5 @@ export const getMockBugs = (numberOfBugs = 2) =>
   bugFactory.buildList(numberOfBugs);
 
 export const mocksBugs = getMockBugs(2);
+export const mockBugZilla = getMockBug({ name: bugzillaName });
+export const mockNotFoundSpider = getMockBug({ name: notFoundSpiderName });
