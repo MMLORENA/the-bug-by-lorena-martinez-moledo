@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { apiPartialPaths } from "../constants/apiPaths/apiPaths";
-import { mockBugZilla, mocksBugs } from "../factories/bugsFactory";
+import { mocksBugs } from "../factories/bugsFactory";
+import { mockBugzillaData } from "./bugs/bugs";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -12,7 +13,7 @@ export const handlers = [
     res(ctx.status(200), ctx.json({}))
   ),
   rest.post(`${apiUrl}${apiPartialPaths.base}`, (_req, res, ctx) =>
-    res(ctx.status(201), ctx.json(mockBugZilla))
+    res(ctx.status(201), ctx.json({ ...mockBugzillaData, id: "1" }))
   ),
 ];
 

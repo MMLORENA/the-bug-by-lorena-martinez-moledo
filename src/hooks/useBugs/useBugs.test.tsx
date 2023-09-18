@@ -3,7 +3,7 @@ import useBugs from "./useBugs";
 import { Provider } from "react-redux";
 import { store } from "../../store";
 import { Bug, Bugs } from "../../types";
-import { mockBugZilla, mocksBugs } from "../../factories/bugsFactory";
+import { mocksBugs } from "../../factories/bugsFactory";
 import { errorsHandlers } from "../../mocks/handlers";
 import server from "../../mocks/server";
 import { mockBugzillaData } from "../../mocks/bugs/bugs";
@@ -52,10 +52,10 @@ describe("Given a useBugs custom hook", () => {
   });
 
   describe("When it's function createBug it's invoked with 'Bugzilla' data without id", () => {
-    test("Then it should return 'Bugzilla' bug with id ''", async () => {
+    test("Then it should return 'Bugzilla' bug with id '1'", async () => {
       const newBug: Bug = await createBug(mockBugzillaData);
 
-      expect(newBug).toStrictEqual(mockBugZilla);
+      expect(newBug).toStrictEqual({ ...mockBugzillaData, id: "1" });
     });
 
     describe("And there is an error", () => {
