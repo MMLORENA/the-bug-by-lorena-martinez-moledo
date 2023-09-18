@@ -3,7 +3,11 @@ import { BugData } from "../../types";
 import Button from "../Button/Button";
 import "./BugForm.scss";
 
-const BugForm = (): React.ReactElement => {
+interface BugFormProps {
+  onSubmit: (bugData: BugData) => Promise<void>;
+}
+
+const BugForm = ({ onSubmit }: BugFormProps): React.ReactElement => {
   const initialBugDataState: BugData = {
     category: "",
     description: "",
@@ -25,8 +29,25 @@ const BugForm = (): React.ReactElement => {
     }));
   };
 
+  const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    await onSubmit(bugData);
+  };
+
+  const isFormValid =
+    bugData.name !== initialBugDataState.name &&
+    bugData.picture !== initialBugDataState.picture &&
+    bugData.description !== initialBugDataState.description &&
+    bugData.category !== initialBugDataState.category;
+
   return (
-    <form className="form" noValidate aria-label="form">
+    <form
+      className="form"
+      noValidate
+      aria-label="form"
+      onSubmit={handleOnSubmit}
+    >
       <div className="form-group">
         <label className="form-group__heading" htmlFor="name">
           Name
@@ -81,7 +102,7 @@ const BugForm = (): React.ReactElement => {
           onChange={handleChangeForm}
         />
       </div>
-      <Button type="submit" className="form__button" disabled>
+      <Button type="submit" className="form__button" disabled={!isFormValid}>
         Create
       </Button>
     </form>
