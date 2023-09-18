@@ -1,0 +1,57 @@
+@use "../../styles/_variables/colors";
+@use "../../styles/_variables/fonts";
+@use "../../styles/_variables/breakpoints";
+@use "../../styles/_variables/paddings";
+@use "../../styles/_getPxToRem/getPxToRem";
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: paddings.$padding-block-vertical;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media (min-width: breakpoints.$breakpoint-medium) {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 80%;
+    gap: 20px;
+  }
+
+  &__heading {
+    font-size: 1.3rem;
+    padding: 0.5rem;
+
+    @media (min-width: breakpoints.$breakpoint-medium) {
+      flex: 1;
+    }
+  }
+
+  &__box {
+    font-size: 1rem;
+    padding: 0.5rem;
+    width: 100%;
+    height: getPxToRem.getPxToRem(56);
+    border-radius: 5px;
+    border: 2px solid colors.$color-main-dark;
+
+    @media (min-width: breakpoints.$breakpoint-medium) {
+      flex: 2;
+    }
+
+    &:focus {
+      border: 2px solid colors.$color-accent;
+      outline: currentColor none 0px;
+    }
+  }
+
+  &__box--long-text {
+    height: getPxToRem.getPxToRem(100);
+  }
+}
