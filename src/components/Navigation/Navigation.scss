@@ -1,0 +1,23 @@
+@use "../../styles/_variables/paddings";
+@use "../../styles/_variables/colors";
+@use "../../styles/_variables/breakpoints";
+
+.navigation {
+  padding: paddings.$padding-block-vertical 0;
+  font-size: 1.2rem;
+
+  &__links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    @media (min-width: breakpoints.$breakpoint-medium) {
+      justify-content: flex-end;
+    }
+
+    & .active {
+      color: colors.$color-accent;
+      font-weight: 700;
+    }
+  }
+}

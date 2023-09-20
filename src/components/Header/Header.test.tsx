@@ -16,5 +16,13 @@ describe("Given a Header Component", () => {
 
       expect(text).toBeInTheDocument();
     });
+
+    test("Then it should show a navigation menú", () => {
+      render(<RouterProvider router={router} />);
+
+      const navigation = screen.getByRole("navigation");
+
+      expect(navigation).toBeInTheDocument();
+    });
   });
 });
