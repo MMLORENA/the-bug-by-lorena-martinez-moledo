@@ -1,10 +1,9 @@
 @use "../../styles/_variables/colors";
 @use "../../styles/_variables/fonts";
 @use "../../styles/_variables/breakpoints";
+@use "../../styles/_variables/paddings";
 
 .main-header {
-  border-bottom: 0.5px solid colors.$color-accent;
-
   &__title {
     font-family: fonts.$font-secondary;
     color: colors.$color-accent;
@@ -16,4 +15,8 @@
       text-align: start;
     }
   }
+}
+
+.title-container {
+  border-bottom: 0.5px solid colors.$color-accent;
 }
