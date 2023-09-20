@@ -76,7 +76,7 @@ describe("Given a '/create' path", () => {
   describe("When it's rendered", () => {
     test("Then it should show a 'Create new bug' heading", () => {
       const headingText = /Create a new bug/i;
-      const router = getMemoryRouter([routerPaths.create]);
+      const router = getMemoryRouter({ initialEntries: [routerPaths.create] });
 
       renderWithProviders(<RouterProvider router={router} />);
 
@@ -89,7 +89,7 @@ describe("Given a '/create' path", () => {
   describe("When the user types correctly 'Bugzilla' data and the user clicks the button 'Create'", () => {
     test("Then it should show 'Bugzilla' text", async () => {
       const buttonText = "Create";
-      const router = getMemoryRouter([routerPaths.create]);
+      const router = getMemoryRouter({ initialEntries: [routerPaths.create] });
 
       renderWithProviders(<RouterProvider router={router} />);
 
@@ -124,13 +124,11 @@ describe("Given a '/create' path", () => {
   describe("When the user types bug data and the user clicks the button 'Create' and there is an error", () => {
     test("Then it should show 'Oops, error creating a new bug'", async () => {
       server.use(...createPageErrorHandlers);
-      const router = getMemoryRouter([routerPaths.create]);
+      const router = getMemoryRouter({ initialEntries: [routerPaths.create] });
 
       const buttonText = "Create";
 
       renderWithProviders(<RouterProvider router={router} />);
-
-      screen.debug();
 
       const nameField = screen.getByLabelText(nameHeading);
       const pictureField = screen.getByLabelText(pictureHeading);

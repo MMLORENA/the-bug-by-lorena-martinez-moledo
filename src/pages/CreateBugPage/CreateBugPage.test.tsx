@@ -1,11 +1,11 @@
 import { screen } from "@testing-library/react";
 import renderWithProviders from "../../testUtils/renderWithProviders";
 import CreateBugPage from "./CreateBugPage";
-import { getBrowserRouter } from "../../routers/routers";
+import { getMemoryRouter } from "../../routers/routers";
 import { RouterProvider } from "react-router-dom";
 
 describe("Given a CreateBugPage", () => {
-  const createBugPageRouter = getBrowserRouter(<CreateBugPage />);
+  const createBugPageRouter = getMemoryRouter({ ui: <CreateBugPage /> });
 
   describe("When it's render", () => {
     test("Then it should show a 'Create a new bug' heading inside", () => {
