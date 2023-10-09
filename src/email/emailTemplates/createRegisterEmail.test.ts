@@ -1,4 +1,4 @@
-import { luisName } from "../../testUtils/mocks/mockUsers";
+import { luisEmail, luisName } from "../../testUtils/mocks/mockUsers";
 import createRegisterEmail from "./createRegisterEmail";
 import { getNewPasswordLink } from "./utils";
 
@@ -13,6 +13,7 @@ describe("Given the function createRegisterEmail", () => {
 
       const registerEmail = createRegisterEmail(
         luisName,
+        luisEmail,
         activationKey,
         activationKeyExpiry
       );
@@ -25,6 +26,7 @@ describe("Given the function createRegisterEmail", () => {
 
       const registerEmail = createRegisterEmail(
         luisName,
+        luisEmail,
         activationKey,
         activationKeyExpiry
       );
@@ -33,10 +35,14 @@ describe("Given the function createRegisterEmail", () => {
     });
 
     test("Then it should return a text containing an activation link", () => {
-      const expectedEmailActivationLink = getNewPasswordLink(activationKey);
+      const expectedEmailActivationLink = getNewPasswordLink(
+        activationKey,
+        luisEmail
+      );
 
       const registerEmail = createRegisterEmail(
         luisName,
+        luisEmail,
         activationKey,
         activationKeyExpiry
       );

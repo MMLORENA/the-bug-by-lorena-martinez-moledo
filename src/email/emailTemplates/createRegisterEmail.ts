@@ -2,12 +2,13 @@ import { getNewPasswordLink, getTimeToExpirationString } from "./utils.js";
 
 const createRegisterEmail = (
   name: string,
+  email: string,
   activationKey: string,
   activationKeyExpiry: number
 ) => {
   const timeToExpirationString = getTimeToExpirationString(activationKeyExpiry);
 
-  const newPasswordLink = getNewPasswordLink(activationKey);
+  const newPasswordLink = getNewPasswordLink(activationKey, email);
 
   return {
     subject: `Welcome to Coders One, ${name}. Please activate your account`,

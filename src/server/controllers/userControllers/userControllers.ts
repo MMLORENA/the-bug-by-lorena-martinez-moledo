@@ -66,6 +66,7 @@ export const registerUser = async (
 
     const { text, subject } = createRegisterEmail(
       name,
+      email,
       activationKey,
       activationKeyExpiry.getTime()
     );
